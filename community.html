@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ParfAI — Community</title>
+<link rel="stylesheet" href="parfai.css">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="community"></nav>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Welcome to the<br><span class="g">ParfAI community</span></h1>
+    <p class="sub" style="max-width:520px">Review the scents you love, share your collection, and help others find their signature — with thousands of fragrance lovers.</p>
+    <div class="cta">
+      <a class="btn" href="#">Write a review</a>
+      <a class="btn ghost" href="#">Share your collection</a>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:center;gap:44px;margin:6px 0 40px;flex-wrap:wrap">
+    <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:26px;text-align:center">92k</span><small style="color:var(--muted);font-size:12px">Reviews</small></div>
+    <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:26px;text-align:center">14k</span><small style="color:var(--muted);font-size:12px">Photos shared</small></div>
+    <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:26px;text-align:center">3,600+</span><small style="color:var(--muted);font-size:12px">Fragrances</small></div>
+    <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:26px;text-align:center">28k</span><small style="color:var(--muted);font-size:12px">Members</small></div>
+  </div>
+
+  <div class="tabs">
+    <span class="tab on">All</span><span class="tab">Reviews</span><span class="tab">Photo wall</span>
+    <span class="tab">Scent of the Day</span><span class="tab">Discussions</span><span class="tab">Ask &amp; recommend</span>
+  </div>
+
+  <section>
+    <div class="shead"><h2>Photo wall</h2><a href="#">Share yours →</a></div>
+    <div class="wall" id="wall"></div>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Latest reviews</h2><a href="#">Write a review →</a></div>
+    <div class="rev" id="rev"></div>
+  </section>
+
+  <section class="split">
+    <div class="card">
+      <h3>Scent of the Day</h3>
+      <div id="sotd"></div>
+      <a class="btn ghost block" style="margin-top:16px">Log what you're wearing</a>
+    </div>
+    <div class="card">
+      <h3>Trending discussions</h3>
+      <div id="threads"></div>
+      <a class="btn ghost block" style="margin-top:16px">Start a discussion</a>
+    </div>
+  </section>
+
+  <div class="band">
+    <h2>Your nose. Your take.<br>Your people.</h2>
+    <p>Join the ParfAI community — free forever. Review, share, discover.</p>
+    <a class="btn" href="signup.html">Join the community</a>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js"></script>
+<script>
+  document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`
+    <div class="shot">
+      <div style="height:${s.h}px;background:${gr(i)}"></div>
+      <div class="cap">
+        <div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div>
+        <div class="tx">${s.t}</div>
+        <div class="meta"><span>♥ ${s.l}</span><span>💬 ${s.c}</span></div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('rev').innerHTML = REVIEWS.map((r,i)=>`
+    <div class="rc">
+      <div class="top"><div class="thumb" style="background:${gr(i)}"></div>
+        <div><div class="pn"><a href="perfume.html?id=${r.id}">${r.p}</a></div><div class="pb">${r.b}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div>
+      <div class="body">${r.tx}</div>
+      <div class="foot"><span class="who"><span class="av" style="${av(i)}"></span>${r.who}</span><span class="helpful">👍 ${r.hp} found helpful</span></div>
+    </div>`).join('');
+
+  document.getElementById('sotd').innerHTML = SOTD.map((s,i)=>`
+    <div class="sotd"><span class="av" style="${av(i)}"></span>
+      <div class="t"><b>${s.u}</b> <span>is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div>
+      <span class="time">${s.t}</span></div>`).join('');
+
+  document.getElementById('threads').innerHTML = THREADS.map(t=>`
+    <a class="thread"><div class="ti">${t.t}</div>
+      <div class="mt"><span class="pill">${t.c}</span><span>💬 ${t.r} replies</span></div></a>`).join('');
+</script>
+</body>
+</html>

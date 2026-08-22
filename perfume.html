@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="pgtitle">Fragrance — ParfAI</title>
+<link rel="stylesheet" href="parfai.css">
+</head>
+<body>
+
+<nav id="nav-slot"></nav>
+
+<div class="wrap" id="content">
+  <!-- filled by script -->
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js"></script>
+<script>
+  const id = qs('id');
+  const p = perfumeById(id);
+  const content = document.getElementById('content');
+
+  if (!p){
+    content.innerHTML = `<div class="doc"><h1>Fragrance not found</h1><p>We couldn't find that one in the catalog yet.</p><a class="btn" href="explore.html">← Back to Explore</a></div>`;
+  } else {
+    document.getElementById('pgtitle').textContent = `${p.name} by ${houseName(p.houseId)} — ParfAI`;
+    const g = famColor(p.family);
+    const similar = PERFUMES.filter(x=>x.id!==p.id && (x.family===p.family || x.houseId===p.houseId)).slice(0,4);
+    const dupes = (p.dupeIds||[]).map(perfumeById).filter(Boolean);
+    const original = p.dupeOf ? perfumeById(p.dupeOf) : null;
+
+    const retailers = [
+      {name:'Sephora', url:`https://www.sephora.com/search?keyword=${encodeURIComponent(p.name)}`},
+      {name:'Notino', url:`https://www.notino.com/search/?q=${encodeURIComponent(p.name)}`},
+      {name:'Amazon', url:`https://www.amazon.com/s?k=${encodeURIComponent(p.name+' perfume')}`},
+      {name:'FragranceNet', url:`https://www.fragrancenet.com/catalogsearch/result?q=${encodeURIComponent(p.name)}`},
+    ];
+
+    content.innerHTML = `
+      <div class="crumb"><a href="explore.html">Explore</a> / <a href="house.html?id=${p.houseId}">${houseName(p.houseId)}</a> / ${p.name}</div>
+
+      <div class="pdhead">
+        <div class="pdimg" style="background:linear-gradient(140deg,${g[0]},${g[1]})">
+          ${p.image ? `<img class="realphoto" src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">` : `<div class="bottle"></div>`}
+        </div>
+        <div>
+          <div class="pdhouse"><a href="house.html?id=${p.houseId}">${houseName(p.houseId)}</a></div>
+          <h1 class="pdname">${p.name}${original ? ' <span style="font-size:22px;color:var(--muted);font-weight:600">— a ' + original.name + ' dupe</span>' : ''}</h1>
+          <div class="pdmeta">
+            <span><b>★ ${p.rating}</b> (${p.reviews.toLocaleString()} reviews)</span>
+            <span>${p.year} · ${p.concentration}</span>
+            <span>${p.gender}</span>
+            ${p.perfumer ? `<span>By ${p.perfumer}</span>` : ''}
+          </div>
+          <div class="pddesc">${p.description}</div>
+          <div class="pdbuy" id="retailers"></div>
+          <div class="disclose">Some links are affiliate links — ParfAI may earn a commission at no extra cost to you.</div>
+          ${!p.dupeOf ? `<div style="margin-top:16px"><a class="btn irid" href="dupe-finder.html?for=${p.id}">Find an affordable dupe →</a></div>` : ''}
+        </div>
+      </div>
+
+      <section>
+        <div class="shead"><h2>Notes pyramid</h2></div>
+        <div class="pyramid">
+          <div class="plevel"><div class="lh">TOP NOTES</div>${p.notes.top.map(n=>`<span class="notechip">${n}</span>`).join('')}</div>
+          <div class="plevel"><div class="lh">HEART NOTES</div>${p.notes.heart.map(n=>`<span class="notechip">${n}</span>`).join('')}</div>
+          <div class="plevel"><div class="lh">BASE NOTES</div>${p.notes.base.map(n=>`<span class="notechip">${n}</span>`).join('')}</div>
+        </div>
+        <div class="accordwrap">${p.accords.map((a,i)=>`<span class="accord" style="background:linear-gradient(140deg,${famColor(p.family)[0]},${famColor(p.family)[1]})">${a}</span>`).join('')}</div>
+        <div class="ratingbars">
+          <div class="ratingbar"><b>Longevity</b><div class="rbtrack"><div class="rbfill" style="width:${p.longevity.includes('12h')?'95%':p.longevity.includes('7-12')?'75%':p.longevity.includes('Moderate')?'50%':'30%'}"></div></div><span style="font-size:12px;color:var(--muted)">${p.longevity}</span></div>
+          <div class="ratingbar"><b>Sillage</b><div class="rbtrack"><div class="rbfill" style="width:${p.sillage==='Strong'?'85%':p.sillage==='Moderate'?'55%':'30%'}"></div></div><span style="font-size:12px;color:var(--muted)">${p.sillage}</span></div>
+        </div>
+      </section>
+
+      ${dupes.length ? `
+      <section>
+        <div class="shead"><h2>Affordable dupes</h2><a href="dupe-finder.html?for=${p.id}">Full comparison →</a></div>
+        <div class="grid">${dupes.map((d,i)=>pcardHTML(d,i)).join('')}</div>
+      </section>` : ''}
+
+      <section>
+        <div class="shead"><h2>Similar fragrances</h2></div>
+        <div class="grid">${similar.map((s,i)=>pcardHTML(s,i)).join('')}</div>
+      </section>
+
+      <section class="split">
+        <div class="card">
+          <h3>Reviews</h3>
+          <div id="revs"></div>
+          <a class="btn ghost block" style="margin-top:16px">Write a review</a>
+        </div>
+        <div class="card">
+          <h3>Questions &amp; answers</h3>
+          <div style="padding:13px 0;border-top:1px solid var(--border)">
+            <div style="font-family:var(--disp);font-weight:700;font-size:13px">Does this run true to size on sillage indoors?</div>
+            <div style="font-size:12px;color:var(--ink2);margin-top:5px">Answered by 3 community members</div>
+          </div>
+          <div style="padding:13px 0;border-top:1px solid var(--border)">
+            <div style="font-family:var(--disp);font-weight:700;font-size:13px">Best season to wear ${p.name}?</div>
+            <div style="font-size:12px;color:var(--ink2);margin-top:5px">Answered by 7 community members</div>
+          </div>
+          <a class="btn ghost block" style="margin-top:16px">Ask a question</a>
+        </div>
+      </section>
+    `;
+
+    document.getElementById('retailers').innerHTML = retailers.map(r=>`<a class="retail" href="${r.url}" target="_blank" rel="nofollow sponsored noopener">${r.name} <span class="p">$${p.price}</span></a>`).join('');
+
+    const revs = REVIEWS.filter(r=>r.id===p.id).length ? REVIEWS.filter(r=>r.id===p.id) : [{p:p.name,b:houseName(p.houseId),s:5,who:'FragBro',tx:'Genuinely one of the better bottles in my collection — reach for it constantly.',hp:41,id:p.id}];
+    document.getElementById('revs').innerHTML = revs.map((r,i)=>`<div class="rc" style="background:var(--bg);padding:0;border:none"><div class="top" style="margin-bottom:8px"><div class="thumb" style="background:${gr(i)}"></div><div><div class="pn">${r.who}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div><div class="body">${r.tx}</div></div>`).join('');
+  }
+</script>
+</body>
+</html>

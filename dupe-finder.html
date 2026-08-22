@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dupe Finder — ParfAI</title>
+<link rel="stylesheet" href="parfai.css">
+<style>
+  .dfbox{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:30px;margin:30px 0}
+  .dfrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .dfrow .searchbox{flex:1;min-width:260px}
+  .matchcard{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:16px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+  @media(max-width:640px){.matchcard{grid-template-columns:1fr}}
+  .matchcard .sw{width:56px;height:88px;border-radius:10px 10px 14px 14px;flex-shrink:0}
+  .matchcard .nm{font-family:var(--disp);font-weight:800;font-size:19px}
+  .matchcard .bd{font-size:12px;color:var(--muted)}
+  .matchcard .why{font-size:13px;color:var(--ink2);margin-top:8px}
+  .matchscore{font-family:var(--disp);font-weight:800;font-size:13px;color:var(--mint);white-space:nowrap}
+  .savings{font-family:var(--disp);font-weight:900;font-size:22px}
+</style>
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap">
+  <div class="hero" style="padding:50px 0 20px">
+    <div class="k">AI Dupe Finder</div>
+    <h1 style="font-size:56px">Smell like it costs<br>a fortune.</h1>
+    <div class="sub">Pick a fragrance you love — ParfAI matches it against the catalog by notes and accords to surface the best affordable alternatives.</div>
+  </div>
+
+  <div class="dfbox">
+    <div class="dfrow">
+      <div class="searchbox">🔍<input id="q" type="text" placeholder="Search for a fragrance (e.g. Aventus, Baccarat Rouge 540, Sauvage)" autocomplete="off"></div>
+      <select id="pick" class="chip-select"></select>
+    </div>
+  </div>
+
+  <div id="results"></div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js"></script>
+<script>
+  const picker = document.getElementById('pick');
+  const source = PERFUMES.filter(p=>!p.dupeOf).sort((a,b)=>a.name.localeCompare(b.name));
+  picker.innerHTML = `<option value="">Or choose from the list…</option>` + source.map(p=>`<option value="${p.id}">${p.name} (${houseName(p.houseId)})</option>`).join('');
+
+  function similarity(target, candidate){
+    if (candidate.id === target.id || candidate.houseId === target.houseId) return -1;
+    let score = 0;
+    if (candidate.family === target.family) score += 3;
+    const shared = candidate.accords.filter(a=>target.accords.includes(a));
+    score += shared.length * 2;
+    if (candidate.gender === target.gender || candidate.gender === 'Unisex' || target.gender === 'Unisex') score += 1;
+    return score;
+  }
+
+  function findMatches(target){
+    // prefer explicit curated dupes if we have them
+    let matches = (target.dupeIds || []).map(perfumeById).filter(Boolean);
+    if (matches.length < 3){
+      const pool = PERFUMES.filter(p => p.tier === 'Affordable' && !matches.includes(p));
+      const scored = pool.map(p=>({p, score: similarity(target, p)})).filter(x=>x.score > 0);
+      scored.sort((a,b)=>b.score-a.score);
+      scored.forEach(x=>{ if (matches.length < 3 && !matches.includes(x.p)) matches.push(x.p); });
+    }
+    return matches.slice(0,3);
+  }
+
+  function renderResults(target){
+    const box = document.getElementById('results');
+    if (!target){ box.innerHTML = ''; return; }
+    const matches = findMatches(target);
+    if (!matches.length){
+      box.innerHTML = `<div class="dfbox" style="text-align:center;color:var(--muted)">No close affordable match in the catalog yet for ${target.name} — check back as we add more houses.</div>`;
+      return;
+    }
+    const sharedAccordsHtml = m => {
+      const shared = m.accords.filter(a=>target.accords.includes(a));
+      return shared.length ? `Shares ${shared.join(', ')} with ${target.name}.` : `Similar ${m.family.toLowerCase()} profile to ${target.name}.`;
+    };
+    box.innerHTML = `
+      <div class="shead"><h2>Best dupes for ${target.name}</h2></div>
+      ${matches.map((m,i)=>{
+        const g = famColor(m.family);
+        const save = Math.round((1 - m.price/target.price)*100);
+        return `<a class="matchcard" href="perfume.html?id=${m.id}" style="text-decoration:none">
+          <div class="sw" style="background:linear-gradient(140deg,${g[0]},${g[1]})"></div>
+          <div>
+            <div class="nm">${m.name}</div>
+            <div class="bd">${houseName(m.houseId)} · $${m.price} · ★ ${m.rating}</div>
+            <div class="why">${sharedAccordsHtml(m)}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="matchscore">${save > 0 ? save+'% cheaper' : 'Great value'}</div>
+            <div class="savings">$${m.price}</div>
+            <div style="font-size:11px;color:var(--muted)">vs $${target.price}</div>
+          </div>
+        </a>`;
+      }).join('')}
+      <div class="disclose">Matches are based on shared notes, accords, and fragrance family — some links are affiliate links.</div>
+    `;
+  }
+
+  function selectPerfume(id){
+    const target = perfumeById(id);
+    picker.value = target ? target.id : '';
+    document.getElementById('q').value = target ? target.name : '';
+    renderResults(target);
+  }
+
+  document.getElementById('q').addEventListener('input', (e)=>{
+    const val = e.target.value.trim().toLowerCase();
+    const found = source.find(p=>p.name.toLowerCase() === val) || (val.length>2 ? source.find(p=>p.name.toLowerCase().includes(val)) : null);
+    if (found) { picker.value = found.id; renderResults(found); }
+  });
+  picker.addEventListener('change', ()=> selectPerfume(picker.value));
+
+  const preId = qs('for');
+  if (preId) selectPerfume(preId);
+  else selectPerfume('aventus');
+</script>
+</body>
+</html>

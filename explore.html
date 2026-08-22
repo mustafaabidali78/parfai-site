@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Explore fragrances — ParfAI</title>
+<link rel="stylesheet" href="parfai.css">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap">
+  <div class="hero" style="padding:50px 0 30px">
+    <div class="k">3,600+ fragrances and counting</div>
+    <h1 style="font-size:52px">Explore every scent</h1>
+    <div class="sub">Search by name, house, note or accord. Filter down to exactly what you're after.</div>
+  </div>
+
+  <div class="filterbar">
+    <div class="searchbox">🔍<input id="q" type="text" placeholder="Search by name, house, or note (e.g. oud, vanilla)"></div>
+    <select id="family" class="chip-select"><option value="">All families</option></select>
+    <select id="house" class="chip-select"><option value="">All houses</option></select>
+    <select id="gender" class="chip-select"><option value="">All genders</option><option>Men</option><option>Women</option><option>Unisex</option></select>
+    <select id="tier" class="chip-select"><option value="">Designer &amp; niche</option><option value="Affordable">Affordable only</option></select>
+    <select id="sort" class="chip-select">
+      <option value="trending">Sort: Trending</option>
+      <option value="rating">Sort: Highest rated</option>
+      <option value="price-asc">Sort: Price low → high</option>
+      <option value="price-desc">Sort: Price high → low</option>
+      <option value="new">Sort: Newest</option>
+    </select>
+  </div>
+
+  <div class="resultcount" id="count"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js"></script>
+<script>
+  const familySel = document.getElementById('family');
+  const houseSel = document.getElementById('house');
+  [...new Set(PERFUMES.map(p=>p.family))].sort().forEach(f=>familySel.innerHTML += `<option>${f}</option>`);
+  HOUSES.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(h=>houseSel.innerHTML += `<option value="${h.id}">${h.name}</option>`);
+
+  // pre-fill from URL (nav links pass ?sort=, ?tier=, ?house=)
+  const initSort = qs('sort'); if (initSort) document.getElementById('sort').value = initSort;
+  const initTier = qs('tier'); if (initTier) document.getElementById('tier').value = initTier;
+  const initHouse = qs('house'); if (initHouse) houseSel.value = initHouse;
+
+  function render(){
+    const q = document.getElementById('q').value.trim().toLowerCase();
+    const fam = familySel.value, house = houseSel.value, gender = document.getElementById('gender').value,
+          tier = document.getElementById('tier').value, sort = document.getElementById('sort').value;
+
+    let list = PERFUMES.filter(p=>{
+      if (fam && p.family!==fam) return false;
+      if (house && p.houseId!==house) return false;
+      if (gender && p.gender!==gender) return false;
+      if (tier && p.tier!==tier) return false;
+      if (q){
+        const hay = `${p.name} ${houseName(p.houseId)} ${p.family} ${(p.notes.top.concat(p.notes.heart,p.notes.base)).join(' ')} ${p.accords.join(' ')}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    if (sort==='rating') list.sort((a,b)=>b.rating-a.rating);
+    else if (sort==='price-asc') list.sort((a,b)=>a.price-b.price);
+    else if (sort==='price-desc') list.sort((a,b)=>b.price-a.price);
+    else if (sort==='new') list.sort((a,b)=>b.year-a.year);
+    else list.sort((a,b)=>b.reviews-a.reviews); // trending
+
+    document.getElementById('count').textContent = `${list.length} fragrance${list.length===1?'':'s'}`;
+    document.getElementById('grid').innerHTML = list.length
+      ? list.map((p,i)=>pcardHTML(p,i)).join('')
+      : `<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">No fragrances match those filters yet — try widening your search.</div>`;
+  }
+
+  ['q','family','house','gender','tier','sort'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', render);
+    document.getElementById(id).addEventListener('change', render);
+  });
+  render();
+</script>
+</body>
+</html>

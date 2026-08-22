@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fragrance houses — ParfAI</title>
+<link rel="stylesheet" href="parfai.css">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="houses"></nav>
+
+<div class="wrap">
+  <div class="hero" style="padding:50px 0 30px">
+    <div class="k">Designer, niche, and everything between</div>
+    <h1 style="font-size:52px">Every house, A–Z</h1>
+    <div class="sub">Click into a house to see their full catalog on ParfAI.</div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <span class="tab" data-tier="">All</span>
+    <span class="tab" data-tier="Designer">Designer</span>
+    <span class="tab" data-tier="Niche">Niche</span>
+    <span class="tab" data-tier="Affordable">Affordable</span>
+  </div>
+
+  <div class="hgrid" id="hgrid"></div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js"></script>
+<script>
+  let activeTier = qs('tier') || '';
+
+  function count(id){ return PERFUMES.filter(p=>p.houseId===id).length; }
+
+  function render(){
+    document.querySelectorAll('#tabs .tab').forEach(t=>t.classList.toggle('on', t.dataset.tier===activeTier));
+    const list = HOUSES.filter(h=>!activeTier || h.tier===activeTier).sort((a,b)=>a.name.localeCompare(b.name));
+    document.getElementById('hgrid').innerHTML = list.map(h=>`
+      <a class="hcard" href="house.html?id=${h.id}">
+        <div class="tier">${h.tier.toUpperCase()}</div>
+        <div class="hn">${h.name}</div>
+        <div class="hd">${h.blurb}</div>
+        <div class="hc">${count(h.id)} fragrance${count(h.id)===1?'':'s'} on ParfAI</div>
+      </a>`).join('');
+  }
+
+  document.querySelectorAll('#tabs .tab').forEach(t=>t.addEventListener('click', ()=>{ activeTier = t.dataset.tier; render(); }));
+  render();
+</script>
+</body>
+</html>

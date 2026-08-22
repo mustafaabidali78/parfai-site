@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="pgtitle">House — ParfAI</title>
+<link rel="stylesheet" href="parfai.css">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="houses"></nav>
+
+<div class="wrap" id="content"></div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js"></script>
+<script>
+  const h = HOUSES.find(x=>x.id===qs('id'));
+  const content = document.getElementById('content');
+
+  if (!h){
+    content.innerHTML = `<div class="doc"><h1>House not found</h1><a class="btn" href="houses.html">← Back to Houses</a></div>`;
+  } else {
+    document.getElementById('pgtitle').textContent = `${h.name} — ParfAI`;
+    const perfumes = PERFUMES.filter(p=>p.houseId===h.id);
+    content.innerHTML = `
+      <div class="crumb"><a href="houses.html">Houses</a> / ${h.name}</div>
+      <div class="hero" style="padding:20px 0 40px;text-align:left">
+        <div class="k">${h.tier.toUpperCase()} HOUSE</div>
+        <h1 style="font-size:56px;margin:0">${h.name}</h1>
+        <div class="sub" style="margin:18px 0 0;max-width:600px">${h.blurb}</div>
+      </div>
+      <div class="shead"><h2>${perfumes.length} fragrance${perfumes.length===1?'':'s'} on ParfAI</h2></div>
+      <div class="grid">${perfumes.map((p,i)=>pcardHTML(p,i)).join('') || '<div style="color:var(--muted)">No fragrances catalogued for this house yet.</div>'}</div>
+    `;
+  }
+</script>
+</body>
+</html>
