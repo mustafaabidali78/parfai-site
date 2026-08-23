@@ -497,9 +497,150 @@ function pcardHTML(p, i){
   const dupeBadge = p.dupeOf ? `<span class="dupe">DUPE</span>` : '';
   const art = p.image ? `<img class="realphoto" src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">` : `<div class="bottle"></div>`;
   return `<a class="pcard" href="perfume.html?id=${p.id}">
-    <div class="em" style="background:linear-gradient(140deg,${g[0]},${g[1]})"><span class="fam">${p.family.toUpperCase()}</span>${dupeBadge}${art}</div>
+    <div class="em" style="background:linear-gradient(140deg,${g[0]},${g[1]})">${sigCanvasHTML(p)}<span class="fam">${p.family.toUpperCase()}</span>${dupeBadge}${art}</div>
     <div class="info"><div class="bd">${houseName(p.houseId)}</div><div class="nm">${p.name}</div>
     <div class="prow"><span class="rate">★ ${p.rating}</span><span class="buy">$${p.price} ↗</span></div></div></a>`;
+}
+
+/* ---------- Scent DNA: per-fragrance accord fingerprint (radar chart) ---------- */
+const NOTE_CATEGORY_SHORT = { 'Green & Aromatic':'Green', 'Amber & Resin':'Amber', 'Gourmand & Sweet':'Sweet', 'Musk & Animalic':'Musk', 'Leather & Tobacco':'Leather', 'Marine & Mineral':'Marine' };
+function shortCat(c){ return NOTE_CATEGORY_SHORT[c] || c; }
+
+function perfumeCategoryTally(p){
+  const cats = NOTE_CATEGORY_ORDER.filter(c => c !== 'Other');
+  const t = {}; cats.forEach(c => t[c] = 0);
+  perfumeAllNotes(p).forEach(n => { const c = noteCategory(n); if (t.hasOwnProperty(c)) t[c]++; });
+  return t;
+}
+
+function scentDnaSVG(p, size){
+  size = size || 300;
+  const cats = NOTE_CATEGORY_ORDER.filter(c => c !== 'Other');
+  const tally = perfumeCategoryTally(p);
+  const maxVal = Math.max(1, ...cats.map(c => tally[c]));
+  const cx = size/2, cy = size/2, R = size*0.34, n = cats.length;
+  const g = famColor(p.family);
+  const angle = i => (Math.PI*2*i/n) - Math.PI/2;
+  const pt = (i,frac) => [cx + Math.cos(angle(i))*R*frac, cy + Math.sin(angle(i))*R*frac];
+
+  let rings = '';
+  [0.25,0.5,0.75,1].forEach(f => {
+    rings += `<polygon points="${cats.map((_,i)=>pt(i,f).join(',')).join(' ')}" style="fill:none;stroke:var(--border);stroke-width:1"/>`;
+  });
+  let spokes = '', labels = '';
+  cats.forEach((c,i) => {
+    const [x,y] = pt(i,1);
+    spokes += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" style="stroke:var(--border)"/>`;
+    const [lx,ly] = pt(i,1.2);
+    labels += `<text x="${lx}" y="${ly}" font-size="11" text-anchor="middle" dominant-baseline="middle" style="fill:var(--muted);font-family:var(--disp);font-weight:700">${shortCat(c)}</text>`;
+  });
+  const dataPts = cats.map((c,i) => pt(i, Math.min((tally[c]||0)/maxVal, 1)).join(',')).join(' ');
+  const gid = 'dna-' + p.id;
+  return `<svg viewBox="0 0 ${size} ${size}" class="dnasvg">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${g[0]}"/><stop offset="100%" stop-color="${g[1]}"/>
+    </linearGradient></defs>
+    ${rings}${spokes}
+    <polygon points="${dataPts}" fill="url(#${gid})" fill-opacity="0.5" stroke="${g[0]}" stroke-width="2.5"/>
+    ${labels}
+  </svg>`;
+}
+
+/* ---------- Scent Signature: animated note-driven visual identity ----------
+   Replaces the flat gradient behind every bottle/photo with a small canvas
+   of drifting particles seeded from that fragrance's own top/heart/base note
+   counts (small+fast+bright near the top for top notes, large+slow+deep near
+   the bottom for base notes). A single shared rAF loop drives every canvas
+   on the page; a periodic scan picks up canvases added by later re-renders
+   (filter changes, etc.) without any page needing to call anything itself.
+*/
+function sigCanvasHTML(p){
+  const g = famColor(p.family);
+  return `<canvas class="sigcanvas" data-top="${p.notes.top.length}" data-heart="${p.notes.heart.length}" data-base="${p.notes.base.length}" data-c1="${g[0]}" data-c2="${g[1]}" aria-hidden="true"></canvas>`;
+}
+
+function _sigHexToRgb(h){ h = h.replace('#',''); return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; }
+function _sigMix(a,b,t){ return a.map((v,i)=>Math.round(v+(b[i]-v)*t)); }
+
+const _sigSystems = [];
+let _sigStarted = false;
+const _sigObserver = (typeof IntersectionObserver !== 'undefined') ? new IntersectionObserver(entries => {
+  entries.forEach(en => { const sys = _sigSystems.find(s => s.canvas === en.target); if (sys) sys.visible = en.isIntersecting; });
+}, {rootMargin:'150px'}) : null;
+
+function _sigBuild(canvas){
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || (canvas.parentElement && canvas.parentElement.clientWidth) || 200;
+  const h = canvas.clientHeight || (canvas.parentElement && canvas.parentElement.clientHeight) || 150;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const c1 = _sigHexToRgb(canvas.dataset.c1), c2 = _sigHexToRgb(canvas.dataset.c2);
+  const top = +canvas.dataset.top || 0, heart = +canvas.dataset.heart || 0, base = +canvas.dataset.base || 0;
+  const particles = [];
+  function seed(count, zoneY, zoneH, sizeR, speedR, tR){
+    for (let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*w,
+        baseY: zoneY + Math.random()*zoneH,
+        r: sizeR[0] + Math.random()*(sizeR[1]-sizeR[0]),
+        speed: speedR[0] + Math.random()*(speedR[1]-speedR[0]),
+        phase: Math.random()*Math.PI*2,
+        t: tR[0] + Math.random()*(tR[1]-tR[0]),
+        drift: w * (0.02 + Math.random()*0.035)
+      });
+    }
+  }
+  seed(top,   h*0.04, h*0.28, [2,4],  [0.018,0.03],  [0.05,0.25]);
+  seed(heart, h*0.36, h*0.28, [4,8],  [0.010,0.017], [0.35,0.6]);
+  seed(base,  h*0.66, h*0.30, [8,15], [0.004,0.009], [0.7,0.95]);
+  return { canvas, ctx, w, h, particles, c1, c2, visible: true };
+}
+
+function _sigDraw(sys){
+  const { ctx, w, h, particles, c1, c2 } = sys;
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach(pt => {
+    pt.phase += pt.speed;
+    const x = pt.x + Math.sin(pt.phase) * pt.drift;
+    const y = pt.baseY + Math.cos(pt.phase * 0.7) * (pt.drift * 0.55);
+    const col = _sigMix(c1, c2, pt.t);
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, pt.r);
+    grad.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},0.85)`);
+    grad.addColorStop(1, `rgba(${col[0]},${col[1]},${col[2]},0)`);
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(x, y, pt.r, 0, Math.PI*2); ctx.fill();
+  });
+}
+
+function _sigScan(){
+  document.querySelectorAll('canvas.sigcanvas:not([data-siginit])').forEach(canvas => {
+    canvas.dataset.siginit = '1';
+    const sys = _sigBuild(canvas);
+    _sigSystems.push(sys);
+    if (_sigObserver) _sigObserver.observe(canvas);
+  });
+}
+
+function _sigTick(){
+  for (let i = _sigSystems.length - 1; i >= 0; i--){
+    const sys = _sigSystems[i];
+    if (!sys.canvas.isConnected){
+      if (_sigObserver) _sigObserver.unobserve(sys.canvas);
+      _sigSystems.splice(i, 1);
+      continue;
+    }
+    if (sys.visible !== false) _sigDraw(sys);
+  }
+  requestAnimationFrame(_sigTick);
+}
+
+function startSigSystem(){
+  if (_sigStarted) return;
+  _sigStarted = true;
+  _sigScan();
+  setInterval(_sigScan, 400);
+  requestAnimationFrame(_sigTick);
 }
 
 /* ---------- logo mark ---------- */
@@ -661,4 +802,5 @@ document.addEventListener('DOMContentLoaded', () => {
     bindMegaMenus(navSlot);
   }
   if (footSlot) footSlot.innerHTML = renderFooter();
+  startSigSystem();
 });

@@ -48,6 +48,7 @@
 
       <div class="pdhead">
         <div class="pdimg" style="background:linear-gradient(140deg,${g[0]},${g[1]})">
+          ${sigCanvasHTML(p)}
           ${p.image ? `<img class="realphoto" src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">` : `<div class="bottle"></div>`}
         </div>
         <div>
@@ -77,6 +78,17 @@
         <div class="ratingbars">
           <div class="ratingbar"><b>Longevity</b><div class="rbtrack"><div class="rbfill" style="width:${p.longevity.includes('12h')?'95%':p.longevity.includes('7-12')?'75%':p.longevity.includes('Moderate')?'50%':'30%'}"></div></div><span style="font-size:12px;color:var(--muted)">${p.longevity}</span></div>
           <div class="ratingbar"><b>Sillage</b><div class="rbtrack"><div class="rbfill" style="width:${p.sillage==='Strong'?'85%':p.sillage==='Moderate'?'55%':'30%'}"></div></div><span style="font-size:12px;color:var(--muted)">${p.sillage}</span></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shead"><h2>Scent DNA</h2></div>
+        <div class="dnawrap">
+          <div class="dnachart">${scentDnaSVG(p, 300)}</div>
+          <div class="dnacaption">
+            <p>A fingerprint of ${p.name}'s note profile, plotted from its actual top, heart, and base notes — the further a point reaches, the more that family shows up across the pyramid.</p>
+            <p style="font-size:12px;color:var(--muted)">Generated live from this fragrance's data — no two profiles in the catalog look quite the same.</p>
+          </div>
         </div>
       </section>
 
