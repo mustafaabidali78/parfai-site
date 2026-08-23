@@ -581,9 +581,64 @@ function renderFooter(){
   </footer></div>`;
 }
 
+/* ---------- mega-menu open/close ----------
+   Pure-CSS :hover chains break the instant the pointer crosses the small
+   gap between the nav trigger and the dropdown panel (or moves diagonally
+   toward an item instead of straight down), closing the menu before the
+   user can click anything inside it. This drives the menu with a JS
+   "open" class instead, with a short grace period on mouseleave so a
+   diagonal or gap-crossing path doesn't kill the hover state.
+*/
+function bindMegaMenus(navSlot){
+  const wraps = navSlot.querySelectorAll('.megawrap');
+  if (!wraps.length) return;
+  let closeTimer = null;
+
+  function closeAll(except){
+    wraps.forEach(w => { if (w !== except) w.classList.remove('open'); });
+  }
+
+  wraps.forEach(w => {
+    w.addEventListener('mouseenter', () => {
+      clearTimeout(closeTimer);
+      closeAll(w);
+      w.classList.add('open');
+    });
+    w.addEventListener('mouseleave', () => {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => w.classList.remove('open'), 300);
+    });
+
+    const trigger = w.querySelector('.menu');
+    if (trigger){
+      // Tapping/clicking the trigger opens it (for touch/keyboard, where
+      // there's no hover). It deliberately doesn't toggle closed on a
+      // second click, since on desktop the hover that opened it already
+      // fires mouseenter before the click lands — closing here instead of
+      // outside/Escape/mouseleave would make it snap shut immediately.
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearTimeout(closeTimer);
+        closeAll(w);
+        w.classList.add('open');
+      });
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.megawrap')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const navSlot = document.getElementById('nav-slot');
   const footSlot = document.getElementById('footer-slot');
-  if (navSlot) navSlot.innerHTML = renderNav(navSlot.dataset.active || '');
+  if (navSlot) {
+    navSlot.innerHTML = renderNav(navSlot.dataset.active || '');
+    bindMegaMenus(navSlot);
+  }
   if (footSlot) footSlot.innerHTML = renderFooter();
 });
