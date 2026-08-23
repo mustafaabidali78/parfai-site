@@ -68,13 +68,21 @@
 <div id="footer-slot"></div>
 
 <script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="reviews.js"></script>
 <script>
   document.getElementById('grid').innerHTML = PERFUMES.filter(p=>!p.dupeOf).slice(0,8).map((p,i)=>pcardHTML(p,i)).join('');
   document.getElementById('dupegrid').innerHTML = PERFUMES.filter(p=>p.dupeOf).slice(0,4).map((p,i)=>pcardHTML(p,i)).join('');
 
   document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`<div class="shot"><div style="height:${s.h}px;background:${gr(i)}"></div><div class="cap"><div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div><div class="tx">${s.t}</div><div class="meta"><span>♥ ${s.l}</span><span>💬 ${s.c}</span></div></div></div>`).join('');
 
-  document.getElementById('rev').innerHTML = REVIEWS.map((r,i)=>`<div class="rc" style="background:var(--bg)"><div class="r1" style="display:flex;gap:10px;align-items:center"><div class="thumb" style="width:34px;height:44px;border-radius:7px;flex-shrink:0;background:${gr(i)}"></div><div><div class="pn" style="font-family:var(--disp);font-weight:700;font-size:14px"><a href="perfume.html?id=${r.id}">${r.p}</a> <span style="color:var(--muted);font-weight:400;font-size:12px">· ${r.b}</span></div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div><div class="tx" style="font-size:12px;color:var(--ink2);margin-top:7px;line-height:1.45">${r.tx}</div><div class="fo" style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">— ${r.who} · 👍 ${r.hp} helpful</div></div>`).join('');
+  function renderHomeRevs(list){
+    document.getElementById('rev').innerHTML = list.map((r,i)=>`<div class="rc" style="background:var(--bg)"><div class="r1" style="display:flex;gap:10px;align-items:center"><div class="thumb" style="width:34px;height:44px;border-radius:7px;flex-shrink:0;background:${gr(i)}"></div><div><div class="pn" style="font-family:var(--disp);font-weight:700;font-size:14px"><a href="perfume.html?id=${r.id}">${r.p}</a> <span style="color:var(--muted);font-weight:400;font-size:12px">· ${r.b}</span></div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div>${r.live?'<span class="newbadge">NEW</span>':''}</div><div class="tx" style="font-size:12px;color:var(--ink2);margin-top:7px;line-height:1.45">${r.tx}</div><div class="fo" style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">— ${r.who} · 👍 ${r.hp} helpful</div></div>`).join('');
+  }
+  renderHomeRevs(REVIEWS);
+  fetchLiveReviews(null, 4).then(rows=>{
+    if (rows.length) renderHomeRevs([...rows.map(liveToCardShape), ...REVIEWS].slice(0,4));
+  });
 
   document.getElementById('sotd').innerHTML = SOTD.map((s,i)=>`<div class="sotd"><span class="av" style="${av(i)}"></span><div><b>${s.u}</b> <span class="w">is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div><span class="time">${s.t}</span></div>`).join('');
 </script>

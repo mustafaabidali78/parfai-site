@@ -221,9 +221,23 @@ select.chip,.chip-select{font-family:var(--disp);font-weight:600;font-size:13px;
 .authcard p.sub{font-size:14px;color:var(--muted);margin-bottom:24px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px}
-.field input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);font-family:var(--body);font-size:14px;outline:none}
-.field input:focus{border-color:var(--violet)}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);font-family:var(--body);font-size:14px;outline:none;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--violet)}
 .authcard .btn{width:100%;margin-top:6px}
+.btn.block{width:100%}
+
+/* ---- write-a-review modal ---- */
+.rvmodal-backdrop{position:fixed;inset:0;background:rgba(14,26,21,.55);backdrop-filter:blur(2px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.rvmodal{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:32px;max-width:440px;width:100%;max-height:90vh;overflow:auto;position:relative}
+.rvmodal h2{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:-.02em}
+.rvmodal .close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted)}
+.starpick{display:flex;gap:6px;font-size:26px;line-height:1;cursor:pointer;user-select:none}
+.starpick span{color:var(--border);transition:color .1s}
+.starpick span.on{color:#FF9F1C}
+.rvmsg{font-size:13px;margin-top:10px;padding:10px 12px;border-radius:10px}
+.rvmsg.ok{background:rgba(0,196,139,.14);color:#00875F}
+.rvmsg.err{background:rgba(255,77,157,.14);color:#C9184A}
+.newbadge{font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.3px;background:var(--mint);color:#fff;padding:3px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
 .divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-size:12px}
 .divider:before,.divider:after{content:"";flex:1;height:1px;background:var(--border)}
 .oauth{display:flex;flex-direction:column;gap:10px}

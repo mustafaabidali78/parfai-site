@@ -16,7 +16,7 @@
     <h1>Welcome to the<br><span class="g">ParfAI community</span></h1>
     <p class="sub" style="max-width:520px">Review the scents you love, share your collection, and help others find their signature — with thousands of fragrance lovers.</p>
     <div class="cta">
-      <a class="btn" href="#">Write a review</a>
+      <a class="btn" href="#" data-write-review>Write a review</a>
       <a class="btn ghost" href="#">Share your collection</a>
     </div>
   </div>
@@ -39,7 +39,7 @@
   </section>
 
   <section>
-    <div class="shead"><h2>Latest reviews</h2><a href="#">Write a review →</a></div>
+    <div class="shead"><h2>Latest reviews</h2><a href="#" data-write-review>Write a review →</a></div>
     <div class="rev" id="rev"></div>
   </section>
 
@@ -66,6 +66,8 @@
 <div id="footer-slot"></div>
 
 <script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="reviews.js"></script>
 <script>
   document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`
     <div class="shot">
@@ -77,13 +79,23 @@
       </div>
     </div>`).join('');
 
-  document.getElementById('rev').innerHTML = REVIEWS.map((r,i)=>`
-    <div class="rc">
-      <div class="top"><div class="thumb" style="background:${gr(i)}"></div>
-        <div><div class="pn"><a href="perfume.html?id=${r.id}">${r.p}</a></div><div class="pb">${r.b}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div>
-      <div class="body">${r.tx}</div>
-      <div class="foot"><span class="who"><span class="av" style="${av(i)}"></span>${r.who}</span><span class="helpful">👍 ${r.hp} found helpful</span></div>
-    </div>`).join('');
+  function renderCommunityRevs(list){
+    document.getElementById('rev').innerHTML = list.map((r,i)=>`
+      <div class="rc">
+        <div class="top"><div class="thumb" style="background:${gr(i)}"></div>
+          <div><div class="pn"><a href="perfume.html?id=${r.id}">${r.p}</a>${r.live?'<span class="newbadge">NEW</span>':''}</div><div class="pb">${r.b}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div>
+        <div class="body">${r.tx}</div>
+        <div class="foot"><span class="who"><span class="av" style="${av(i)}"></span>${r.who}</span><span class="helpful">👍 ${r.hp} found helpful</span></div>
+      </div>`).join('');
+  }
+  renderCommunityRevs(REVIEWS);
+  function refreshCommunityRevs(){
+    fetchLiveReviews(null, 12).then(rows=>{
+      renderCommunityRevs([...rows.map(liveToCardShape), ...REVIEWS]);
+    });
+  }
+  refreshCommunityRevs();
+  window.addEventListener('parfai:review-posted', refreshCommunityRevs);
 
   document.getElementById('sotd').innerHTML = SOTD.map((s,i)=>`
     <div class="sotd"><span class="av" style="${av(i)}"></span>
