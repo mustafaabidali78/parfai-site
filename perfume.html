@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">Fragrance — ParfAI</title>
 <link rel="stylesheet" href="parfai.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&family=Sora:wght@400;500;600;700&display=swap">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
@@ -46,14 +49,14 @@
     content.innerHTML = `
       <div class="crumb"><a href="explore.html">Explore</a> / <a href="house.html?id=${p.houseId}">${houseName(p.houseId)}</a> / ${p.name}</div>
 
-      <div class="pdhead">
-        <div class="pdimg" style="background:linear-gradient(140deg,${g[0]},${g[1]})">
+      <div class="pdhero" style="background:linear-gradient(135deg,${g[0]},${g[1]})">
+        <div class="pdimg">
           ${sigCanvasHTML(p)}
           ${p.image ? `<img class="realphoto" src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">` : `<div class="bottle"></div>`}
         </div>
         <div>
           <div class="pdhouse"><a href="house.html?id=${p.houseId}">${houseName(p.houseId)}</a></div>
-          <h1 class="pdname">${p.name}${original ? ' <span style="font-size:22px;color:var(--muted);font-weight:600">— a ' + original.name + ' dupe</span>' : ''}</h1>
+          <h1 class="pdname">${p.name}${original ? ' <span style="font-size:18px;color:rgba(255,255,255,.8);font-weight:600;display:block;margin-top:8px">— a ' + original.name + ' dupe</span>' : ''}</h1>
           <div class="pdmeta">
             <span><b>★ ${p.rating}</b> (${p.reviews.toLocaleString()} reviews)</span>
             <span>${p.year} · ${p.concentration}</span>
@@ -63,7 +66,7 @@
           <div class="pddesc">${p.description}</div>
           <div class="pdbuy" id="retailers"></div>
           <div class="disclose">Some links are affiliate links — ParfAI may earn a commission at no extra cost to you.</div>
-          ${!p.dupeOf ? `<div style="margin-top:16px"><a class="btn irid" href="dupe-finder.html?for=${p.id}">Find an affordable dupe →</a></div>` : ''}
+          ${!p.dupeOf ? `<div style="margin-top:16px"><a class="btn" style="background:#141414" href="dupe-finder.html?for=${p.id}">Find an affordable dupe →</a></div>` : ''}
         </div>
       </div>
 

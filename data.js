@@ -496,8 +496,8 @@ function pcardHTML(p, i){
   const g = famColor(p.family);
   const dupeBadge = p.dupeOf ? `<span class="dupe">DUPE</span>` : '';
   const art = p.image ? `<img class="realphoto" src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">` : `<div class="bottle"></div>`;
-  return `<a class="pcard" href="perfume.html?id=${p.id}">
-    <div class="em" style="background:linear-gradient(140deg,${g[0]},${g[1]})">${sigCanvasHTML(p)}<span class="fam">${p.family.toUpperCase()}</span>${dupeBadge}${art}</div>
+  return `<a class="pcard" href="perfume.html?id=${p.id}" style="background:linear-gradient(150deg,${g[0]},${g[1]})">
+    <div class="em">${sigCanvasHTML(p)}<span class="fam">${p.family.toUpperCase()}</span>${dupeBadge}${art}</div>
     <div class="info"><div class="bd">${houseName(p.houseId)}</div><div class="nm">${p.name}</div>
     <div class="prow"><span class="rate">★ ${p.rating}</span><span class="buy">$${p.price} ↗</span></div></div></a>`;
 }
@@ -647,7 +647,7 @@ function startSigSystem(){
 function logoSVG(w,h){
   return `<svg width="${w}" height="${h}" viewBox="0 0 240 300" aria-hidden="true">
     <defs><linearGradient id="navg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#00D2FF"/><stop offset=".36" stop-color="#6C4CFF"/><stop offset=".7" stop-color="#FF4D9D"/><stop offset="1" stop-color="#00C48B"/>
+      <stop offset="0" stop-color="#00D2FF"/><stop offset=".36" stop-color="#8B7CFF"/><stop offset=".7" stop-color="#FF4D9D"/><stop offset="1" stop-color="#00C48B"/>
     </linearGradient></defs>
     <g fill="none" stroke="url(#navg)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
       <path d="M120 26 C133 26 143 36 143 49 L143 64 L97 64 L97 49 C97 36 107 26 120 26 Z"/>
