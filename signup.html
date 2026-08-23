@@ -15,11 +15,12 @@
   <div class="authcard">
     <h1 id="h1">Create your account</h1>
     <p class="sub" id="sub">Free forever — upgrade to Scent Pro anytime.</p>
-    <form onsubmit="event.preventDefault(); alert('This is a design demo — sign-up isn\'t wired up yet.');">
-      <div class="field"><label>Name</label><input type="text" placeholder="Your name" required></div>
-      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" required></div>
-      <div class="field"><label>Password</label><input type="password" placeholder="At least 8 characters" required></div>
+    <form id="signup-form">
+      <div class="field"><label>Name</label><input id="su-name" type="text" placeholder="Your name" required></div>
+      <div class="field"><label>Email</label><input id="su-email" type="email" placeholder="you@example.com" required></div>
+      <div class="field"><label>Password</label><input id="su-password" type="password" placeholder="At least 8 characters" minlength="8" required></div>
       <button class="btn" type="submit" id="cta">Create account</button>
+      <div id="su-msg"></div>
     </form>
     <div class="divider">or</div>
     <div class="oauth">
@@ -33,12 +34,53 @@
 <div id="footer-slot"></div>
 
 <script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
 <script>
   if (qs('plan') === 'pro'){
     document.getElementById('h1').textContent = 'Start Scent Pro';
     document.getElementById('sub').textContent = '$4.99/mo or $34.99/yr — cancel anytime.';
     document.getElementById('cta').textContent = 'Create account & continue';
   }
+
+  document.getElementById('signup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('su-msg');
+    const btn = document.getElementById('cta');
+    const name = document.getElementById('su-name').value.trim();
+    const email = document.getElementById('su-email').value.trim();
+    const password = document.getElementById('su-password').value;
+
+    if (!_sb){
+      msg.className = 'rvmsg err';
+      msg.textContent = 'Sign-up service unavailable right now — please try again later.';
+      return;
+    }
+
+    const origText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Creating account…';
+    const { data, error } = await _sb.auth.signUp({
+      email, password,
+      options: { data: { full_name: name } }
+    });
+    btn.disabled = false; btn.textContent = origText;
+
+    if (error){
+      msg.className = 'rvmsg err';
+      msg.textContent = error.message || 'Something went wrong — please try again.';
+      return;
+    }
+
+    if (data && data.session){
+      msg.className = 'rvmsg ok';
+      msg.textContent = 'Account created — redirecting…';
+      setTimeout(() => { window.location.href = 'index.html'; }, 800);
+    } else {
+      msg.className = 'rvmsg ok';
+      msg.textContent = 'Almost there — check your email to confirm your account, then log in.';
+    }
+  });
 </script>
 </body>
 </html>

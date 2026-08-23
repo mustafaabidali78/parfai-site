@@ -1,14 +1,8 @@
 /* ---------- live reviews (Supabase) ----------
-   Public project URL + anon key — these are meant to be public (client-side),
-   access is controlled entirely by the row-level security policies on the
+   Access is controlled entirely by the row-level security policies on the
    `reviews` table (anyone can read, anyone can insert within basic limits).
+   Relies on the shared `_sb` client from supabase-client.js (loaded first).
 */
-const SUPABASE_URL = 'https://nqyiocjsovwjujvbaszr.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xeWlvY2pzb3Z3anVqdmJhc3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0ODk4MjUsImV4cCI6MjEwMzA2NTgyNX0.yijnTHcQ2mBor2aU-UhqE2U_awOSVrTmOC9Ias473yc';
-
-const _sb = (typeof window !== 'undefined' && window.supabase)
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
 
 async function fetchLiveReviews(perfumeId, limit){
   if (!_sb) return [];
@@ -51,13 +45,15 @@ function starPickerHTML(){
   return `<div class="starpick" id="rv-stars">${[1,2,3,4,5].map(n=>`<span data-v="${n}">★</span>`).join('')}</div>`;
 }
 
-function openReviewModal(opts){
+async function openReviewModal(opts){
   opts = opts || {};
   const fixedPerfume = opts.perfumeId ? perfumeById(opts.perfumeId) : null;
   const perfumeOptions = !fixedPerfume
     ? PERFUMES.slice().sort((a,b)=>a.name.localeCompare(b.name))
         .map(p=>`<option value="${p.id}">${p.name} (${houseName(p.houseId)})</option>`).join('')
     : '';
+  const loggedInUser = typeof getCurrentUser === 'function' ? await getCurrentUser() : null;
+  const prefillName = loggedInUser && typeof displayNameFor === 'function' ? displayNameFor(loggedInUser) : '';
 
   const backdrop = document.createElement('div');
   backdrop.className = 'rvmodal-backdrop';
@@ -68,7 +64,7 @@ function openReviewModal(opts){
       <p class="sub" style="font-size:13px;color:var(--muted);margin-bottom:18px">${fixedPerfume ? `Reviewing <b>${fixedPerfume.name}</b>` : 'Share your take with the ParfAI community.'}</p>
       <form id="rv-form">
         ${!fixedPerfume ? `<div class="field"><label>Fragrance</label><select id="rv-perfume" required><option value="">Choose a fragrance…</option>${perfumeOptions}</select></div>` : ''}
-        <div class="field"><label>Your name</label><input id="rv-author" type="text" placeholder="e.g. FragBro" maxlength="60" required></div>
+        <div class="field"><label>Your name</label><input id="rv-author" type="text" value="${prefillName.replace(/"/g,'&quot;')}" placeholder="e.g. FragBro" maxlength="60" required></div>
         <div class="field"><label>Rating</label>${starPickerHTML()}</div>
         <div class="field"><label>Review</label><textarea id="rv-body" rows="4" maxlength="1000" placeholder="What do you think of it?" required></textarea></div>
         <button class="btn block" type="submit">Post review</button>

@@ -15,10 +15,11 @@
   <div class="authcard">
     <h1>Welcome back</h1>
     <p class="sub">Log in to your ParfAI account.</p>
-    <form onsubmit="event.preventDefault(); alert('This is a design demo — sign-in isn\'t wired up yet.');">
-      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" required></div>
-      <div class="field"><label>Password</label><input type="password" placeholder="••••••••" required></div>
-      <button class="btn" type="submit">Log in</button>
+    <form id="login-form">
+      <div class="field"><label>Email</label><input id="li-email" type="email" placeholder="you@example.com" required></div>
+      <div class="field"><label>Password</label><input id="li-password" type="password" placeholder="••••••••" required></div>
+      <button class="btn" type="submit" id="li-cta">Log in</button>
+      <div id="li-msg"></div>
     </form>
     <div class="divider">or</div>
     <div class="oauth">
@@ -32,5 +33,38 @@
 <div id="footer-slot"></div>
 
 <script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script>
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('li-msg');
+    const btn = document.getElementById('li-cta');
+    const email = document.getElementById('li-email').value.trim();
+    const password = document.getElementById('li-password').value;
+
+    if (!_sb){
+      msg.className = 'rvmsg err';
+      msg.textContent = 'Login service unavailable right now — please try again later.';
+      return;
+    }
+
+    const origText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Logging in…';
+    const { data, error } = await _sb.auth.signInWithPassword({ email, password });
+    btn.disabled = false; btn.textContent = origText;
+
+    if (error){
+      msg.className = 'rvmsg err';
+      msg.textContent = error.message || 'Something went wrong — please try again.';
+      return;
+    }
+
+    msg.className = 'rvmsg ok';
+    msg.textContent = 'Welcome back — redirecting…';
+    setTimeout(() => { window.location.href = 'index.html'; }, 500);
+  });
+</script>
 </body>
 </html>
