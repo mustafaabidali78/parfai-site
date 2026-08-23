@@ -472,6 +472,25 @@ function famColor(fam){ return FAM_COLOR[fam] || ['#6C4CFF','#00B8D4']; }
 function houseName(id){ const h = HOUSES.find(h=>h.id===id); return h ? h.name : id; }
 function perfumeById(id){ return PERFUMES.find(p=>p.id===id); }
 function qs(name){ return new URLSearchParams(window.location.search).get(name); }
+function perfumeAllNotes(p){ return [...p.notes.top, ...p.notes.heart, ...p.notes.base]; }
+
+/* ---------- note taxonomy (for the note-picker / Explore by note page) ---------- */
+const NOTE_CATEGORY_ORDER = ['Citrus','Floral','Fruity','Green & Aromatic','Spicy','Woody','Amber & Resin','Gourmand & Sweet','Musk & Animalic','Leather & Tobacco','Marine & Mineral','Earthy','Other'];
+const NOTE_CATEGORY_MAP = {
+  'Bergamot':'Citrus','Calabrian Bergamot':'Citrus','Citrus':'Citrus','Grapefruit':'Citrus','Green Tangerine':'Citrus','Lemon':'Citrus','Lemon Verbena':'Citrus','Mandarin':'Citrus','Blood Mandarin':'Citrus','Orange':'Citrus','Sweet Orange':'Citrus','Sicilian Lemon':'Citrus','Yuzu':'Citrus',
+  'Bellflower':'Floral','Black Orchid':'Floral','Freesia':'Floral','Geranium':'Floral','Gillyflower':'Floral','Iris':'Floral','Jasmine':'Floral','Moroccan Jasmine':'Floral','Sambac Jasmine':'Floral','Lily':'Floral','Lily of the Valley':'Floral','Lotus':'Floral','Magnolia':'Floral','Muguet':'Floral','Narcissus':'Floral','Neroli':'Floral','Orange Blossom':'Floral','Orchid':'Floral','Orris':'Floral','Peony':'Floral','Pelargonium':'Floral','Rose':'Floral','Turkish Rose':'Floral','White Rose':'Floral','Tuberose':'Floral','Violet':'Floral','Violet Leaf':'Floral','Ylang-Ylang':'Floral',
+  'Apple':'Fruity','Red Apple':'Fruity','Green Apple':'Fruity','Apricot':'Fruity','Black Cherry':'Fruity','Cherry Liqueur':'Fruity','Black Currant':'Fruity','Blackcurrant':'Fruity','Red Currant':'Fruity','Dried Fruit':'Fruity','Dried Fruits':'Fruity','Fruit':'Fruity','Litchi':'Fruity','Lychee':'Fruity','Melon':'Fruity','Peach':'Fruity','Pear':'Fruity','Pineapple':'Fruity','Plum':'Fruity','Pomegranate':'Fruity','Raspberry':'Fruity','Red Berries':'Fruity','Rhubarb':'Fruity',
+  'Aldehydes':'Green & Aromatic','Bamboo':'Green & Aromatic','Bay Leaf':'Green & Aromatic','Clary Sage':'Green & Aromatic','Fig':'Green & Aromatic','Fig Leaf':'Green & Aromatic','Galbanum':'Green & Aromatic','Green Tea':'Green & Aromatic','Juniper':'Green & Aromatic','Juniper Berries':'Green & Aromatic','Lavender':'Green & Aromatic','Mint':'Green & Aromatic','Rosemary':'Green & Aromatic','Sage':'Green & Aromatic','Tea':'Green & Aromatic','Verbena':'Green & Aromatic',
+  'Cardamom':'Spicy','Cinnamon':'Spicy','Cumin':'Spicy','Ginger':'Spicy','Nutmeg':'Spicy','Paprika':'Spicy','Pepper':'Spicy','Pink Pepper':'Spicy','Saffron':'Spicy','Sichuan Pepper':'Spicy','Spices':'Spicy',
+  'Amberwood':'Woody','Birch':'Woody','Cashmere Wood':'Woody','Cedar':'Woody','Cedarwood':'Woody','Sicilian Cedar':'Woody','Virginia Cedar':'Woody','White Cedar':'Woody','Fig Tree Wood':'Woody','Guaiac Wood':'Woody','Lotus Wood':'Woody','Mahogany':'Woody','Oak':'Woody','Oud':'Woody','Pine Needles':'Woody','Rosewood':'Woody','Sandalwood':'Woody','Vetiver':'Woody','Woody Notes':'Woody',
+  'Amber':'Amber & Resin','Amber Notes':'Amber & Resin','Ambergris':'Amber & Resin','Ambrox':'Amber & Resin','Ambroxan':'Amber & Resin','Benzoin':'Amber & Resin','Cistus Labdanum':'Amber & Resin','Fir Resin':'Amber & Resin','Incense':'Amber & Resin','Labdanum':'Amber & Resin','Mastic':'Amber & Resin','Opoponax':'Amber & Resin','Plant Amber':'Amber & Resin',
+  'Almond':'Gourmand & Sweet','Bitter Almond':'Gourmand & Sweet','Cacao':'Gourmand & Sweet','Cocoa':'Gourmand & Sweet','Coconut':'Gourmand & Sweet','Coffee':'Gourmand & Sweet','Cognac':'Gourmand & Sweet','Madagascar Vanilla':'Gourmand & Sweet','Milk Accord':'Gourmand & Sweet','Praline':'Gourmand & Sweet','Rum':'Gourmand & Sweet','Tonka':'Gourmand & Sweet','Tonka Bean':'Gourmand & Sweet','Vanilla':'Gourmand & Sweet','Vanilla Orchid':'Gourmand & Sweet','Whipped Cream':'Gourmand & Sweet',
+  'Ambrette':'Musk & Animalic','Ambrette Seeds':'Musk & Animalic','Civet':'Musk & Animalic','Musk':'Musk & Animalic','White Musk':'Musk & Animalic',
+  'Leather':'Leather & Tobacco','Suede':'Leather & Tobacco','Tobacco':'Leather & Tobacco','Tobacco Blossom':'Leather & Tobacco','Tobacco Leaf':'Leather & Tobacco',
+  'Flint':'Marine & Mineral','Ice Notes':'Marine & Mineral','Marine Notes':'Marine & Mineral','Red Algae':'Marine & Mineral','Sea Notes':'Marine & Mineral','Sea Salt':'Marine & Mineral',
+  'Black Truffle':'Earthy','Chestnut':'Earthy','Oak Moss':'Earthy','Oakmoss':'Earthy','Papyrus':'Earthy','Patchouli':'Earthy'
+};
+function noteCategory(n){ return NOTE_CATEGORY_MAP[n] || 'Other'; }
 
 function pcardHTML(p, i){
   const g = famColor(p.family);
@@ -510,6 +529,7 @@ function renderNav(active){
         <div class="mega"><div class="cols">
           <div><div class="colhead">Browse fragrances</div>
             <a class="it" href="explore.html"><b>By family</b><span>Woody, floral, fresh &amp; more</span></a>
+            <a class="it" href="notes.html"><b>By note</b><span>Rose, oud, vanilla &amp; more</span></a>
             <a class="it" href="houses.html"><b>By house</b><span>Creed, Dior, Chanel…</span></a>
             <a class="it" href="explore.html"><b>All fragrances</b><span>Browse the full catalog</span></a></div>
           <div><div class="colhead">&nbsp;</div>
@@ -573,7 +593,7 @@ function renderFooter(){
   return `<div class="wrap"><footer>
     <div class="fcols">
       <div><b>ParfAI</b><span>The world's first AI perfumer</span></div>
-      <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="explore.html">Fragrance wheel</a><a href="houses.html">Houses</a></div>
+      <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="notes.html">Browse by note</a><a href="houses.html">Houses</a></div>
       <div><b>Community</b><a href="community.html">Reviews</a><a href="community.html">Photo wall</a><a href="community.html">Discussions</a></div>
       <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="contact.html">Contact</a></div>
     </div>

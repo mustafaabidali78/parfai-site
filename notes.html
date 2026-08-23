@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Browse by note — ParfAI</title>
+<link rel="stylesheet" href="parfai.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap">
+  <div class="hero" style="padding:50px 0 30px">
+    <div class="k">Browse by note</div>
+    <h1 style="font-size:52px">Pick the notes<br>you love</h1>
+    <div class="sub">Select any notes below — top, heart, or base — and we'll surface every fragrance in the database that features them. Add a gender filter to narrow it further.</div>
+  </div>
+
+  <div class="filterbar notesearch">
+    <div class="searchbox">🔍<input id="notesearch" type="text" placeholder="Search notes (e.g. oud, rose, vanilla)"></div>
+    <select id="gender" class="chip-select">
+      <option value="">All genders</option>
+      <option>Men</option>
+      <option>Women</option>
+      <option>Unisex</option>
+    </select>
+  </div>
+
+  <div class="selectedbar" id="selectedbar"></div>
+
+  <div class="notecats" id="notecats"></div>
+
+  <section style="margin-top:40px">
+    <div class="resultcount" id="count"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script>
+  // every note actually present in the current database, with how many fragrances carry it
+  const noteCounts = {};
+  PERFUMES.forEach(p => perfumeAllNotes(p).forEach(n => { noteCounts[n] = (noteCounts[n]||0) + 1; }));
+  const allNotes = Object.keys(noteCounts).sort();
+
+  const grouped = {};
+  allNotes.forEach(n => { const c = noteCategory(n); (grouped[c] = grouped[c] || []).push(n); });
+
+  // state, seeded from the URL so this page is shareable/linkable (?n=Rose,Oud&gender=Women)
+  const initial = qs('n');
+  const selected = new Set(initial ? initial.split(',').map(s=>s.trim()).filter(Boolean) : []);
+  const genderSel = document.getElementById('gender');
+  const initGender = qs('gender');
+  if (initGender) genderSel.value = initGender;
+
+  function updateURL(){
+    const params = new URLSearchParams();
+    if (selected.size) params.set('n', [...selected].join(','));
+    if (genderSel.value) params.set('gender', genderSel.value);
+    const qstr = params.toString();
+    history.replaceState(null, '', qstr ? `notes.html?${qstr}` : 'notes.html');
+  }
+
+  function renderChips(filterText){
+    const f = (filterText||'').trim().toLowerCase();
+    document.getElementById('notecats').innerHTML = NOTE_CATEGORY_ORDER
+      .filter(cat => grouped[cat] && grouped[cat].length)
+      .map(cat => {
+        const notes = grouped[cat].filter(n => !f || n.toLowerCase().includes(f));
+        if (!notes.length) return '';
+        return `<div class="notecat"><div class="nch">${cat}</div><div class="notecatwrap">${
+          notes.map(n => `<span class="pickchip${selected.has(n)?' active':''}" data-note="${n}">${n} <span style="opacity:.6">${noteCounts[n]}</span></span>`).join('')
+        }</div></div>`;
+      }).join('') || `<div style="color:var(--muted);padding:20px 0">No notes match "${filterText}".</div>`;
+  }
+
+  function renderSelected(){
+    const bar = document.getElementById('selectedbar');
+    if (!selected.size){
+      bar.innerHTML = `<span class="hint">No notes selected yet — click any note below to start narrowing down fragrances.</span>`;
+      return;
+    }
+    bar.innerHTML = [...selected].map(n =>
+      `<span class="selchip">${n}<button data-remove="${n}" aria-label="Remove ${n}">✕</button></span>`
+    ).join('') + `<span class="clearbtn" id="clearall">Clear all</span>`;
+  }
+
+  function renderResults(){
+    const gender = genderSel.value;
+    const list = PERFUMES.filter(p => {
+      if (gender && p.gender !== gender) return false;
+      if (!selected.size) return true;
+      const pn = perfumeAllNotes(p);
+      return [...selected].every(n => pn.includes(n));
+    }).sort((a,b) => b.rating - a.rating);
+
+    document.getElementById('count').textContent = selected.size
+      ? `${list.length} fragrance${list.length===1?'':'s'} with ${[...selected].join(' + ')}${gender?` · ${gender}`:''}`
+      : `${list.length} fragrance${list.length===1?'':'s'}${gender?` · ${gender}`:''}`;
+
+    document.getElementById('grid').innerHTML = list.length
+      ? list.map((p,i)=>pcardHTML(p,i)).join('')
+      : `<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">No fragrances match that combination yet — try removing a note.</div>`;
+  }
+
+  function renderAll(filterText){
+    renderChips(filterText);
+    renderSelected();
+    renderResults();
+    updateURL();
+  }
+
+  document.getElementById('notecats').addEventListener('click', e => {
+    const chip = e.target.closest('.pickchip');
+    if (!chip) return;
+    const n = chip.dataset.note;
+    selected.has(n) ? selected.delete(n) : selected.add(n);
+    renderAll(document.getElementById('notesearch').value);
+  });
+
+  document.getElementById('selectedbar').addEventListener('click', e => {
+    if (e.target.id === 'clearall'){ selected.clear(); renderAll(document.getElementById('notesearch').value); return; }
+    const rm = e.target.closest('[data-remove]');
+    if (rm){ selected.delete(rm.dataset.remove); renderAll(document.getElementById('notesearch').value); }
+  });
+
+  document.getElementById('notesearch').addEventListener('input', e => renderChips(e.target.value));
+  genderSel.addEventListener('change', () => { renderResults(); updateURL(); });
+
+  renderAll('');
+</script>
+</body>
+</html>

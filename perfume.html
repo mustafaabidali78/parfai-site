@@ -67,11 +67,11 @@
       </div>
 
       <section>
-        <div class="shead"><h2>Notes pyramid</h2></div>
+        <div class="shead"><h2>Notes pyramid</h2><a href="notes.html">Browse by note →</a></div>
         <div class="pyramid">
-          <div class="plevel"><div class="lh">TOP NOTES</div>${p.notes.top.map(n=>`<span class="notechip">${n}</span>`).join('')}</div>
-          <div class="plevel"><div class="lh">HEART NOTES</div>${p.notes.heart.map(n=>`<span class="notechip">${n}</span>`).join('')}</div>
-          <div class="plevel"><div class="lh">BASE NOTES</div>${p.notes.base.map(n=>`<span class="notechip">${n}</span>`).join('')}</div>
+          <div class="plevel"><div class="lh">TOP NOTES</div>${p.notes.top.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${n}</a>`).join('')}</div>
+          <div class="plevel"><div class="lh">HEART NOTES</div>${p.notes.heart.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${n}</a>`).join('')}</div>
+          <div class="plevel"><div class="lh">BASE NOTES</div>${p.notes.base.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${n}</a>`).join('')}</div>
         </div>
         <div class="accordwrap">${p.accords.map((a,i)=>`<span class="accord" style="background:linear-gradient(140deg,${famColor(p.family)[0]},${famColor(p.family)[1]})">${a}</span>`).join('')}</div>
         <div class="ratingbars">
