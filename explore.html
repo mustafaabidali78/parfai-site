@@ -13,7 +13,7 @@
 
 <div class="wrap">
   <div class="hero" style="padding:50px 0 30px">
-    <div class="k">3,600+ fragrances and counting</div>
+    <div class="k" id="stat-count"></div>
     <h1 style="font-size:52px">Explore every scent</h1>
     <div class="sub">Search by name, house, note or accord. Filter down to exactly what you're after.</div>
   </div>
@@ -44,6 +44,8 @@
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script>
+  document.getElementById('stat-count').textContent = `${PERFUMES.length} fragrances and counting`;
+
   const familySel = document.getElementById('family');
   const houseSel = document.getElementById('house');
   [...new Set(PERFUMES.map(p=>p.family))].sort().forEach(f=>familySel.innerHTML += `<option>${f}</option>`);

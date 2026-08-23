@@ -16,7 +16,7 @@
   <div class="hero">
     <div class="k">The world's first AI perfumer</div>
     <h1>Find your scent,<br>not just a bottle</h1>
-    <div class="sub">Search thousands of fragrances, decode their notes with AI, and find affordable dupes of the ones you love.</div>
+    <div class="sub">Search real fragrances, decode their notes with AI, and find affordable dupes of the ones you love.</div>
     <div class="cta"><a class="btn" href="dupe-finder.html">Try the Dupe Finder</a><a class="btn ghost" href="explore.html">Find my scent</a></div>
   </div>
 
@@ -39,10 +39,8 @@
       <p style="font-size:18px;color:var(--ink2);max-width:520px;margin:18px auto 22px">Review the scents you love, share your collection, and help others find their signature.</p>
       <div class="cta"><a class="btn" href="community.html">Write a review</a><a class="btn ghost" href="community.html">Share your collection</a></div>
       <div style="display:flex;justify-content:center;gap:40px;margin:26px 0 6px;flex-wrap:wrap">
-        <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center">92k</span><small style="color:var(--muted);font-size:12px">Reviews</small></div>
-        <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center">14k</span><small style="color:var(--muted);font-size:12px">Photos</small></div>
-        <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center">28k</span><small style="color:var(--muted);font-size:12px">Members</small></div>
-        <div><span style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center">3,600+</span><small style="color:var(--muted);font-size:12px">Fragrances</small></div>
+        <div><span id="stat-fragrances" style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Fragrances</small></div>
+        <div><span id="stat-houses" style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Houses</small></div>
       </div>
     </div>
 
@@ -73,6 +71,9 @@
 <script src="auth.js"></script>
 <script src="reviews.js"></script>
 <script>
+  document.getElementById('stat-fragrances').textContent = PERFUMES.length + '+';
+  document.getElementById('stat-houses').textContent = HOUSES.length + '+';
+
   document.getElementById('grid').innerHTML = PERFUMES.filter(p=>!p.dupeOf).slice(0,8).map((p,i)=>pcardHTML(p,i)).join('');
   document.getElementById('dupegrid').innerHTML = PERFUMES.filter(p=>p.dupeOf).slice(0,4).map((p,i)=>pcardHTML(p,i)).join('');
 
