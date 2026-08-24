@@ -58,7 +58,7 @@
           <div class="pdhouse"><a href="house.html?id=${p.houseId}">${houseName(p.houseId)}</a></div>
           <h1 class="pdname">${p.name}${original ? ' <span style="font-size:18px;color:rgba(255,255,255,.8);font-weight:600;display:block;margin-top:8px">— a ' + original.name + ' dupe</span>' : ''}</h1>
           <div class="pdmeta">
-            <span><b>★ ${p.rating}</b> (${p.reviews.toLocaleString()} reviews)</span>
+            <span><b>★ ${p.rating}</b></span>
             <span>${p.year} · ${p.concentration}</span>
             <span>${p.gender}</span>
             ${p.perfumer ? `<span>By ${p.perfumer}</span>` : ''}
@@ -114,15 +114,7 @@
         </div>
         <div class="card">
           <h3>Questions &amp; answers</h3>
-          <div style="padding:13px 0;border-top:1px solid var(--border)">
-            <div style="font-family:var(--disp);font-weight:700;font-size:13px">Does this run true to size on sillage indoors?</div>
-            <div style="font-size:12px;color:var(--ink2);margin-top:5px">Answered by 3 community members</div>
-          </div>
-          <div style="padding:13px 0;border-top:1px solid var(--border)">
-            <div style="font-family:var(--disp);font-weight:700;font-size:13px">Best season to wear ${p.name}?</div>
-            <div style="font-size:12px;color:var(--ink2);margin-top:5px">Answered by 7 community members</div>
-          </div>
-          <a class="btn ghost block" style="margin-top:16px">Ask a question</a>
+          <div style="padding:13px 0;font-size:13px;color:var(--muted)">No questions yet for ${p.name} — Q&amp;A is coming soon to ParfAI.</div>
         </div>
       </section>
     `;

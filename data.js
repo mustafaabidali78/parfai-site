@@ -677,11 +677,10 @@ function renderNav(active){
             <a class="it" href="explore.html?sort=new"><b>New releases</b><span>Just dropped</span></a>
             <a class="it" href="explore.html?sort=trending"><b>Trending</b><span>Hot right now</span></a>
             <a class="it" href="explore.html?tier=Affordable"><b>Best value</b><span>Big scent, small price</span></a></div>
-          <div><div class="colhead">AI tools</div>
+          <div><div class="colhead">Smart tools</div>
             <a class="it" href="dupe-finder.html"><b>Dupe Finder</b><span>Affordable alternatives</span></a>
-            <a class="it" href="explore.html"><b>Find My Scent</b><span>Describe it, AI picks</span></a>
-            <a class="it" href="pricing.html"><b>Scent DNA</b><span>Your scent personality</span></a>
-            <a class="it" href="pricing.html"><b>Gift Finder</b><span>The perfect present</span></a></div>
+            <a class="it" href="explore.html"><b>Find My Scent</b><span>Filter by family, note &amp; more</span></a>
+            <a class="it" href="explore.html"><b>Scent DNA</b><span>Any fragrance's note fingerprint</span></a></div>
         </div></div>
       </span>
       <span class="megawrap"><span class="menu">Houses <span class="car">▾</span></span>
