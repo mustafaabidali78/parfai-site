@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="pgtitle">Note — ParfAI</title>
+<link rel="stylesheet" href="parfai.css?v=202608251718">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap" id="content"></div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js?v=202608251718"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script>
+  const n = qs('n');
+  const content = document.getElementById('content');
+  const img = (typeof NOTE_IMAGE==='object' && n) ? NOTE_IMAGE[n] : null;
+  const desc = (typeof noteDescription==='function' && n) ? noteDescription(n) : '';
+  const exists = n && PERFUMES.some(p => perfumeAllNotes(p).includes(n));
+
+  if (!exists){
+    content.innerHTML = `<div class="doc"><h1>Note not found</h1><p>We don't have that one catalogued yet.</p><a class="btn" href="notes.html">← Back to Browse by note</a></div>`;
+  } else {
+    document.getElementById('pgtitle').textContent = `${n} — ParfAI`;
+    const category = noteCategory(n);
+    const catIndex = NOTE_CATEGORY_ORDER.indexOf(category);
+    const bgGrad = gr(catIndex >= 0 ? catIndex : 0);
+    const perfumes = PERFUMES.filter(p => perfumeAllNotes(p).includes(n)).sort((a,b) => b.rating - a.rating);
+
+    content.innerHTML = `
+      <div class="crumb"><a href="notes.html">Browse by note</a> / ${n}</div>
+
+      <div class="pdhero" style="background:${bgGrad}">
+        <div class="pdimg">
+          ${img ? `<img class="notephoto" src="${wikiThumb(img.url, 440)}" alt="${n}" loading="lazy" onerror="this.remove()">` : `<div class="bottle" style="width:120px;height:120px;border-radius:50%"></div>`}
+        </div>
+        <div>
+          <div class="pdhouse">${category.toUpperCase()}</div>
+          <h1 class="pdname">${n}</h1>
+          <div class="pdmeta"><span><b>${perfumes.length}</b> fragrance${perfumes.length===1?'':'s'} on ParfAI</span></div>
+          <div class="pddesc">${desc || `A ${category.toLowerCase()} note used across the catalog — a full description is on the way.`}</div>
+          ${img ? `<div class="disclose">Photo: ${img.author ? `${img.author} · ` : ''}${img.license} · <a href="${img.page}" target="_blank" rel="noopener" style="color:inherit">Wikimedia Commons ↗</a></div>` : ''}
+        </div>
+      </div>
+
+      <section style="margin-top:40px">
+        <div class="shead"><h2>Fragrances with ${n}</h2><a href="notes.html?n=${encodeURIComponent(n)}">Filter by ${n} →</a></div>
+        <div class="grid">${perfumes.length ? perfumes.map((p,i)=>pcardHTML(p,i)).join('') : `<div style="grid-column:1/-1;color:var(--muted);padding:20px 0">No fragrances in the catalog carry this note yet.</div>`}</div>
+      </section>
+    `;
+  }
+</script>
+</body>
+</html>

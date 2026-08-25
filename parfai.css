@@ -125,6 +125,7 @@ select.chip,.chip-select{font-family:var(--body);font-weight:600;font-size:13px;
 .pdimg{height:280px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .pdimg .bottle{width:74px;height:130px;border-radius:14px 14px 20px 20px;background:rgba(255,255,255,.42);border:2px solid rgba(255,255,255,.75);position:relative;z-index:1}
 .pdimg .realphoto{max-height:88%;max-width:72%;object-fit:contain;filter:drop-shadow(0 14px 26px rgba(0,0,0,.3));position:relative;z-index:1}
+.pdimg .notephoto{width:220px;height:220px;border-radius:26px;object-fit:cover;box-shadow:0 16px 34px rgba(0,0,0,.3);position:relative;z-index:1}
 .crumb{font-size:13px;color:var(--muted);margin:26px 0 6px}
 .crumb a:hover{color:var(--violet)}
 .pdhouse{font-family:var(--body);font-weight:700;font-size:13px;letter-spacing:.4px;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.2);display:inline-block;padding:7px 15px;border-radius:100px;margin-bottom:16px}
@@ -176,6 +177,16 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 .pickchip.active{background:var(--irid);border-color:transparent;color:#fff}
 .pickchip.active .nphoto{box-shadow:0 0 0 1px rgba(255,255,255,.7)}
 .notesearch{margin-bottom:22px}
+
+/* ---- note library (notes.html): a browsable, photo-led knowledge
+   section, separate from the filter chips below it ---- */
+.notelib{margin:36px 0 48px}
+.libgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;margin-top:20px}
+.libcard{display:block;background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.libcard:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(20,20,20,.09);border-color:var(--violet)}
+.libcard img{width:100%;height:104px;object-fit:cover;display:block;background:var(--bg)}
+.libcard .libname{font-weight:700;font-size:13px;padding:11px 12px 2px}
+.libcard .libcat{font-size:10.5px;color:var(--muted);padding:0 12px 12px;text-transform:uppercase;letter-spacing:.4px}
 .ratingbars{display:flex;gap:26px;flex-wrap:wrap;margin:24px 0}
 .ratingbar b{display:block;font-family:var(--disp);font-weight:700;font-size:13px;margin-bottom:6px}
 .rbtrack{width:140px;height:6px;background:var(--border);border-radius:99px;overflow:hidden}

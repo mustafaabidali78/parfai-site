@@ -610,6 +610,64 @@ function noteIcon(n){
   return `<img class="nphoto" src="${wikiThumb(img.url, 48)}" alt="" width="18" height="18" loading="lazy" onerror="this.remove()">`;
 }
 
+/* ---------- note descriptions: a short, plain-language primer for each
+   photographed note — what it smells like and where it shows up — used by
+   the "Know your notes" library on notes.html and each note's own page
+   (note.html?n=...). Scoped to the same notes as NOTE_IMAGE for now, since
+   a card in that library always has a photo. ---------- */
+const NOTE_DESC = {
+  'Vanilla':'Warm, sweet and creamy with a soft powdery edge — one of the most-used base notes, prized for rounding out sharper accords.',
+  'Musk':'A soft, skin-like warmth with a faintly animalic depth. Modern musks are synthetic, added to a fragrance\'s base for sensuality and lasting power.',
+  'Jasmine':'An intensely heady white floral, sweet and slightly narcotic. One of perfumery\'s most prized heart notes, especially the Grasse and Sambac varieties.',
+  'Sandalwood':'A soft, creamy, milky wood with a faint natural sweetness. Long prized — especially Mysore sandalwood — for the velvety base it lends a composition.',
+  'Bergamot':'A bright, zesty citrus with a subtle floral bitterness. The signature opening note of colognes (and of Earl Grey tea), grown mainly in Calabria, Italy.',
+  'Vetiver':'An earthy, smoky root with green, woody facets. A backbone of masculine fragrances, giving grounding depth to a composition\'s base.',
+  'Patchouli':'A dark, earthy leaf note with chocolatey, camphorous undertones. At home equally in bohemian 1970s-style scents and modern chypres.',
+  'Rose':'The classic floral — sweet, dewy and slightly spicy, ranging from jammy Turkish rose to the greener, tea-like Bulgarian varieties.',
+  'Amber':'A warm, resinous, honeyed accord — not a single raw material, but a blend built from labdanum, benzoin and vanilla. Instantly recognizable as cozy and sweet.',
+  'Lavender':'Fresh and herbaceous with a camphorous edge and a hint of sweetness. A fougère staple, pairing barbershop freshness with a calming, aromatic quality.',
+  'Cedar':'A dry, pencil-shavings wood note, clean and slightly sharp. A workhorse base note that adds structure without heaviness.',
+  'Grapefruit':'A tart, bittersweet citrus with a slightly bitter pith facet. Gives fragrances a modern, sparkling, energetic opening.',
+  'Tonka Bean':'Sweet, warm and hay-like, with a hint of almond and vanilla. A gourmand base note beloved for its soft, cozy sweetness.',
+  'Lemon':'Sharp, juicy and unmistakably fresh. The brightest of the citrus top notes — it evaporates quickly but leaves instant sparkle.',
+  'Orange Blossom':'The delicate, honeyed flower of the bitter orange tree — softer and less indolic than neroli, with a warm, sunny sweetness.',
+  'Pear':'A crisp, juicy fruit note with a soft, slightly green sweetness. Lends fragrances a fresh, modern fruitiness without excess sugar.',
+  'Apple':'Crisp and green, or sweet and red, depending on the accord. A familiar, approachable fruit note common in fresh, youthful compositions.',
+  'Cardamom':'A warm, spicy-green seed with a camphorous, faintly citrus edge. Adds an exotic lift to both gourmand and woody fragrances.',
+  'Geranium':'Green, rosy and minty all at once. Often used as an affordable, herbal echo of rose in the heart of a fragrance.',
+  'Pink Pepper':'A light, fruity-spicy berry (not a true pepper). Adds a sparkling, slightly rosy tingle to modern fragrance openings.',
+  'Ambergris':'A rare, prized marine material historically from sperm whales, now almost always replaced by synthetics — salty, warm and softly animalic.',
+  'Cinnamon':'Warm, sweet-spicy bark with a slight woody bite. Brings cozy, gourmand warmth to oriental and holiday-style compositions.',
+  'Incense':'Resinous and smoky with a churchlike, meditative quality. Usually built from frankincense or myrrh, lending mystery and depth.',
+  'Iris':'Powdery, cool and faintly carroty, drawn from the dried root (orris) of the iris flower. One of perfumery\'s most luxurious raw materials.',
+  'Saffron':'A leathery, slightly medicinal spice with a dry warmth. Used sparingly to add an exotic, luxurious edge to oriental fragrances.',
+  'Amberwood':'A modern accord pairing amber\'s warmth with a smooth woody backbone. Common in contemporary unisex and masculine scents.',
+  'Mandarin':'Sweeter and softer than orange, with a slightly green, zesty rind character. A gentle, approachable citrus opening.',
+  'Mint':'Cool, sharp and immediately refreshing. Used in small doses to add a crisp, invigorating edge to citrus and aromatic openings.',
+  'Neroli':'The bitter orange blossom in its brighter, greener form — fresh, slightly bitter and honeyed. A classic eau de cologne note.',
+  'Pepper':'A dry, sharp spice with a warming bite. Black pepper especially adds an energetic, slightly smoky kick to an opening.',
+  'Praline':'A sweet, toasted, nutty-caramel gourmand note. Brings a dessert-like richness to sweet, indulgent compositions.',
+  'Sage':'Herbal, slightly peppery and faintly medicinal. Adds an aromatic, savory green facet to fougères and woody blends.',
+  'Ambroxan':'A clean, dry, mineral-amber facet derived from ambergris chemistry. A modern staple prized for its diffusive, skin-like warmth.',
+  'Black Currant':'A tart, sharp berry note with a green, almost catty facet. A signature opening in many modern fruity-chypre fragrances.',
+  'Blackcurrant':'A tart, sharp berry note with a green, almost catty facet. A signature opening in many modern fruity-chypre fragrances.',
+  'Coffee':'Roasted, dark and bittersweet. A bold gourmand note that adds richness and a jolt of modernity to oriental compositions.',
+  'Ginger':'Warm, spicy and slightly citrusy with a peppery bite. Adds a zesty, energizing spark to fresh and oriental blends alike.',
+  'Leather':'A dry, smoky, slightly animalic accord evoking tanned hide — ranging from soft suede to birch-tar harshness depending on the composition.',
+  'Oud':'A dark, smoky, intensely complex wood from resin-infected agarwood. One of perfumery\'s most prized — and expensive — raw materials.',
+  'Peony':'A soft, dewy, slightly rosy-fruity floral. Peonies have little natural scent, so "peony" accords are built to feel fresh, romantic and youthful.',
+  'Rosemary':'Sharp, herbal and faintly camphorous. A classic aromatic note that adds a savory, invigorating green edge.',
+  'Tobacco':'Rich, sweet and slightly fermented with a dried-leaf warmth. Lends fragrances an old-world, smoky-sweet sophistication.',
+  'Ylang-Ylang':'A heady, creamy tropical flower with banana- and custard-like facets. A key note in classic florals like Chanel No. 5.',
+  'Apricot':'A soft, velvety stone fruit note with a gentle sweetness. Adds a warm, sun-ripened fruitiness without being sharp.',
+  'Benzoin':'A sweet, vanilla-like resin with a soft balsamic warmth. A classic amber-family base note that adds cozy depth.',
+  'Birch':'A smoky, slightly tarry wood note with a leathery edge. Historically used (as birch tar) to give leather accords their rugged character.',
+  'Bitter Almond':'A marzipan-like, slightly bitter nutty note. Brings a soft, gourmand sweetness reminiscent of cherry stones.',
+  'Calabrian Bergamot':'Bergamot specifically from Calabria, Italy — considered the finest source, with an especially bright, refined citrus character.',
+  'Cashmere Wood':'A soft, smooth, modern woody accord designed to feel the way cashmere fabric feels — warm and comforting rather than sharp.',
+};
+function noteDescription(n){ return NOTE_DESC[n] || ''; }
+
 function pcardHTML(p, i){
   const g = famColor(p.family);
   const dupeBadge = p.dupeOf ? `<span class="dupe">DUPE</span>` : '';
