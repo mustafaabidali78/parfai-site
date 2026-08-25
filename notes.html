@@ -128,9 +128,18 @@
     const wasSelected = selected.has(n);
     wasSelected ? selected.delete(n) : selected.add(n);
     renderAll(document.getElementById('notesearch').value);
-    // picking a note should surface its matches right away, not require a manual scroll
+    // picking a note should surface its matches right away, not require a manual scroll.
+    // NOTE: the page sets html{scroll-behavior:smooth} globally, and in some browsers that
+    // silently swallows a scrollIntoView() call fired from inside a click handler (the CSS
+    // smooth-scroll animation never runs, so nothing moves at all) — even passing
+    // behavior:'auto' explicitly doesn't override it. Toggling the CSS property off for the
+    // instant of the call sidesteps that entirely.
     if (!wasSelected){
-      document.getElementById('results').scrollIntoView({ behavior:'smooth', block:'start' });
+      const results = document.getElementById('results');
+      const prevBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      results.scrollIntoView({ block: 'start' });
+      document.documentElement.style.scrollBehavior = prevBehavior;
     }
   });
 
