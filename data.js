@@ -599,10 +599,19 @@ const NOTE_IMAGE = {
 // far too heavy for a 20px chip icon. Its thumbnail service generates a
 // resized JPEG on the fly from a predictable URL shape, so request a small
 // one instead of shipping megabytes of image data for a tiny circle.
+// Confirmed live (2026-08-25): a direct/hotlinked request to Wikimedia's
+// thumbnail endpoint for an arbitrary width (e.g. .../240px-Foo.jpg) comes
+// back as an HTTP 400 "Use thumbnail sizes listed on https://w.wiki/GHai" —
+// unlike the PHP-mediated InstantCommons/imageinfo path, direct hotlinking
+// is restricted to a fixed set of widths and does NOT get silently rounded
+// up. This is what made every note photo on the live site fail at once.
+// Snap the requested width up to the nearest size Wikimedia actually serves.
+const WIKI_THUMB_STEPS = [20, 40, 60, 120, 250, 330, 500, 960, 1280, 1920, 3840];
 function wikiThumb(url, px){
   const m = url.match(/^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/(\w\/\w\w)\/(.+)$/);
   if (!m) return url;
-  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m[1]}/${m[2]}/${px}px-${m[2]}`;
+  const step = WIKI_THUMB_STEPS.find(s => s >= px) || WIKI_THUMB_STEPS[WIKI_THUMB_STEPS.length - 1];
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m[1]}/${m[2]}/${step}px-${m[2]}`;
 }
 function noteIcon(n){
   const img = NOTE_IMAGE[n];
