@@ -36,7 +36,7 @@
 
   <div class="notecats" id="notecats"></div>
 
-  <section style="margin-top:40px">
+  <section style="margin-top:40px;scroll-margin-top:96px" id="results">
     <div class="resultcount" id="count"></div>
     <div class="grid" id="grid"></div>
   </section>
@@ -125,8 +125,13 @@
     const chip = e.target.closest('.pickchip');
     if (!chip) return;
     const n = chip.dataset.note;
-    selected.has(n) ? selected.delete(n) : selected.add(n);
+    const wasSelected = selected.has(n);
+    wasSelected ? selected.delete(n) : selected.add(n);
     renderAll(document.getElementById('notesearch').value);
+    // picking a note should surface its matches right away, not require a manual scroll
+    if (!wasSelected){
+      document.getElementById('results').scrollIntoView({ behavior:'smooth', block:'start' });
+    }
   });
 
   document.getElementById('selectedbar').addEventListener('click', e => {
