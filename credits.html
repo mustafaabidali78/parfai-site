@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Photo credits — ParfAI</title>
+<link rel="stylesheet" href="parfai.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+<nav id="nav-slot"></nav>
+<div class="wrap"><div class="doc" style="max-width:900px">
+  <h1>Photo credits</h1>
+  <p>The photo shown next to each note on <a href="notes.html" style="color:var(--violet)">Browse by note</a> and on a fragrance's notes pyramid is a real photograph, sourced from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener" style="color:var(--violet)">Wikimedia Commons</a> under a free license. Coverage currently spans the most-used notes in the catalog and is growing over time. Every image below is credited to its photographer and license as required; where a license doesn't require attribution (CC0 / public domain), we still link back to the source.</p>
+  <div class="creditgrid" id="creditgrid"></div>
+</div></div>
+<div id="footer-slot"></div>
+<script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script>
+  // NOTE_IMAGE may map two note-name spellings to the same Commons file
+  // (e.g. "Black Currant" / "Blackcurrant") — dedupe by source URL so the
+  // same photo isn't credited twice.
+  const seen = new Set();
+  const rows = typeof NOTE_IMAGE === 'object'
+    ? Object.entries(NOTE_IMAGE).filter(([, info]) => {
+        if (seen.has(info.url)) return false;
+        seen.add(info.url);
+        return true;
+      }).sort((a, b) => a[0].localeCompare(b[0]))
+    : [];
+  document.getElementById('creditgrid').innerHTML = rows.length
+    ? rows.map(([name, info]) => `
+      <div class="creditcard">
+        <img src="${typeof wikiThumb === 'function' ? wikiThumb(info.url, 88) : info.url}" alt="" loading="lazy" onerror="this.remove()">
+        <div class="cbody">
+          <div class="cname">${name}</div>
+          <div class="cmeta">${info.author ? `${info.author} · ` : ''}${info.license}<br><a href="${info.page}" target="_blank" rel="noopener">Source on Wikimedia Commons ↗</a></div>
+        </div>
+      </div>`).join('')
+    : `<p style="color:var(--muted)">Photo credits will appear here once loaded.</p>`;
+</script>
+</body>
+</html>

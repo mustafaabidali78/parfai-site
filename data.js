@@ -534,26 +534,80 @@ const NOTE_CATEGORY_MAP = {
 };
 function noteCategory(n){ return NOTE_CATEGORY_MAP[n] || 'Other'; }
 
-/* ---------- note icons: one small line-icon per family, so a note chip
-   reads at a glance instead of relying on the word alone ---------- */
-const CATEGORY_ICON = {
-  'Citrus':`<circle cx="8" cy="8" r="6"/><line x1="8" y1="8" x2="8" y2="2.3"/><line x1="8" y1="8" x2="12.7" y2="10.7"/><line x1="8" y1="8" x2="3.3" y2="10.7"/>`,
-  'Floral':`<circle cx="8" cy="3.8" r="2.3"/><circle cx="12" cy="6.7" r="2.3"/><circle cx="10.5" cy="11.8" r="2.3"/><circle cx="5.5" cy="11.8" r="2.3"/><circle cx="4" cy="6.7" r="2.3"/><circle cx="8" cy="8" r="1.6" fill="currentColor" stroke="none"/>`,
-  'Fruity':`<circle cx="8" cy="9.5" r="5"/><line x1="8" y1="4.5" x2="8.6" y2="2.2"/><ellipse cx="10.2" cy="2.6" rx="1.6" ry="0.9" transform="rotate(30 10.2 2.6)"/>`,
-  'Green & Aromatic':`<ellipse cx="8" cy="8" rx="5.6" ry="2.6" transform="rotate(-40 8 8)"/><line x1="4.2" y1="10.8" x2="11.8" y2="5.2"/>`,
-  'Spicy':`<circle cx="5" cy="6" r="1.7" fill="currentColor" stroke="none"/><circle cx="10.3" cy="5" r="2.1" fill="currentColor" stroke="none"/><circle cx="8.3" cy="10.5" r="1.9" fill="currentColor" stroke="none"/>`,
-  'Woody':`<circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="3.6"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/>`,
-  'Amber & Resin':`<path d="M8 2.3 C10.6 5.8 12.5 8.4 12.5 10.6 A4.5 4.5 0 0 1 3.5 10.6 C3.5 8.4 5.4 5.8 8 2.3 Z"/>`,
-  'Gourmand & Sweet':`<circle cx="8" cy="8" r="6"/><circle cx="6" cy="6.3" r="1" fill="currentColor" stroke="none"/><circle cx="10.3" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="7.5" cy="10.6" r="1" fill="currentColor" stroke="none"/><circle cx="10.5" cy="10.8" r=".85" fill="currentColor" stroke="none"/>`,
-  'Musk & Animalic':`<ellipse cx="8" cy="10.6" rx="3.6" ry="2.9"/><circle cx="4.2" cy="5.4" r="1.5"/><circle cx="8" cy="3.8" r="1.5"/><circle cx="11.8" cy="5.4" r="1.5"/>`,
-  'Leather & Tobacco':`<rect x="3.2" y="3.2" width="9.6" height="9.6" rx="2.2" transform="rotate(45 8 8)"/><line x1="8" y1="4" x2="8" y2="12" stroke-dasharray="1.4 1.4"/>`,
-  'Marine & Mineral':`<path d="M1.5 6.3 Q4.5 3.3 7.5 6.3 T13.5 6.3"/><path d="M1.5 10.3 Q4.5 7.3 7.5 10.3 T13.5 10.3"/>`,
-  'Earthy':`<polygon points="8,2.5 12.5,5.2 12.5,10.8 8,13.5 3.5,10.8 3.5,5.2"/>`,
-  'Other':`<path d="M8 2 L9.3 6.7 L14 8 L9.3 9.3 L8 14 L6.7 9.3 L2 8 L6.7 6.7 Z"/>`,
+/* ---------- note photos: a real photo per note, not an abstract family
+   icon — an earlier pass shipped hand-drawn family-level line icons
+   (one per NOTE_CATEGORY, e.g. every floral note got the same flower
+   glyph) and that was explicitly rejected as not showing the actual
+   note. This replaces it with real photographs sourced from Wikimedia
+   Commons under free licenses, mapped per exact note name. Coverage
+   starts with the ~50 most-used notes across the catalog (by design —
+   see credits.html for the full source list) and will grow toward all
+   notes over time; a note with no mapped photo renders no icon at all
+   rather than falling back to a generic/abstract stand-in. */
+const NOTE_IMAGE = {
+  'Vanilla':{url:'https://upload.wikimedia.org/wikipedia/commons/8/8e/Vanilla_planifolia_cluster_of_green_pods.JPG',page:'https://commons.wikimedia.org/wiki/File:Vanilla_planifolia_cluster_of_green_pods.JPG',license:'CC BY-SA 3.0',author:'B.navez'},
+  'Musk':{url:'https://upload.wikimedia.org/wikipedia/commons/3/32/Fruits_and_seeds_of_Abelmoschus_moschatus.jpg',page:'https://commons.wikimedia.org/wiki/File:Fruits_and_seeds_of_Abelmoschus_moschatus.jpg',license:'CC BY 4.0',author:'M108t'},
+  'Jasmine':{url:'https://upload.wikimedia.org/wikipedia/commons/8/8e/Jasmine_(Jasminum_sambac).jpg',page:'https://commons.wikimedia.org/wiki/File:Jasmine_(Jasminum_sambac).jpg',license:'CC BY-SA 3.0',author:'Mokkie'},
+  'Sandalwood':{url:'https://upload.wikimedia.org/wikipedia/commons/2/2d/White_Sandal_Wood_001.jpg',page:'https://commons.wikimedia.org/wiki/File:White_Sandal_Wood_001.jpg',license:'CC BY-SA 3.0',author:'Jacopo188'},
+  'Bergamot':{url:'https://upload.wikimedia.org/wikipedia/commons/9/97/Citrus_bergamia_-_Bergamot.jpg',page:'https://commons.wikimedia.org/wiki/File:Citrus_bergamia_-_Bergamot.jpg',license:'CC BY-SA 3.0',author:'James Steakley'},
+  'Vetiver':{url:'https://upload.wikimedia.org/wikipedia/commons/2/23/Vetiveria_zizanoides_dsc07810.jpg',page:'https://commons.wikimedia.org/wiki/File:Vetiveria_zizanoides_dsc07810.jpg',license:'CC BY-SA 3.0',author:'David Monniaux'},
+  'Patchouli':{url:'https://upload.wikimedia.org/wikipedia/commons/1/17/Pogostemon_cablin_001.jpg',page:'https://commons.wikimedia.org/wiki/File:Pogostemon_cablin_001.jpg',license:'CC BY-SA 3.0',author:'Valérie75'},
+  'Rose':{url:'https://upload.wikimedia.org/wikipedia/commons/2/28/Red_rose.jpg',page:'https://commons.wikimedia.org/wiki/File:Red_rose.jpg',license:'Public domain',author:null},
+  'Amber':{url:'https://upload.wikimedia.org/wikipedia/commons/b/be/Cistus_ladanifer_maculatus.JPG',page:'https://commons.wikimedia.org/wiki/File:Cistus_ladanifer_maculatus.JPG',license:'Public domain',author:null},
+  'Lavender':{url:'https://upload.wikimedia.org/wikipedia/commons/f/fe/Lavender_Flower_Closeup_2.jpg',page:'https://commons.wikimedia.org/wiki/File:Lavender_Flower_Closeup_2.jpg',license:'CC0',author:null},
+  'Cedar':{url:'https://upload.wikimedia.org/wikipedia/commons/2/28/City_of_London_Cemetery_and_Crematorium_~_cedar_branch_and_cone.jpg',page:'https://commons.wikimedia.org/wiki/File:City_of_London_Cemetery_and_Crematorium_~_cedar_branch_and_cone.jpg',license:'CC BY-SA 4.0',author:'Acabashi'},
+  'Grapefruit':{url:'https://upload.wikimedia.org/wikipedia/commons/d/d0/Citrus_paradisi_(Grapefruit,_pink)_white_bg.jpg',page:'https://commons.wikimedia.org/wiki/File:Citrus_paradisi_(Grapefruit,_pink)_white_bg.jpg',license:'CC BY-SA 2.5',author:'א (Aleph); derivative work by Raeky'},
+  'Tonka Bean':{url:'https://upload.wikimedia.org/wikipedia/commons/8/81/Fava_Tonka%2C_cumaru_02.jpg',page:'https://commons.wikimedia.org/wiki/File:Fava_Tonka,_cumaru_02.jpg',license:'CC BY-SA 4.0',author:'Carlo Brescia'},
+  'Lemon':{url:'https://upload.wikimedia.org/wikipedia/commons/f/f8/Whole-Lemon.jpg',page:'https://commons.wikimedia.org/wiki/File:Whole-Lemon.jpg',license:'CC0',author:null},
+  'Orange Blossom':{url:'https://upload.wikimedia.org/wikipedia/commons/b/bd/Orange_Blossom.JPG',page:'https://commons.wikimedia.org/wiki/File:Orange_Blossom.JPG',license:'CC BY 3.0',author:'Alexander Hardin'},
+  'Pear':{url:'https://upload.wikimedia.org/wikipedia/commons/2/2f/Forelle_pear.jpg',page:'https://commons.wikimedia.org/wiki/File:Forelle_pear.jpg',license:'CC BY-SA 4.0',author:'Rhododendrites'},
+  'Apple':{url:'https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg',page:'https://commons.wikimedia.org/wiki/File:Red_Apple.jpg',license:'CC BY 2.0',author:'Abhijit Tembhekar'},
+  'Cardamom':{url:'https://upload.wikimedia.org/wikipedia/commons/6/64/Cardomom_pods.jpg',page:'https://commons.wikimedia.org/wiki/File:Cardomom_pods.jpg',license:'CC BY-SA 3.0',author:'Quadell'},
+  'Geranium':{url:'https://upload.wikimedia.org/wikipedia/commons/8/82/Pelargonium_graveolens_2.jpg',page:'https://commons.wikimedia.org/wiki/File:Pelargonium_graveolens_2.jpg',license:'CC BY-SA 2.5',author:'Eric Hunt'},
+  'Pink Pepper':{url:'https://upload.wikimedia.org/wikipedia/commons/7/7e/Fruto_de_Schinus_molle.JPG',page:'https://commons.wikimedia.org/wiki/File:Fruto_de_Schinus_molle.JPG',license:'CC BY-SA 4.0',author:'Cristofor Ferrandis'},
+  'Ambergris':{url:'https://upload.wikimedia.org/wikipedia/commons/2/2a/Ambergris,_Skagway_Museum.JPG',page:'https://commons.wikimedia.org/wiki/File:Ambergris,_Skagway_Museum.JPG',license:'CC0',author:null},
+  'Cinnamon':{url:'https://upload.wikimedia.org/wikipedia/commons/7/76/Cassia_bark_-_(1).jpg',page:'https://commons.wikimedia.org/wiki/File:Cassia_bark_-_(1).jpg',license:'CC BY 2.0',author:'trophygeek (via Flickr)'},
+  'Incense':{url:'https://upload.wikimedia.org/wikipedia/commons/1/14/Frankincense_2005-12-31.jpg',page:'https://commons.wikimedia.org/wiki/File:Frankincense_2005-12-31.jpg',license:'Public domain',author:'snotch'},
+  'Iris':{url:'https://upload.wikimedia.org/wikipedia/commons/7/76/Purple_iris_flower.JPG',page:'https://commons.wikimedia.org/wiki/File:Purple_iris_flower.JPG',license:'CC BY-SA 4.0',author:'Oleg Yunakov'},
+  'Saffron':{url:'https://upload.wikimedia.org/wikipedia/commons/2/21/Crocus_sativus_-_Saffron_crocus_-_Safran_02.JPG',page:'https://commons.wikimedia.org/wiki/File:Crocus_sativus_-_Saffron_crocus_-_Safran_02.JPG',license:'CC BY-SA 4.0',author:'Zeynel Cebeci'},
+  'Amberwood':{url:'https://upload.wikimedia.org/wikipedia/commons/2/2d/White_Sandal_Wood_001.jpg',page:'https://commons.wikimedia.org/wiki/File:White_Sandal_Wood_001.jpg',license:'CC BY-SA 3.0',author:'Jacopo188'},
+  'Mandarin':{url:'https://upload.wikimedia.org/wikipedia/commons/4/49/Mandarin_Oranges_(Citrus_Reticulata).jpg',page:'https://commons.wikimedia.org/wiki/File:Mandarin_Oranges_(Citrus_Reticulata).jpg',license:'CC BY-SA 3.0',author:'Joe Ravi'},
+  'Mint':{url:'https://upload.wikimedia.org/wikipedia/commons/7/7f/CSA-Chocolate-Mint.jpg',page:'https://commons.wikimedia.org/wiki/File:CSA-Chocolate-Mint.jpg',license:'Public domain',author:null},
+  'Neroli':{url:'https://upload.wikimedia.org/wikipedia/commons/9/9d/Bitter_orange_-_Citrus_aurantium_01.JPG',page:'https://commons.wikimedia.org/wiki/File:Bitter_orange_-_Citrus_aurantium_01.JPG',license:'CC BY-SA 4.0',author:'Zeynel Cebeci'},
+  'Pepper':{url:'https://upload.wikimedia.org/wikipedia/commons/c/c8/Black_Peppercorns.jpg',page:'https://commons.wikimedia.org/wiki/File:Black_Peppercorns.jpg',license:'CC BY-SA 4.0',author:'Xitop753'},
+  'Praline':{url:'https://upload.wikimedia.org/wikipedia/commons/b/b2/Lindt_Pralines_Classic.jpg',page:'https://commons.wikimedia.org/wiki/File:Lindt_Pralines_Classic.jpg',license:'Public domain',author:null},
+  'Sage':{url:'https://upload.wikimedia.org/wikipedia/commons/3/39/Sage_-_Salvia_officinalis.jpg',page:'https://commons.wikimedia.org/wiki/File:Sage_-_Salvia_officinalis.jpg',license:'CC BY-SA 3.0',author:'Takkk'},
+  'Ambroxan':{url:'https://upload.wikimedia.org/wikipedia/commons/5/53/Labdanum_fest.jpg',page:'https://commons.wikimedia.org/wiki/File:Labdanum_fest.jpg',license:'Public domain',author:null},
+  'Black Currant':{url:'https://upload.wikimedia.org/wikipedia/commons/d/d2/Black_currant_fruit.jpg',page:'https://commons.wikimedia.org/wiki/File:Black_currant_fruit.jpg',license:'CC0',author:null},
+  'Blackcurrant':{url:'https://upload.wikimedia.org/wikipedia/commons/d/d2/Black_currant_fruit.jpg',page:'https://commons.wikimedia.org/wiki/File:Black_currant_fruit.jpg',license:'CC0',author:null},
+  'Coffee':{url:'https://upload.wikimedia.org/wikipedia/commons/c/c5/Roasted_coffee_beans.jpg',page:'https://commons.wikimedia.org/wiki/File:Roasted_coffee_beans.jpg',license:'Public domain',author:null},
+  'Ginger':{url:'https://upload.wikimedia.org/wikipedia/commons/f/fa/Ginger_Root.jpg',page:'https://commons.wikimedia.org/wiki/File:Ginger_Root.jpg',license:'CC BY-SA 4.0',author:'Sanjay Acharya'},
+  'Leather':{url:'https://upload.wikimedia.org/wikipedia/commons/b/b2/Leather.jpg',page:'https://commons.wikimedia.org/wiki/File:Leather.jpg',license:'CC BY-SA 3.0',author:'Tomascastelazo'},
+  'Oud':{url:'https://upload.wikimedia.org/wikipedia/commons/9/94/Agarwood_top_grade.jpg',page:'https://commons.wikimedia.org/wiki/File:Agarwood_top_grade.jpg',license:'CC BY-SA 3.0',author:'Hafizmuar'},
+  'Peony':{url:'https://upload.wikimedia.org/wikipedia/commons/b/b2/Pink_Peony_Flower.jpg',page:'https://commons.wikimedia.org/wiki/File:Pink_Peony_Flower.jpg',license:'CC0',author:null},
+  'Rosemary':{url:'https://upload.wikimedia.org/wikipedia/commons/2/2e/Rosmarinus_officinalis_g1.jpg',page:'https://commons.wikimedia.org/wiki/File:Rosmarinus_officinalis_g1.jpg',license:'CC BY-SA 3.0',author:'Giancarlo Dessì'},
+  'Tobacco':{url:'https://upload.wikimedia.org/wikipedia/commons/3/31/P1000483_Nicotiana_tabacum_(tobacco)_(Solanaceae)_Leaf.JPG',page:'https://commons.wikimedia.org/wiki/File:P1000483_Nicotiana_tabacum_(tobacco)_(Solanaceae)_Leaf.JPG',license:'CC BY-SA 3.0',author:'Magnus Manske'},
+  'Ylang-Ylang':{url:'https://upload.wikimedia.org/wikipedia/commons/f/f4/Cananga_odorata_02.JPG',page:'https://commons.wikimedia.org/wiki/File:Cananga_odorata_02.JPG',license:'CC BY-SA 3.0',author:'Prenn'},
+  'Apricot':{url:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Apricot_fruit.jpg',page:'https://commons.wikimedia.org/wiki/File:Apricot_fruit.jpg',license:'CC BY-SA 3.0',author:'User:Geierunited'},
+  'Benzoin':{url:'https://upload.wikimedia.org/wikipedia/commons/c/c8/Kemenyan_110112-11054_tdp.jpg',page:'https://commons.wikimedia.org/wiki/File:Kemenyan_110112-11054_tdp.jpg',license:'CC BY-SA 3.0',author:'Wibowo Djatmiko (Wie146)'},
+  'Birch':{url:'https://upload.wikimedia.org/wikipedia/commons/6/63/Peeling_birch.jpg',page:'https://commons.wikimedia.org/wiki/File:Peeling_birch.jpg',license:'CC BY 2.0',author:'Sheila Sund'},
+  'Bitter Almond':{url:'https://upload.wikimedia.org/wikipedia/commons/5/5a/Amygdalae_dulcis1.jpg',page:'https://commons.wikimedia.org/wiki/File:Amygdalae_dulcis1.jpg',license:'CC BY-SA 3.0',author:'Tina1'},
+  'Calabrian Bergamot':{url:'https://upload.wikimedia.org/wikipedia/commons/8/87/Bergamot_orange_-_whole_and_slice.jpg',page:'https://commons.wikimedia.org/wiki/File:Bergamot_orange_-_whole_and_slice.jpg',license:'CC BY-SA 4.0',author:'Ivar Leidus'},
+  'Cashmere Wood':{url:'https://upload.wikimedia.org/wikipedia/commons/2/2d/White_Sandal_Wood_001.jpg',page:'https://commons.wikimedia.org/wiki/File:White_Sandal_Wood_001.jpg',license:'CC BY-SA 3.0',author:'Jacopo188'},
 };
+// Wikimedia serves originals at full camera resolution (often 3000px+) —
+// far too heavy for a 20px chip icon. Its thumbnail service generates a
+// resized JPEG on the fly from a predictable URL shape, so request a small
+// one instead of shipping megabytes of image data for a tiny circle.
+function wikiThumb(url, px){
+  const m = url.match(/^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/(\w\/\w\w)\/(.+)$/);
+  if (!m) return url;
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${m[1]}/${m[2]}/${px}px-${m[2]}`;
+}
 function noteIcon(n){
-  const body = CATEGORY_ICON[noteCategory(n)] || CATEGORY_ICON['Other'];
-  return `<svg class="nicon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+  const img = NOTE_IMAGE[n];
+  if (!img) return '';
+  return `<img class="nphoto" src="${wikiThumb(img.url, 48)}" alt="" width="18" height="18" loading="lazy" onerror="this.remove()">`;
 }
 
 function pcardHTML(p, i){
@@ -799,7 +853,7 @@ function renderFooter(){
       <div><b>ParfAI</b><span>The world's first AI perfumer</span></div>
       <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="notes.html">Browse by note</a><a href="houses.html">Houses</a></div>
       <div><b>Community</b><a href="community.html">Reviews</a><a href="community.html">Photo wall</a><a href="community.html">Discussions</a></div>
-      <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="contact.html">Contact</a></div>
+      <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="credits.html">Photo credits</a><a href="contact.html">Contact</a></div>
     </div>
     <div style="margin-top:24px">© 2026 ParfAI · Some links are affiliate links.</div>
   </footer></div>`;
