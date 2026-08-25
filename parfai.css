@@ -1,18 +1,15 @@
 /* ==========================================================================
-   ParfAI — shared design system (Direction B: bold gradient-forward)
-   Used by every page in /site. Light base, huge Unbounded display type,
-   Sora body type, black pill buttons, full-bleed saturated family-color
-   gradients as the dominant motif.
+   ParfAI — shared design system
+   Card grids, product hero, and CTA bands keep the original Direction B
+   full-bleed saturated family-color gradients and black pill buttons.
+   The page-top hero ("Atelier" direction) is a plain panel — no gradient
+   box — set in Fraunces (display) and Inter (body), with a thin rust rule
+   standing in for the old oversized gradient block.
    ========================================================================== */
 
-/* Self-hosted Archivo/Inter stay as an offline-safe fallback behind the
-   Google Fonts Unbounded/Sora request each page's <head> makes — if the
-   network request fails or is blocked, these local files still render. */
-@font-face{font-family:'Archivo';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/archivo-latin-500-normal.woff2') format('woff2')}
-@font-face{font-family:'Archivo';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/archivo-latin-600-normal.woff2') format('woff2')}
-@font-face{font-family:'Archivo';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/archivo-latin-700-normal.woff2') format('woff2')}
-@font-face{font-family:'Archivo';font-style:normal;font-weight:800;font-display:swap;src:url('fonts/archivo-latin-800-normal.woff2') format('woff2')}
-@font-face{font-family:'Archivo';font-style:normal;font-weight:900;font-display:swap;src:url('fonts/archivo-latin-900-normal.woff2') format('woff2')}
+/* Self-hosted Inter stays as an offline-safe fallback behind the Google
+   Fonts Fraunces/Inter request each page's <head> makes — if the network
+   request fails or is blocked, these local files still render. */
 @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/inter-latin-400-normal.woff2') format('woff2')}
 @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/inter-latin-500-normal.woff2') format('woff2')}
 @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/inter-latin-600-normal.woff2') format('woff2')}
@@ -20,9 +17,10 @@
 :root{
   --bg:#FAFAF7;--panel:#FFFFFF;--ink:#141414;--ink2:#4A4A46;--muted:#8A8378;
   --violet:#8B7CFF;--cyan:#00B8D4;--pink:#FF4D9D;--orange:#FF8C42;--mint:#00C48B;
+  --rust:#A85C3B;
   --border:rgba(20,20,20,.09);
   --irid:linear-gradient(120deg,#8B7CFF 0%,#C86BFF 30%,#FF4D9D 62%,#FF8C42 100%);
-  --disp:'Unbounded','Archivo',sans-serif;--body:'Sora','Inter',sans-serif;
+  --disp:'Fraunces','Georgia',serif;--body:'Inter','Helvetica Neue',Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -68,17 +66,17 @@ nav{position:sticky;top:0;z-index:40;background:rgba(250,250,247,.82);backdrop-f
 /* ---- logo mark (inline, reused in every page's <a class="logo">) ---- */
 .logomark{display:block}
 
-/* ---- hero: full-bleed saturated gradient panel, white display type ---- */
-.hero{position:relative;text-align:center;padding:88px 40px 96px;margin:22px 0 0;border-radius:32px;overflow:hidden;background:var(--irid);color:#fff;isolation:isolate}
-.hero:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 60% 50% at 78% 8%,rgba(255,255,255,.28),transparent 60%)}
-.hero .k{font-family:var(--body);font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.88);margin-bottom:18px}
-.hero h1{font-family:var(--disp);font-weight:900;font-size:70px;line-height:.97;letter-spacing:-.02em;max-width:880px;margin:0 auto;color:#fff;text-shadow:0 8px 40px rgba(0,0,0,.18)}
-.hero .g{background:none;-webkit-background-clip:initial;background-clip:initial;color:#fff}
-.hero .sub{font-size:17px;color:rgba(255,255,255,.92);margin:24px auto 28px;max-width:480px;font-weight:500}
-.hero .sub a{color:#fff;text-decoration:underline;text-underline-offset:3px}
-.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.hero .btn.ghost{color:#fff;border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.14)}
-@media(max-width:760px){.hero h1{font-size:38px}.hero{padding:56px 24px 64px}}
+/* ---- hero: plain panel, thin rust rule replaces the gradient box ---- */
+.hero{position:relative;text-align:left;padding:60px 0 52px;margin:0}
+.hero .rule{width:44px;height:2px;background:var(--rust);margin:0 0 22px}
+.hero .k{font-family:var(--body);font-weight:600;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--rust);margin-bottom:14px}
+.hero h1{font-family:var(--disp);font-weight:500;font-size:44px;line-height:1.08;letter-spacing:-.01em;max-width:640px;margin:0;color:var(--ink)}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--rust)}
+.hero .sub{font-size:16px;color:var(--ink2);margin:20px 0 28px;max-width:480px;font-weight:400;line-height:1.6}
+.hero .sub a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.hero .cta{display:flex;gap:12px;justify-content:flex-start;flex-wrap:wrap}
+.hero .btn.ghost{color:var(--ink);border-color:var(--border);background:transparent}
+@media(max-width:760px){.hero h1{font-size:32px}.hero{padding:40px 0 36px}}
 
 .logos{display:flex;justify-content:center;gap:44px;align-items:center;flex-wrap:wrap;opacity:.45;font-family:var(--disp);font-weight:700;font-size:19px;padding:26px 0 20px}
 
