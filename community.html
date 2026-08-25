@@ -80,7 +80,7 @@
 
   document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`
     <div class="shot">
-      <div class="ph" style="height:${s.h}px;background:${wallVignette(i)}"><div class="wbottle"></div></div>
+      <div class="ph" style="height:${s.h}px"><div class="tag" style="background:${tagColor(i)}"></div></div>
       <div class="cap">
         <div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div>
         <div class="tx">${s.t}</div>

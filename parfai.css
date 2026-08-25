@@ -194,13 +194,16 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 .wall{columns:4;column-gap:14px}
 @media(max-width:900px){.wall{columns:2}}
 .shot{break-inside:avoid;margin-bottom:14px;background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-/* studio-backdrop photo: vignette (inline, per-post) + fine grain + a ghosted
-   bottle silhouette, so it reads as staged photography rather than a flat
-   color swatch standing in for a photo */
-.shot .ph{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+/* photo-wall shot: one shared warm-paper backdrop (Direction C) + fine grain,
+   like real seamless paper in a shoot; color moves down to a small per-post
+   tag dot instead of tinting the whole photo */
+.shot .ph{position:relative;overflow:hidden;background:#EDE6DA;border-bottom:1px solid rgba(168,92,59,.14)}
+.shot .ph:before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 15%, rgba(255,255,255,.55), rgba(255,255,255,0) 65%)}
 .shot .ph:after{content:"";position:absolute;inset:0;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode:overlay;opacity:.4;background-size:130px 130px}
+.shot .tag{position:absolute;top:12px;left:12px;width:9px;height:9px;border-radius:50%;z-index:2;box-shadow:0 0 0 3px rgba(255,255,255,.7)}
 .shot .wbottle{width:34px;height:58px;border-radius:8px 8px 11px 11px;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.32);position:relative;z-index:1}
 .shot .cap{padding:10px 12px}
 .shot .u{display:flex;align-items:center;gap:7px;margin-bottom:5px}

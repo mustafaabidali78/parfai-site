@@ -500,12 +500,16 @@ function lighten(hex, amt){
   const mix = c => Math.round(c + (255-c)*amt).toString(16).padStart(2,'0');
   return `#${mix(r)}${mix(g)}${mix(b)}`;
 }
-/* Photo-wall "studio backdrop" treatment: a lit, vignetted paper backdrop per
-   post (same muted palette as GRADS) instead of a flat diagonal swatch. */
+/* Photo-wall "studio backdrop" treatment (Direction A): a lit, vignetted
+   paper backdrop per post instead of a flat diagonal swatch. Kept around in
+   case the shared-backdrop direction (C) below gets swapped back. */
 function wallVignette(i){
   const [base, dark] = GRADS[i%GRADS.length].split(',');
   return `radial-gradient(130% 100% at 50% 22%, ${lighten(base,.32)} 0%, ${base} 58%, ${dark} 120%)`;
 }
+/* Direction C: every card shares one warm-paper backdrop; color moves down
+   to a small per-post tag dot instead of tinting the whole photo. */
+function tagColor(i){ return GRADS[i%GRADS.length].split(',')[0]; }
 function famColor(fam){ return FAM_COLOR[fam] || ['#6C4CFF','#00B8D4']; }
 function houseName(id){ const h = HOUSES.find(h=>h.id===id); return h ? h.name : id; }
 function perfumeById(id){ return PERFUMES.find(p=>p.id===id); }
