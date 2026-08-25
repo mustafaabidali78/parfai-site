@@ -42,10 +42,14 @@ const HOUSES = [
   { id:"dossier", name:"Dossier", tier:"Affordable", blurb:"US direct-to-consumer label making openly \"inspired by\" versions of designer fragrances." },
 ];
 
+/* A single curated, muted palette — terracotta, moss, slate, plum, ochre,
+   dusty rose, umber, sage — shared by every family so the perfume cards
+   read as one coordinated system with the rust/cream Atelier hero above
+   them, instead of the old saturated rainbow. */
 const FAM_COLOR = {
-  Chypre:['#FF8C42','#FF4D6D'], Woody:['#A855F7','#7C3AED'], Oriental:['#FF8C42','#CC4400'],
-  Fresh:['#00D2D3','#0099CC'], Floral:['#FF6BAE','#C9184A'], Aromatic:['#3D9CF5','#1565C0'],
-  Amber:['#FFB86B','#C9772E'], Gourmand:['#FFD93D','#FF8F00'],
+  Oriental:['#A8613E','#7A4028'], Chypre:['#6B7A4F','#47522F'], Gourmand:['#8B5169','#5C3348'],
+  Fresh:['#5E7A93','#3D5266'], Floral:['#C08379','#8A564E'], Aromatic:['#7C9683','#526B58'],
+  Amber:['#C6963C','#8F6A24'], Woody:['#6B4B3A','#402B20'],
 };
 
 const PERFUMES = [
@@ -488,7 +492,7 @@ const THREADS = [
 ];
 
 /* ---------- helpers ---------- */
-const GRADS = ['#00B8D4,#6C4CFF','#FF4D9D,#FF8C42','#A855F7,#7C3AED','#00C48B,#00B8D4','#FF6BAE,#C9184A','#3D9CF5,#1565C0','#FFD93D,#FF8F00','#6C4CFF,#FF4D9D'];
+const GRADS = ['#A8613E,#7A4028','#6B7A4F,#47522F','#8B5169,#5C3348','#5E7A93,#3D5266','#C08379,#8A564E','#7C9683,#526B58','#C6963C,#8F6A24','#6B4B3A,#402B20'];
 function gr(i){ return `linear-gradient(140deg,${GRADS[i%GRADS.length]})`; }
 function av(i){ return `background:${gr(i+2)}`; }
 function famColor(fam){ return FAM_COLOR[fam] || ['#6C4CFF','#00B8D4']; }
