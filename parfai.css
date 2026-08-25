@@ -78,6 +78,15 @@ nav{position:sticky;top:0;z-index:40;background:rgba(250,250,247,.82);backdrop-f
 .hero .btn.ghost{color:var(--ink);border-color:var(--border);background:transparent}
 @media(max-width:760px){.hero h1{font-size:32px}.hero{padding:40px 0 36px}}
 
+/* ---- homepage hero: centered, since it's the widest/most prominent one
+   and a left-aligned ~640px text block reads as unbalanced against the
+   full-width sections below it. Other pages keep the left-aligned .hero
+   above — this only applies where index.html opts in with .hero.home ---- */
+.hero.home{text-align:center}
+.hero.home .rule{margin-left:auto;margin-right:auto}
+.hero.home h1,.hero.home .sub{margin-left:auto;margin-right:auto}
+.hero.home .cta{justify-content:center}
+
 .logos{display:flex;justify-content:center;gap:44px;align-items:center;flex-wrap:wrap;opacity:.45;font-family:var(--disp);font-weight:700;font-size:19px;padding:26px 0 20px}
 
 /* ---- section headers ---- */
