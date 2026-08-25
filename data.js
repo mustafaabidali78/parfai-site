@@ -495,6 +495,17 @@ const THREADS = [
 const GRADS = ['#A8613E,#7A4028','#6B7A4F,#47522F','#8B5169,#5C3348','#5E7A93,#3D5266','#C08379,#8A564E','#7C9683,#526B58','#C6963C,#8F6A24','#6B4B3A,#402B20'];
 function gr(i){ return `linear-gradient(140deg,${GRADS[i%GRADS.length]})`; }
 function av(i){ return `background:${gr(i+2)}`; }
+function lighten(hex, amt){
+  const n = parseInt(hex.slice(1), 16), r = (n>>16)&255, g = (n>>8)&255, b = n&255;
+  const mix = c => Math.round(c + (255-c)*amt).toString(16).padStart(2,'0');
+  return `#${mix(r)}${mix(g)}${mix(b)}`;
+}
+/* Photo-wall "studio backdrop" treatment: a lit, vignetted paper backdrop per
+   post (same muted palette as GRADS) instead of a flat diagonal swatch. */
+function wallVignette(i){
+  const [base, dark] = GRADS[i%GRADS.length].split(',');
+  return `radial-gradient(130% 100% at 50% 22%, ${lighten(base,.32)} 0%, ${base} 58%, ${dark} 120%)`;
+}
 function famColor(fam){ return FAM_COLOR[fam] || ['#6C4CFF','#00B8D4']; }
 function houseName(id){ const h = HOUSES.find(h=>h.id===id); return h ? h.name : id; }
 function perfumeById(id){ return PERFUMES.find(p=>p.id===id); }
