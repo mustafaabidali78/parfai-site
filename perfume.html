@@ -29,6 +29,8 @@
   const id = qs('id');
   const p = perfumeById(id);
   const content = document.getElementById('content');
+  // fall back gracefully if a visitor's cached data.js predates this helper
+  const safeNoteIcon = typeof noteIcon==='function' ? noteIcon : () => '';
 
   if (!p){
     content.innerHTML = `<div class="doc"><h1>Fragrance not found</h1><p>We couldn't find that one in the catalog yet.</p><a class="btn" href="explore.html">← Back to Explore</a></div>`;
@@ -73,9 +75,9 @@
       <section>
         <div class="shead"><h2>Notes pyramid</h2><a href="notes.html">Browse by note →</a></div>
         <div class="pyramid">
-          <div class="plevel"><div class="lh">TOP NOTES</div>${p.notes.top.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${n}</a>`).join('')}</div>
-          <div class="plevel"><div class="lh">HEART NOTES</div>${p.notes.heart.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${n}</a>`).join('')}</div>
-          <div class="plevel"><div class="lh">BASE NOTES</div>${p.notes.base.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${n}</a>`).join('')}</div>
+          <div class="plevel"><div class="lh">TOP NOTES</div>${p.notes.top.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${safeNoteIcon(n)}${n}</a>`).join('')}</div>
+          <div class="plevel"><div class="lh">HEART NOTES</div>${p.notes.heart.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${safeNoteIcon(n)}${n}</a>`).join('')}</div>
+          <div class="plevel"><div class="lh">BASE NOTES</div>${p.notes.base.map(n=>`<a class="notechip" href="notes.html?n=${encodeURIComponent(n)}">${safeNoteIcon(n)}${n}</a>`).join('')}</div>
         </div>
         <div class="accordwrap">${p.accords.map((a,i)=>`<span class="accord" style="background:linear-gradient(140deg,${famColor(p.family)[0]},${famColor(p.family)[1]})">${a}</span>`).join('')}</div>
         <div class="ratingbars">

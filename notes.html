@@ -56,6 +56,8 @@
 
   const grouped = {};
   allNotes.forEach(n => { const c = noteCategory(n); (grouped[c] = grouped[c] || []).push(n); });
+  // fall back gracefully if a visitor's cached data.js predates this helper
+  const safeNoteIcon = typeof noteIcon==='function' ? noteIcon : () => '';
 
   // state, seeded from the URL so this page is shareable/linkable (?n=Rose,Oud&gender=Women)
   const initial = qs('n');
@@ -80,7 +82,7 @@
         const notes = grouped[cat].filter(n => !f || n.toLowerCase().includes(f));
         if (!notes.length) return '';
         return `<div class="notecat"><div class="nch">${cat}</div><div class="notecatwrap">${
-          notes.map(n => `<span class="pickchip${selected.has(n)?' active':''}" data-note="${n}">${n} <span style="opacity:.6">${noteCounts[n]}</span></span>`).join('')
+          notes.map(n => `<span class="pickchip${selected.has(n)?' active':''}" data-note="${n}">${safeNoteIcon(n)}${n} <span style="opacity:.6">${noteCounts[n]}</span></span>`).join('')
         }</div></div>`;
       }).join('') || `<div style="color:var(--muted);padding:20px 0">No notes match "${filterText}".</div>`;
   }

@@ -143,11 +143,12 @@ select.chip,.chip-select{font-family:var(--body);font-weight:600;font-size:13px;
 @media(max-width:700px){.pyramid{grid-template-columns:1fr}}
 .plevel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}
 .plevel .lh{font-family:var(--body);font-weight:700;font-size:11px;color:var(--muted);letter-spacing:.6px;margin-bottom:12px;text-transform:uppercase}
-.notechip{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:6px 13px;font-size:12px;font-weight:600;margin:0 6px 6px 0}
+.notechip{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:6px 13px;font-size:12px;font-weight:600;margin:0 6px 6px 0}
 .accordwrap{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .accord{font-family:var(--body);font-weight:700;font-size:12px;color:#fff;padding:7px 15px;border-radius:100px}
 a.notechip{cursor:pointer;text-decoration:none;color:var(--ink)}
 a.notechip:hover{border-color:var(--violet);color:var(--violet)}
+.nicon{flex-shrink:0;color:var(--rust)}
 
 /* ---- Scent DNA fingerprint chart ---- */
 .dnawrap{display:flex;gap:34px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:30px}
@@ -170,9 +171,10 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 .notecat{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:18px 20px}
 .notecat .nch{font-family:var(--body);font-weight:700;font-size:13px;color:var(--muted);letter-spacing:.4px;margin-bottom:12px;text-transform:uppercase}
 .notecatwrap{display:flex;flex-wrap:wrap;gap:8px}
-.pickchip{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;user-select:none;color:var(--ink)}
+.pickchip{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;user-select:none;color:var(--ink)}
 .pickchip:hover{border-color:var(--violet)}
 .pickchip.active{background:var(--irid);border-color:transparent;color:#fff}
+.pickchip.active .nicon{color:#fff}
 .notesearch{margin-bottom:22px}
 .ratingbars{display:flex;gap:26px;flex-wrap:wrap;margin:24px 0}
 .ratingbar b{display:block;font-family:var(--disp);font-weight:700;font-size:13px;margin-bottom:6px}

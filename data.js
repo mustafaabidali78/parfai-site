@@ -534,6 +534,28 @@ const NOTE_CATEGORY_MAP = {
 };
 function noteCategory(n){ return NOTE_CATEGORY_MAP[n] || 'Other'; }
 
+/* ---------- note icons: one small line-icon per family, so a note chip
+   reads at a glance instead of relying on the word alone ---------- */
+const CATEGORY_ICON = {
+  'Citrus':`<circle cx="8" cy="8" r="6"/><line x1="8" y1="8" x2="8" y2="2.3"/><line x1="8" y1="8" x2="12.7" y2="10.7"/><line x1="8" y1="8" x2="3.3" y2="10.7"/>`,
+  'Floral':`<circle cx="8" cy="3.8" r="2.3"/><circle cx="12" cy="6.7" r="2.3"/><circle cx="10.5" cy="11.8" r="2.3"/><circle cx="5.5" cy="11.8" r="2.3"/><circle cx="4" cy="6.7" r="2.3"/><circle cx="8" cy="8" r="1.6" fill="currentColor" stroke="none"/>`,
+  'Fruity':`<circle cx="8" cy="9.5" r="5"/><line x1="8" y1="4.5" x2="8.6" y2="2.2"/><ellipse cx="10.2" cy="2.6" rx="1.6" ry="0.9" transform="rotate(30 10.2 2.6)"/>`,
+  'Green & Aromatic':`<ellipse cx="8" cy="8" rx="5.6" ry="2.6" transform="rotate(-40 8 8)"/><line x1="4.2" y1="10.8" x2="11.8" y2="5.2"/>`,
+  'Spicy':`<circle cx="5" cy="6" r="1.7" fill="currentColor" stroke="none"/><circle cx="10.3" cy="5" r="2.1" fill="currentColor" stroke="none"/><circle cx="8.3" cy="10.5" r="1.9" fill="currentColor" stroke="none"/>`,
+  'Woody':`<circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="3.6"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/>`,
+  'Amber & Resin':`<path d="M8 2.3 C10.6 5.8 12.5 8.4 12.5 10.6 A4.5 4.5 0 0 1 3.5 10.6 C3.5 8.4 5.4 5.8 8 2.3 Z"/>`,
+  'Gourmand & Sweet':`<circle cx="8" cy="8" r="6"/><circle cx="6" cy="6.3" r="1" fill="currentColor" stroke="none"/><circle cx="10.3" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="7.5" cy="10.6" r="1" fill="currentColor" stroke="none"/><circle cx="10.5" cy="10.8" r=".85" fill="currentColor" stroke="none"/>`,
+  'Musk & Animalic':`<ellipse cx="8" cy="10.6" rx="3.6" ry="2.9"/><circle cx="4.2" cy="5.4" r="1.5"/><circle cx="8" cy="3.8" r="1.5"/><circle cx="11.8" cy="5.4" r="1.5"/>`,
+  'Leather & Tobacco':`<rect x="3.2" y="3.2" width="9.6" height="9.6" rx="2.2" transform="rotate(45 8 8)"/><line x1="8" y1="4" x2="8" y2="12" stroke-dasharray="1.4 1.4"/>`,
+  'Marine & Mineral':`<path d="M1.5 6.3 Q4.5 3.3 7.5 6.3 T13.5 6.3"/><path d="M1.5 10.3 Q4.5 7.3 7.5 10.3 T13.5 10.3"/>`,
+  'Earthy':`<polygon points="8,2.5 12.5,5.2 12.5,10.8 8,13.5 3.5,10.8 3.5,5.2"/>`,
+  'Other':`<path d="M8 2 L9.3 6.7 L14 8 L9.3 9.3 L8 14 L6.7 9.3 L2 8 L6.7 6.7 Z"/>`,
+};
+function noteIcon(n){
+  const body = CATEGORY_ICON[noteCategory(n)] || CATEGORY_ICON['Other'];
+  return `<svg class="nicon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+}
+
 function pcardHTML(p, i){
   const g = famColor(p.family);
   const dupeBadge = p.dupeOf ? `<span class="dupe">DUPE</span>` : '';
