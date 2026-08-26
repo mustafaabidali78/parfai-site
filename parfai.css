@@ -335,15 +335,31 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 .creditcard .cmeta a{color:var(--muted)}
 .creditcard .cmeta a:hover{color:var(--violet)}
 
-/* ---- homepage "coming soon" promo card (Layering Recipe Builder) ---- */
-.laypromo{display:block;border-radius:28px;padding:46px 50px;color:#fff;position:relative;overflow:hidden;isolation:isolate}
+/* ---- homepage "coming soon" promo cards (multiple upcoming features) ---- */
+.soongrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:820px){.soongrid{grid-template-columns:1fr}}
+.laypromo{display:block;border-radius:28px;padding:38px 40px;color:#fff;position:relative;overflow:hidden;isolation:isolate}
 .laypromo:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 55% 60% at 85% 12%,rgba(255,255,255,.18),transparent 60%)}
 .laypromo .lp-badge{display:inline-block;font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.5px;text-transform:uppercase;background:rgba(255,255,255,.22);padding:6px 14px;border-radius:100px;margin-bottom:16px}
-.laypromo h3{font-family:var(--disp);font-weight:800;font-size:30px;letter-spacing:-.02em;margin-bottom:10px}
-.laypromo p{font-size:14.5px;color:rgba(255,255,255,.9);max-width:540px;margin-bottom:18px;font-weight:500}
+.laypromo h3{font-family:var(--disp);font-weight:800;font-size:25px;letter-spacing:-.02em;margin-bottom:10px}
+.laypromo p{font-size:14px;color:rgba(255,255,255,.9);margin-bottom:16px;font-weight:500}
 .laypromo .lp-cta{font-family:var(--body);font-weight:700;font-size:13px;letter-spacing:.3px}
 .laypromo:hover .lp-cta{text-decoration:underline}
-@media(max-width:760px){.laypromo{padding:34px 26px}.laypromo h3{font-size:24px}}
+@media(max-width:760px){.laypromo{padding:32px 26px}.laypromo h3{font-size:23px}}
+
+/* ---- Weather-Aware Pick of the Day preview page (weather-pick.html) ---- */
+.wcities{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:900px){.wcities{grid-template-columns:1fr}}
+.wcity{border:1px solid var(--border);border-radius:20px;overflow:hidden;background:var(--panel)}
+.wcity .wctop{padding:22px 22px 20px;color:#fff;position:relative}
+.wcity .wcloc{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.85;margin-bottom:6px}
+.wcity .wctemp{font-family:var(--disp);font-weight:800;font-size:36px;letter-spacing:-.02em;line-height:1}
+.wcity .wccond{font-size:13px;margin-top:4px;opacity:.9}
+.wcity .wcpick{padding:18px 22px 22px}
+.wcity .wcpicklabel{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.wcity .wcname{font-family:var(--disp);font-weight:700;font-size:17px;margin-bottom:4px}
+.wcity .wcfam{font-size:12px;color:var(--muted);margin-bottom:10px}
+.wcity .wcwhy{font-size:12.5px;color:var(--ink2);line-height:1.55}
 
 /* ---- Layering Recipe Builder preview page (layering.html) ---- */
 .lpanel{background:var(--panel);border:1px solid var(--border);border-radius:26px;padding:36px;box-shadow:0 24px 60px -40px rgba(20,20,20,.4)}

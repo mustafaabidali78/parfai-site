@@ -866,7 +866,8 @@ function renderNav(active){
             <a class="it" href="dupe-finder.html"><b>Dupe Finder</b><span>Affordable alternatives</span></a>
             <a class="it" href="explore.html"><b>Find My Scent</b><span>Filter by family, note &amp; more</span></a>
             <a class="it" href="explore.html"><b>Scent DNA</b><span>Any fragrance's note fingerprint</span></a>
-            <a class="it" href="layering.html"><b>Layering Recipe Builder <span class="newbadge" style="background:var(--rust)">SOON</span></b><span>Combine fragrances into a recipe</span></a></div>
+            <a class="it" href="layering.html"><b>Layering Recipe Builder <span class="newbadge" style="background:var(--rust)">SOON</span></b><span>Combine fragrances into a recipe</span></a>
+            <a class="it" href="weather-pick.html"><b>Weather-Aware Pick <span class="newbadge" style="background:var(--rust)">SOON</span></b><span>Today's pick, based on real weather</span></a></div>
         </div></div>
       </span>
       <span class="megawrap"><span class="menu">Houses <span class="car">▾</span></span>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Weather-Aware Pick of the Day — Coming soon — ParfAI</title>
+<link rel="stylesheet" href="parfai.css?v=202608261330">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap">
+
+  <div class="crumb"><a href="explore.html">Explore</a> / Weather-Aware Pick of the Day</div>
+
+  <div class="pdhero" style="background:linear-gradient(120deg,#5E7A93 0%,#3D5266 55%,#2A3A47 100%)">
+    <div class="pdimg">
+      <div class="bottle" style="width:70px;height:122px"></div>
+    </div>
+    <div>
+      <div class="pdhouse">Coming soon</div>
+      <h1 class="pdname" style="font-size:44px">Weather-Aware Pick of the Day</h1>
+      <div class="pddesc">Every morning, ParfAI would look at the real live weather wherever you actually are — not a guess, not a hardcoded region — and recommend a fragrance from the catalog suited to how it performs in heat, cold, humidity or rain.</div>
+    </div>
+  </div>
+
+  <section>
+    <div class="shead"><h2>Why weather changes what you should wear</h2></div>
+    <p style="color:var(--ink2);font-size:15px;max-width:700px;margin-bottom:20px;font-weight:400">Heat and humidity amplify projection — a heavy amber or gourmand that's cozy in December can turn cloying and overwhelming at 35°C, while light citrus and aquatic notes stay pleasant and perform exactly as intended. Cold does the opposite: it suppresses how far a scent travels, so the same light citrus that shines in summer barely registers in winter, while dense woody, spicy and amber compositions finally get to show their full sillage. This isn't a gimmick — perfumers plan around this, and enthusiasts already rotate their collection by season by hand. This feature would just do that rotation automatically, every day, using the actual conditions outside.</p>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Works anywhere — not just one climate</h2></div>
+    <p style="color:var(--ink2);font-size:14.5px;max-width:700px;margin-bottom:24px;font-weight:400">The pick would be computed from wherever you're actually logging in from, worldwide — a visitor in Dubai and a visitor in Oslo get completely different recommendations on the same day, because they're feeling completely different weather. These three cards show what that looks like for the same afternoon in three different places.</p>
+
+    <div class="wcities">
+      <div class="wcity">
+        <div class="wctop" style="background:linear-gradient(160deg,#E8B04A,#C6963C)">
+          <div class="wcloc">Dubai, UAE</div>
+          <div class="wctemp">38°C</div>
+          <div class="wccond">☀️ Clear &amp; dry</div>
+        </div>
+        <div class="wcpick">
+          <div class="wcpicklabel">Today's pick</div>
+          <div class="wcname">Erba Pura</div>
+          <div class="wcfam">Xerjoff · Fresh, Fruity, Sweet</div>
+          <div class="wcwhy">Sicilian lemon and red berries up top with a light musk-and-amber base — reads bright and sun-drenched instead of heavy, and won't turn cloying in the heat.</div>
+        </div>
+      </div>
+
+      <div class="wcity">
+        <div class="wctop" style="background:linear-gradient(160deg,#7C93A6,#5E7A93)">
+          <div class="wcloc">London, UK</div>
+          <div class="wctemp">9°C</div>
+          <div class="wccond">🌧️ Light rain</div>
+        </div>
+        <div class="wcpick">
+          <div class="wcpicklabel">Today's pick</div>
+          <div class="wcname">Green Irish Tweed</div>
+          <div class="wcfam">Creed · Fresh, Green, Woody</div>
+          <div class="wcwhy">Often described as "smells like a shower, but expensive" — a clean, green fresh note that suits overcast, damp weather without fighting it.</div>
+        </div>
+      </div>
+
+      <div class="wcity">
+        <div class="wctop" style="background:linear-gradient(160deg,#8A6B54,#6B4B3A)">
+          <div class="wcloc">New York, USA</div>
+          <div class="wctemp">-2°C</div>
+          <div class="wccond">❄️ Snow</div>
+        </div>
+        <div class="wcpick">
+          <div class="wcpicklabel">Today's pick</div>
+          <div class="wcname">Oud Wood</div>
+          <div class="wcfam">Tom Ford · Woody, Smoky, Warm Spicy</div>
+          <div class="wcwhy">Cold air suppresses projection, so a lighter fragrance would barely register — this smoky, spiced sandalwood has the density to actually show up at freezing temperatures.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shead"><h2>How it would actually work</h2></div>
+    <div class="lpanel">
+      <div class="lblendtxt" style="margin-top:0;max-width:none">
+        <b>Getting your location, worldwide, with consent.</b> The page would ask your browser for permission to use your location. If you say yes, that resolves to a city and country and a live weather API call runs against it. If you say no, or your browser doesn't support it, it falls back to a coarser IP-based location — clearly labeled as approximate — with a "not your city?" link to search and set it manually. Nothing about your exact coordinates would ever be stored; only the resolved city, country, and the day's weather snapshot, and only long enough to compute and cache that day's pick.<br><br>
+        <b>Live, not simulated.</b> A weather API (a free option like Open-Meteo needs no API key and no cost, which keeps this cheap to run at scale) would supply temperature, humidity, and condition for that city in real time. It refreshes at most once or twice a day per visitor — weather doesn't change fast enough to justify calling it on every page load, and caching keeps the feature fast and within free-tier limits.<br><br>
+        <b>Matching weather to fragrance, no AI call needed.</b> Temperature and humidity sort into simple bands — hot/dry, hot/humid, mild, cold/dry, cold/wet — and each band maps to a small set of target accords, the same accord data already on every product page (Fresh and Citrus for hot, Woody and Amber and Warm Spicy for cold, Green for rain). The catalog gets filtered and ranked by accord match plus rating, and the top result becomes the day's pick, with one or two alternates offered underneath.<br><br>
+        <b>Locale-correct by default.</b> Temperature would display in °C or °F automatically based on the visitor's resolved country, with a manual toggle for anyone who prefers the other unit regardless of where they are.
+      </div>
+    </div>
+  </section>
+
+  <section style="text-align:center">
+    <div class="band" style="background:linear-gradient(120deg,#2A3A47,#3D5266)">
+      <h2>Want early access?</h2>
+      <p>This is next on the roadmap. Follow along in the community for updates, or tell us which city's weather you'd want it to nail first.</p>
+      <a class="btn" href="community.html">Join the community</a>
+    </div>
+  </section>
+
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js?v=202608261330"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>
