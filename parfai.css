@@ -60,7 +60,50 @@ nav{position:sticky;top:0;z-index:40;background:rgba(250,250,247,.82);backdrop-f
 .it b{font-family:var(--disp);font-weight:700;font-size:15px;display:block;letter-spacing:-.01em}
 .it span{font-size:13px;color:var(--muted)}
 .it:hover b{color:var(--violet)}
-@media(max-width:900px){.navlinks{display:none}.mega{display:none!important}}
+/* ---- mobile nav: hamburger + slide-down drawer ----
+   Below 900px .navlinks becomes a full-height fixed drawer (toggled by
+   #navburger, see bindMobileNav in data.js) instead of the inline row —
+   there is otherwise no way to reach Explore/Houses/Community/Pricing on
+   a phone. The mega dropdowns reuse the exact same markup as tap-to-open
+   accordion sections rather than floating absolutely-positioned panels. */
+.navburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:34px;height:34px;border:none;background:transparent;cursor:pointer;padding:0;flex-shrink:0}
+.navburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+.navburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.navburger.open span:nth-child(2){opacity:0}
+.navburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+body.navlock{overflow:hidden}
+
+@media(max-width:900px){
+  .navburger{display:flex}
+  .navlinks{display:none}
+  .navlinks.mobileopen{
+    display:flex;flex-direction:column;align-items:stretch;gap:0;
+    /* position:fixed here is relative to <nav>'s own box, not the viewport —
+       <nav> has position:sticky, and a sticky (like relative/absolute/fixed)
+       ancestor becomes the containing block for a fixed descendant. <nav> is
+       pinned to the viewport top already, so top:76px still lands correctly;
+       an explicit height (rather than bottom:0, which would resolve against
+       <nav>'s own ~76px-tall box and collapse to almost nothing) is what
+       actually makes this fill the rest of the screen. */
+    position:fixed;top:76px;left:0;right:0;height:calc(100vh - 76px);
+    background:var(--bg);z-index:100;
+    padding:6px 24px 40px;overflow-y:auto;
+    border-top:1px solid var(--border);
+  }
+  .navlinks.mobileopen .megawrap{width:100%}
+  .navlinks.mobileopen .menu{width:100%;justify-content:space-between;padding:18px 2px;font-size:17px;font-weight:600;border-bottom:1px solid var(--border)}
+  .navlinks.mobileopen .mega{
+    display:none!important;position:static;width:100%;max-width:none;
+    box-shadow:none;border:none;border-radius:0;background:transparent;
+    padding:2px 2px 12px;
+  }
+  .navlinks.mobileopen .megawrap.open .mega{display:block!important}
+  .navlinks.mobileopen .mega .cols{display:flex;flex-direction:column;gap:0}
+  .navlinks.mobileopen .colhead{margin:16px 0 6px;font-size:11px}
+  .navlinks.mobileopen .colhead:first-child{margin-top:0}
+  .navlinks.mobileopen .it{margin-bottom:16px}
+  .navlinks.mobileopen > a{display:block;width:100%;padding:18px 2px;font-size:17px;font-weight:600;border-bottom:1px solid var(--border)}
+}
 @media(max-width:460px){.nav{gap:10px}.nav>a.btn{padding:10px 14px;font-size:10px;letter-spacing:.2px}.logo{font-size:18px}}
 
 /* ---- logo mark (inline, reused in every page's <a class="logo">) ---- */

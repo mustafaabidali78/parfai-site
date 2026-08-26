@@ -850,7 +850,7 @@ function renderNav(active){
   const link = (href,label,key)=>`<a href="${href}"${active===key?' class="on"':''}>${label}</a>`;
   return `<div class="wrap nav">
     <a class="logo" href="index.html">${logoSVG(44,55)}ParfAI</a>
-    <div class="navlinks">
+    <div class="navlinks" id="navlinks-drawer">
       <span class="megawrap"><span class="menu">Explore <span class="car">▾</span></span>
         <div class="mega"><div class="cols">
           <div><div class="colhead">Browse fragrances</div>
@@ -913,6 +913,9 @@ function renderNav(active){
     <div class="navsp"></div>
     <a class="btn ghost" href="login.html">Log in</a>
     <a class="btn" href="signup.html">Get started</a>
+    <button class="navburger" id="navburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks-drawer">
+      <span></span><span></span><span></span>
+    </button>
   </div>`;
 }
 
@@ -946,12 +949,18 @@ function bindMegaMenus(navSlot){
   }
 
   wraps.forEach(w => {
+    // Touch browsers commonly synthesize a hover/mouseenter on first tap
+    // (to support :hover styling), which would otherwise fight with the
+    // tap-to-toggle accordion logic below inside the mobile drawer — so
+    // hover only drives anything above the 900px breakpoint.
     w.addEventListener('mouseenter', () => {
+      if (window.matchMedia('(max-width: 900px)').matches) return;
       clearTimeout(closeTimer);
       closeAll(w);
       w.classList.add('open');
     });
     w.addEventListener('mouseleave', () => {
+      if (window.matchMedia('(max-width: 900px)').matches) return;
       clearTimeout(closeTimer);
       closeTimer = setTimeout(() => w.classList.remove('open'), 300);
     });
@@ -959,15 +968,24 @@ function bindMegaMenus(navSlot){
     const trigger = w.querySelector('.menu');
     if (trigger){
       // Tapping/clicking the trigger opens it (for touch/keyboard, where
-      // there's no hover). It deliberately doesn't toggle closed on a
-      // second click, since on desktop the hover that opened it already
-      // fires mouseenter before the click lands — closing here instead of
+      // there's no hover). On desktop it deliberately doesn't toggle closed
+      // on a second click, since the hover that opened it already fires
+      // mouseenter before the click lands — closing here instead of
       // outside/Escape/mouseleave would make it snap shut immediately.
+      // Inside the mobile drawer (see bindMobileNav below) there's no hover
+      // at all, so a tap there is a real accordion toggle instead.
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
-        clearTimeout(closeTimer);
-        closeAll(w);
-        w.classList.add('open');
+        const isMobileDrawer = window.matchMedia('(max-width: 900px)').matches;
+        if (isMobileDrawer){
+          const wasOpen = w.classList.contains('open');
+          closeAll(w);
+          w.classList.toggle('open', !wasOpen);
+        } else {
+          clearTimeout(closeTimer);
+          closeAll(w);
+          w.classList.add('open');
+        }
       });
     }
   });
@@ -980,12 +998,52 @@ function bindMegaMenus(navSlot){
   });
 }
 
+/* ---------- mobile nav (hamburger + slide-down drawer) ----------
+   Below the 900px breakpoint .navlinks is hidden by default (see
+   parfai.css) — there is no way to reach Explore/Houses/Community/
+   Pricing otherwise. This reveals the same .navlinks markup as a
+   full-height drawer instead of duplicating the link data anywhere. */
+function bindMobileNav(navSlot){
+  const burger = navSlot.querySelector('#navburger');
+  const drawer = navSlot.querySelector('#navlinks-drawer');
+  if (!burger || !drawer) return;
+
+  function closeDrawer(){
+    drawer.classList.remove('mobileopen');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('navlock');
+  }
+  function openDrawer(){
+    drawer.classList.add('mobileopen');
+    burger.classList.add('open');
+    burger.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('navlock');
+  }
+
+  burger.addEventListener('click', () => {
+    drawer.classList.contains('mobileopen') ? closeDrawer() : openDrawer();
+  });
+  // Tapping an actual link (not a mega-menu accordion trigger) closes the drawer and navigates.
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('a[href]')) closeDrawer();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+  // Resizing past the breakpoint (e.g. rotating a tablet) shouldn't leave a phantom open drawer.
+  window.addEventListener('resize', () => {
+    if (window.matchMedia('(min-width: 901px)').matches) closeDrawer();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const navSlot = document.getElementById('nav-slot');
   const footSlot = document.getElementById('footer-slot');
   if (navSlot) {
     navSlot.innerHTML = renderNav(navSlot.dataset.active || '');
     bindMegaMenus(navSlot);
+    bindMobileNav(navSlot);
   }
   if (footSlot) footSlot.innerHTML = renderFooter();
   startSigSystem();
