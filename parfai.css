@@ -78,15 +78,19 @@ body.navlock{overflow:hidden}
   .navlinks{display:none}
   .navlinks.mobileopen{
     display:flex;flex-direction:column;align-items:stretch;gap:0;
-    /* position:fixed here is relative to <nav>'s own box, not the viewport —
-       <nav> has position:sticky, and a sticky (like relative/absolute/fixed)
-       ancestor becomes the containing block for a fixed descendant. <nav> is
-       pinned to the viewport top already, so top:76px still lands correctly;
-       an explicit height (rather than bottom:0, which would resolve against
-       <nav>'s own ~76px-tall box and collapse to almost nothing) is what
-       actually makes this fill the rest of the screen. */
-    position:fixed;top:76px;left:0;right:0;height:calc(100vh - 76px);
-    background:var(--bg);z-index:100;
+    /* position:absolute, anchored to <nav> (which already has
+       position:sticky and so is an unambiguous containing block for an
+       absolutely-positioned descendant in every browser) — deliberately
+       NOT position:fixed, whose containing block inside a sticky ancestor
+       is a known cross-browser inconsistency (Blink and WebKit have
+       disagreed on it), which silently collapsed this drawer to almost no
+       height on at least one real device. top:100% starts it right at the
+       header's bottom edge; height:100vh is generous on purpose (WebKit's
+       vh math changes with a mobile browser's address bar) — the extra
+       overshoots the viewport but only means slightly more of the panel is
+       reachable by scrolling, not that anything is cut off. */
+    position:absolute;top:100%;left:0;right:0;height:100vh;
+    background:var(--bg);z-index:10;
     padding:6px 24px 40px;overflow-y:auto;
     border-top:1px solid var(--border);
   }
