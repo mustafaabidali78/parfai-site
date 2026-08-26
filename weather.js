@@ -89,6 +89,17 @@ function whyThisPick(p, bucket){
   return reasons[bucket] || reasons.mild;
 }
 
+function familyGrad(fam){
+  const g = typeof famColor === 'function' ? famColor(fam) : ['#6C4CFF', '#00B8D4'];
+  return `linear-gradient(150deg,${g[0]},${g[1]})`;
+}
+function bottleThumbHTML(p, cls){
+  const art = p.image
+    ? `<img src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">`
+    : `<div class="bottle"></div>`;
+  return `<div class="${cls}" style="background:${familyGrad(p.family)}">${art}</div>`;
+}
+
 function tempUnitForCountry(countryCode){
   return ['US', 'LR', 'MM'].includes(countryCode) ? 'F' : 'C';
 }
@@ -223,10 +234,15 @@ function renderWeatherResult(el, result){
       </div>
       <div class="wpxpickwrap">
         <div class="wcpicklabel">Today's pick for you</div>
-        <a class="wpxname" href="perfume.html?id=${top.id}">${top.name}</a>
-        <div class="wcfam">${typeof houseName === 'function' ? houseName(top.houseId) : ''} · ${top.accords.slice(0, 3).join(', ')}</div>
-        <div class="wcwhy">${whyThisPick(top, result.bucket)}</div>
-        ${alts.length ? `<div class="wpxalt">Also good today: ${alts.map(p => `<a href="perfume.html?id=${p.id}">${p.name}</a>`).join(' · ')}</div>` : ''}
+        <div class="wpxpick">
+          <a href="perfume.html?id=${top.id}">${bottleThumbHTML(top, 'wpxthumb')}</a>
+          <div class="wpxpicktext">
+            <a class="wpxname" href="perfume.html?id=${top.id}">${top.name}</a>
+            <div class="wcfam">${typeof houseName === 'function' ? houseName(top.houseId) : ''} · ${top.accords.slice(0, 3).join(', ')}</div>
+            <div class="wcwhy">${whyThisPick(top, result.bucket)}</div>
+          </div>
+        </div>
+        ${alts.length ? `<div class="wpxaltlabel">Also good today</div><div class="wpxalt">${alts.map(p => `<a class="wpxaltlink" href="perfume.html?id=${p.id}">${bottleThumbHTML(p, 'wpxaltthumb')}${p.name}</a>`).join('')}</div>` : ''}
       </div>
     </div>
     <div class="wpxcredit">

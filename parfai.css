@@ -360,6 +360,11 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 .wcity .wcname{font-family:var(--disp);font-weight:700;font-size:17px;margin-bottom:4px}
 .wcity .wcfam{font-size:12px;color:var(--muted);margin-bottom:10px}
 .wcity .wcwhy{font-size:12.5px;color:var(--ink2);line-height:1.55}
+.wcity .wcpickrow{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.wcity .wcpickrow .wcpicklabel{margin-bottom:3px}
+.wcity .wcpickrow .wcname{margin-bottom:0}
+.wcthumb{flex-shrink:0;width:44px;height:58px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.wcthumb img{max-width:78%;max-height:82%;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.28))}
 .wcpicklabel{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .wcfam{font-size:12px;color:var(--muted);margin:3px 0 8px}
 .wcwhy{font-size:12.5px;color:var(--ink2);line-height:1.55}
@@ -372,10 +377,20 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 .wpxtemp{font-family:var(--disp);font-weight:800;font-size:32px;letter-spacing:-.02em}
 .wpxcond{font-size:13px;color:var(--ink2);margin-top:2px}
 .wpxpickwrap{flex:1;min-width:220px}
+.wpxpick{display:flex;gap:14px;align-items:flex-start}
+.wpxthumb{flex-shrink:0;width:56px;height:74px;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.wpxthumb img{max-width:78%;max-height:82%;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.3))}
+.wpxthumb .bottle{width:20px;height:36px;border-radius:5px 5px 8px 8px}
+.wpxpicktext{min-width:0}
 .wpxname{font-family:var(--disp);font-weight:700;font-size:19px;color:var(--ink);display:inline-block;margin-bottom:2px}
 .wpxname:hover{color:var(--violet)}
-.wpxalt{font-size:12px;color:var(--muted);margin-top:10px}
-.wpxalt a{color:var(--ink2);text-decoration:underline;text-underline-offset:2px}
+.wpxaltlabel{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:16px;margin-bottom:8px}
+.wpxalt{display:flex;flex-wrap:wrap;gap:8px}
+.wpxaltlink{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink2);text-decoration:none;border:1px solid var(--border);border-radius:100px;padding:4px 14px 4px 4px}
+.wpxaltlink:hover{border-color:var(--violet);color:var(--violet)}
+.wpxaltthumb{width:22px;height:29px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.wpxaltthumb img{max-width:74%;max-height:78%;object-fit:contain}
+.wpxaltthumb .bottle{width:8px;height:15px;border-radius:2px 2px 3px 3px;border-width:1px}
 .wpxcredit{font-size:11.5px;color:var(--muted);margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .wpxcredit a{color:var(--muted);text-decoration:underline}
 .wpxchange{background:transparent;border:1px solid var(--border);border-radius:100px;padding:5px 12px;font-family:var(--body);font-size:11px;font-weight:600;color:var(--ink2);cursor:pointer}
@@ -387,11 +402,13 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 .wpxcitybtn:hover{border-color:var(--violet);color:var(--violet)}
 
 /* same widget, rendered white-on-gradient inside a .laypromo card */
-.laypromo .wpxloc,.laypromo .wpxcond,.laypromo .wpxalt,.laypromo .wpxcredit,
+.laypromo .wpxloc,.laypromo .wpxcond,.laypromo .wpxcredit,.laypromo .wpxaltlabel,
 .laypromo .wpxmanualtxt,.laypromo .wpx-loading,.laypromo .wcfam,.laypromo .wcpicklabel{color:rgba(255,255,255,.82)}
 .laypromo .wpxtemp,.laypromo .wpxname,.laypromo .wcwhy{color:#fff}
 .laypromo .wpxname:hover{color:#fff;text-decoration:underline}
-.laypromo .wpxalt a,.laypromo .wpxcredit a{color:rgba(255,255,255,.82)}
+.laypromo .wpxcredit a{color:rgba(255,255,255,.82)}
+.laypromo .wpxaltlink{border-color:rgba(255,255,255,.34);color:rgba(255,255,255,.92)}
+.laypromo .wpxaltlink:hover{border-color:#fff;color:#fff}
 .laypromo .wpxchange{border-color:rgba(255,255,255,.4);color:#fff}
 .laypromo .wpxchange:hover{border-color:#fff;color:#fff}
 .laypromo .wpxcitybtn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.32);color:#fff}
