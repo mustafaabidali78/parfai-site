@@ -395,6 +395,27 @@ a.notechip:hover{border-color:var(--violet);color:var(--violet)}
 @media(max-width:760px){.laypromo{padding:32px 26px}.laypromo h3{font-size:23px}}
 
 /* ---- Weather-Aware Pick of the Day preview page (weather-pick.html) ---- */
+/* Hot-vs-cold explainer: replaces a long paragraph with two scannable
+   cards + a projection-strength bar, so the "why" reads in a glance. */
+.wexgrid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;margin-bottom:18px}
+@media(max-width:640px){.wexgrid{grid-template-columns:1fr}}
+.wexcard{border:1px solid var(--border);border-radius:20px;background:var(--panel);padding:24px 24px 22px}
+.wexcard.hot{border-radius:20px 4px 4px 20px}
+.wexcard.cold{border-radius:4px 20px 20px 4px}
+@media(max-width:640px){.wexcard.hot{border-radius:20px}.wexcard.cold{border-radius:20px}}
+.wexicon{font-size:28px;line-height:1;margin-bottom:10px}
+.wexlabel{font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:-.01em;margin-bottom:10px}
+.wexbar{height:8px;border-radius:99px;background:var(--border);margin-bottom:12px;overflow:hidden}
+.wexbar span{display:block;height:100%;border-radius:99px}
+.wexcard.hot .wexbar span{width:88%;background:linear-gradient(90deg,#E8B04A,#A85C3B)}
+.wexcard.cold .wexbar span{width:28%;background:linear-gradient(90deg,#5E7A93,#3D5266)}
+.wexbarlabel{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.wexpicks{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.wexpick{font-size:12px;font-weight:600;padding:5px 11px;border-radius:99px;background:var(--bg);border:1px solid var(--border);color:var(--ink2)}
+.wextxt{font-size:13.5px;color:var(--ink2);line-height:1.5}
+.wexvs{display:flex;align-items:center;justify-content:center;padding:0 4px;color:var(--muted);font-size:13px;font-weight:700}
+@media(max-width:640px){.wexvs{padding:6px 0;transform:rotate(90deg)}}
+.wexnote{font-size:13px;color:var(--muted);max-width:700px;line-height:1.55}
 .wcities{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media(max-width:900px){.wcities{grid-template-columns:1fr}}
 .wcity{border:1px solid var(--border);border-radius:20px;overflow:hidden;background:var(--panel)}

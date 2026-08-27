@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Weather-Aware Pick of the Day — ParfAI</title>
-<link rel="stylesheet" href="parfai.css?v=202608261945">
+<link rel="stylesheet" href="parfai.css?v=202608272015">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -36,12 +36,31 @@
 
   <section>
     <div class="shead"><h2>Why weather changes what you should wear</h2></div>
-    <p style="color:var(--ink2);font-size:15px;max-width:700px;margin-bottom:20px;font-weight:400">Heat and humidity amplify projection — a heavy amber or gourmand that's cozy in December can turn cloying and overwhelming at 35°C, while light citrus and aquatic notes stay pleasant and perform exactly as intended. Cold does the opposite: it suppresses how far a scent travels, so the same light citrus that shines in summer barely registers in winter, while dense woody, spicy and amber compositions finally get to show their full sillage. This isn't a gimmick — perfumers plan around this, and enthusiasts already rotate their collection by season by hand. This feature just does that rotation automatically, every day, using the actual conditions outside.</p>
+    <div class="wexgrid">
+      <div class="wexcard hot">
+        <div class="wexicon">☀️</div>
+        <div class="wexlabel">Hot &amp; humid</div>
+        <div class="wexbar"><span></span></div>
+        <div class="wexbarlabel">Projection: amplified</div>
+        <div class="wexpicks"><span class="wexpick">Citrus</span><span class="wexpick">Aquatic</span></div>
+        <div class="wextxt">Heavy amber or gourmand turns cloying at 35°C — light notes perform exactly as intended.</div>
+      </div>
+      <div class="wexvs">vs</div>
+      <div class="wexcard cold">
+        <div class="wexicon">❄️</div>
+        <div class="wexlabel">Cold &amp; dry</div>
+        <div class="wexbar"><span></span></div>
+        <div class="wexbarlabel">Projection: suppressed</div>
+        <div class="wexpicks"><span class="wexpick">Woody</span><span class="wexpick">Amber</span><span class="wexpick">Spicy</span></div>
+        <div class="wextxt">The citrus that shines in summer barely registers — dense notes finally show their full sillage.</div>
+      </div>
+    </div>
+    <p class="wexnote">Perfumers plan around this and enthusiasts already rotate their collection by season, by hand. This feature just automates it, daily, from the real conditions outside.</p>
   </section>
 
   <section>
     <div class="shead"><h2>Works anywhere — not just one climate</h2></div>
-    <p style="color:var(--ink2);font-size:14.5px;max-width:700px;margin-bottom:24px;font-weight:400">The pick above is computed from wherever you're actually visiting from, worldwide — a visitor in Dubai and a visitor in Oslo get completely different recommendations on the same day, because they're feeling completely different weather. These three cards show what that looks like for the same afternoon in three different places.</p>
+    <p style="color:var(--ink2);font-size:14.5px;max-width:700px;margin-bottom:24px;font-weight:400">Computed from wherever you're actually visiting, worldwide. Same afternoon, three cities, three different picks:</p>
 
     <div class="wcities">
       <div class="wcity">
@@ -127,8 +146,8 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202608261945"></script>
-<script src="weather.js?v=202608261945"></script>
+<script src="data.js?v=202608272015"></script>
+<script src="weather.js?v=202608272015"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
