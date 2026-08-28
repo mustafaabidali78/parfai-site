@@ -146,6 +146,8 @@ body.navlock{overflow:hidden}
 .hhero-box{background:linear-gradient(155deg,#FBF3EC,#F6E9DC);border-radius:16px;padding:30px 34px 30px 30px;border-left:4px solid var(--rust);max-width:440px}
 .hhero-box .k{color:var(--rust);margin-bottom:0}
 .hhero-box h1{font-size:44px;margin:10px 0 0;line-height:1.08}
+.hhero-box h1 .hhero-l1{color:var(--violet)}
+.hhero-box h1 em{color:var(--pink)}
 @media(max-width:760px){.hhero-box h1{font-size:32px}}
 .hhero-sub{font-size:16px;color:var(--ink2);margin:22px 0 28px;max-width:440px;font-weight:400;line-height:1.6}
 .hhero-img{position:relative;border-radius:32px 8px 32px 8px;overflow:hidden;height:100%;min-height:420px;max-height:520px}
