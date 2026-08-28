@@ -908,7 +908,9 @@ function renderNav(active){
             <a class="it" href="community.html"><b>Your feed</b><span>People you follow</span></a></div>
         </div></div>
       </span>
-      ${link('pricing.html','Pricing','pricing')}
+      <!-- Pricing nav item removed 2026-08-28 — page archived at archive/pricing.html,
+           full content/history preserved in git (see archive/README.md for the
+           exact restore steps, including the one nav line to add back here). -->
     </div>
     <div class="navsp"></div>
     <a class="btn ghost" href="login.html">Log in</a>
@@ -1000,8 +1002,8 @@ function bindMegaMenus(navSlot){
 
 /* ---------- mobile nav (hamburger + slide-down drawer) ----------
    Below the 900px breakpoint .navlinks is hidden by default (see
-   parfai.css) — there is no way to reach Explore/Houses/Community/
-   Pricing otherwise. This reveals the same .navlinks markup as a
+   parfai.css) — there is no way to reach Explore/Houses/Community
+   otherwise. This reveals the same .navlinks markup as a
    full-height drawer instead of duplicating the link data anywhere. */
 function bindMobileNav(navSlot){
   const burger = navSlot.querySelector('#navburger');
