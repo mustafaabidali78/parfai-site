@@ -3,7 +3,7 @@
    Card grids, product hero, and CTA bands keep the original Direction B
    full-bleed saturated family-color gradients and black pill buttons.
    The page-top hero ("Atelier" direction) is a plain panel — no gradient
-   box — set in Fraunces (display) and Inter (body), with a thin rust rule
+   box — set in Cormorant Garamond (display) and Inter (body), with a thin rust rule
    standing in for the old oversized gradient block.
    ========================================================================== */
 
@@ -20,7 +20,7 @@
   --rust:#A85C3B;
   --border:rgba(20,20,20,.09);
   --irid:linear-gradient(120deg,#8B7CFF 0%,#C86BFF 30%,#FF4D9D 62%,#FF8C42 100%);
-  --disp:'Fraunces','Georgia',serif;--body:'Inter','Helvetica Neue',Arial,sans-serif;
+  --disp:'Cormorant Garamond','Georgia',serif;--body:'Inter','Helvetica Neue',Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
