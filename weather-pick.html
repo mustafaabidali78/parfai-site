@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Weather-Aware Pick of the Day — ParfAI</title>
-<link rel="stylesheet" href="parfai.css?v=202608272015">
+<link rel="stylesheet" href="parfai.css?v=202608280310">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -18,14 +18,13 @@
 
   <div class="crumb"><a href="explore.html">Explore</a> / Weather-Aware Pick of the Day</div>
 
-  <div class="pdhero" style="background:linear-gradient(120deg,#5E7A93 0%,#3D5266 55%,#2A3A47 100%)">
-    <div class="pdimg">
-      <div class="bottle" style="width:70px;height:122px"></div>
-    </div>
-    <div>
-      <div class="pdhouse">● Live</div>
-      <h1 class="pdname" style="font-size:44px">Weather-Aware Pick of the Day</h1>
-      <div class="pddesc">ParfAI looks at the real live weather wherever you actually are — not a guess, not a hardcoded region — and recommends a fragrance from the catalog suited to how it performs in heat, cold, humidity or rain.</div>
+  <div class="whero" id="whero">
+    <video class="whero-video" id="whero-video" muted loop playsinline preload="none"></video>
+    <div class="whero-scrim"></div>
+    <div class="whero-content">
+      <div class="pdhouse" id="whero-badge">● Live</div>
+      <h1 class="pdname" id="whero-h1" style="font-size:44px">Weather-Aware<br>Pick of the Day</h1>
+      <div class="pddesc" id="whero-sub">ParfAI looks at the real live weather wherever you actually are — not a guess, not a hardcoded region — and recommends a fragrance from the catalog suited to how it performs in heat, cold, humidity or rain.</div>
     </div>
   </div>
 
@@ -146,12 +145,15 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202608272015"></script>
-<script src="weather.js?v=202608272015"></script>
+<script src="data.js?v=202608280310"></script>
+<script src="weather.js?v=202608280310"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script>
+  if (typeof onWeatherResolved === 'function' && typeof applyWeatherHero === 'function') {
+    onWeatherResolved(applyWeatherHero);
+  }
   if (typeof renderWeatherPick === 'function') renderWeatherPick('weather-live-panel');
 </script>
 </body>

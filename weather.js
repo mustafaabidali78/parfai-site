@@ -199,6 +199,19 @@ async function resolveWeatherPick(){
   }
 }
 
+/* ---------------- weather-resolved listeners ----------------
+   Anything on the page that wants to react to a real weather result
+   (not just the pick panel itself) subscribes here. Fired once for the
+   initial automatic resolution, and again any time the visitor overrides
+   it — "Use precise location" or the manual city picker — so a listener
+   like the hero video always reflects the weather actually being shown,
+   not just the first guess. */
+const _weatherResolvedListeners = [];
+function onWeatherResolved(fn){ if (typeof fn === 'function') _weatherResolvedListeners.push(fn); }
+function notifyWeatherResolved(result){
+  _weatherResolvedListeners.forEach(fn => { try { fn(result); } catch (e) { /* one bad listener shouldn't break another */ } });
+}
+
 /* ---------------- rendering ---------------- */
 
 async function renderWeatherPick(containerId){
@@ -206,6 +219,7 @@ async function renderWeatherPick(containerId){
   if (!el) return;
   el.innerHTML = `<div class="wpx-loading">Finding your local weather…</div>`;
   const result = await resolveWeatherPick();
+  notifyWeatherResolved(result);
   if (result && result.picks && result.picks.length) {
     renderWeatherResult(el, result);
   } else {
@@ -260,6 +274,7 @@ function renderWeatherResult(el, result){
       const pos = await browserGeolocate();
       const label = await reverseGeocode(pos.lat, pos.lon);
       const r = await weatherForCoords(pos.lat, pos.lon, label, result.countryCode);
+      notifyWeatherResolved(r);
       renderWeatherResult(el, r);
     } catch (e) {
       preciseBtn.disabled = false;
@@ -272,6 +287,50 @@ function renderWeatherResult(el, result){
     clearWeatherCache();
     renderManualPicker(el, `Pick a city and we'll pull real live weather for it.`);
   });
+}
+
+/* ---------------- weather-pick.html hero: video synced to real weather ----------------
+   Only 3 clips exist, so mild/hot share the sunny clip and cold/snowy
+   share the snow clip — the closest visual match available rather than
+   commissioning 5 for every bucket. */
+const WEATHER_HERO_VIDEO = {
+  hot:   'https://d8j0ntlcm91z4.cloudfront.net/user_3GClRJLPfk4DQWViYV9PO3J6IYl/hf_20260828_024601_3e0cb531-5cd6-46fa-9f06-f86ea1f50504.mp4',
+  mild:  'https://d8j0ntlcm91z4.cloudfront.net/user_3GClRJLPfk4DQWViYV9PO3J6IYl/hf_20260828_024601_3e0cb531-5cd6-46fa-9f06-f86ea1f50504.mp4',
+  rainy: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GClRJLPfk4DQWViYV9PO3J6IYl/hf_20260828_025449_f6142d09-5b64-4e8b-955b-026450d2e29a.mp4',
+  cold:  'https://d8j0ntlcm91z4.cloudfront.net/user_3GClRJLPfk4DQWViYV9PO3J6IYl/hf_20260828_025449_e6f086bc-783f-4d3b-afaf-bcae8ab5bbcd.mp4',
+  snowy: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GClRJLPfk4DQWViYV9PO3J6IYl/hf_20260828_025449_e6f086bc-783f-4d3b-afaf-bcae8ab5bbcd.mp4',
+};
+const WEATHER_HERO_COPY = {
+  hot:   'Warm &amp; bright —<br>reach for citrus',
+  mild:  'Mild &amp; easy —<br>go effortless',
+  rainy: 'Grey skies —<br>go clean &amp; green',
+  cold:  'Cold &amp; still —<br>go bold &amp; dense',
+  snowy: 'Freezing &amp; hushed —<br>go rich &amp; warm',
+};
+
+function applyWeatherHero(result){
+  const video = document.getElementById('whero-video');
+  if (!video) return; // this page has no hero — nothing to do
+  if (!result || !result.bucket) return; // resolution failed — keep the static gradient + generic copy
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const src = WEATHER_HERO_VIDEO[result.bucket];
+    if (src && video.getAttribute('data-loaded') !== src) {
+      video.setAttribute('data-loaded', src);
+      video.src = src;
+      video.oncanplay = () => { video.classList.add('ready'); video.play().catch(() => {}); };
+      video.load();
+    }
+  }
+
+  const unit = tempUnitForCountry(result.countryCode);
+  const cond = (WEATHER_COND_TEXT[result.code] || 'these conditions').toLowerCase();
+  const badge = document.getElementById('whero-badge');
+  const h1 = document.getElementById('whero-h1');
+  const sub = document.getElementById('whero-sub');
+  if (badge) badge.textContent = `● Live — ${result.label || 'your location'} · ${fmtTemp(result.tempC, unit)}`;
+  if (h1) h1.innerHTML = WEATHER_HERO_COPY[result.bucket] || WEATHER_HERO_COPY.mild;
+  if (sub) sub.textContent = `It's ${fmtTemp(result.tempC, unit)} and ${cond} where you are right now — today's pick below is chosen from the real catalog to suit exactly that.`;
 }
 
 function renderManualPicker(el, note){
@@ -289,6 +348,7 @@ function renderManualPicker(el, note){
       el.innerHTML = `<div class="wpx-loading">Finding weather in ${c.label}…</div>`;
       try {
         const r = await weatherForCoords(c.lat, c.lon, c.label, null);
+        notifyWeatherResolved(r);
         renderWeatherResult(el, r);
       } catch (e) {
         el.innerHTML = `<div class="wpx-loading">Couldn't reach the weather service right now — try again in a moment.</div>`;
