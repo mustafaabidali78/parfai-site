@@ -3,6 +3,29 @@
    logged-in user, and exposes small helpers other scripts (reviews.js) use.
 */
 
+/* ---------- login tracking (for the analytics scheduler) ----------
+   Supabase Auth itself doesn't keep a queryable log of sign-ins, only the
+   current session — so the analytics report (scripts/analytics-report.mjs,
+   run by .github/workflows/analytics-report.yml) has nothing to count
+   without this. Every real 'SIGNED_IN' event writes one row to the
+   login_events table (see supabase/migrations/0001_analytics_tracking.sql).
+
+   Note: Supabase can also re-fire 'SIGNED_IN' when a persisted session is
+   restored in a new tab/window, not only on a fresh credentials sign-in —
+   so this is "sign-in events", a reasonable activity signal, not a
+   guaranteed one-row-per-distinct-login-action count. Fire-and-forget and
+   never blocks the UI; if the login_events table doesn't exist yet (the
+   migration hasn't been run) this just logs a console warning and moves on.
+*/
+async function logLoginEvent(user){
+  if (!_sb || !user) return;
+  try {
+    await _sb.from('login_events').insert([{ user_id: user.id, email: user.email }]);
+  } catch (e) {
+    console.warn('logLoginEvent (login_events table may not exist yet — see supabase/README.md)', e);
+  }
+}
+
 async function getCurrentUser(){
   if (!_sb) return null;
   try {
@@ -59,5 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 if (_sb && _sb.auth) {
-  _sb.auth.onAuthStateChange(() => { updateNavForAuth(); });
+  _sb.auth.onAuthStateChange((event, session) => {
+    updateNavForAuth();
+    if (event === 'SIGNED_IN' && session && session.user) logLoginEvent(session.user);
+  });
 }

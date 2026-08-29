@@ -17,11 +17,12 @@
     <div class="authcard">
       <h1>Get in touch</h1>
       <p class="sub">Questions, partnership ideas, or a fragrance we're missing — let us know.</p>
-      <form onsubmit="event.preventDefault(); alert('This is a design demo — the contact form isn\'t wired up yet.');">
-        <div class="field"><label>Name</label><input type="text" required></div>
-        <div class="field"><label>Email</label><input type="email" required></div>
-        <div class="field"><label>Message</label><input type="text" placeholder="How can we help?" required></div>
+      <form id="contact-form">
+        <div class="field"><label>Name</label><input id="cf-name" type="text" required></div>
+        <div class="field"><label>Email</label><input id="cf-email" type="email" required></div>
+        <div class="field"><label>Message</label><input id="cf-message" type="text" placeholder="How can we help?" required></div>
         <button class="btn" type="submit">Send message</button>
+        <div id="cf-msg" style="margin-top:12px;font-size:13px"></div>
       </form>
     </div>
   </div>
@@ -31,5 +32,39 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
+<script>
+  /* Writes to the `feedback` table (supabase/migrations/0001_analytics_tracking.sql)
+     so submissions show up in the analytics scheduler's report — see
+     reports/analytics/README.md. Until that migration is run, _sb.from('feedback')
+     will error (table doesn't exist yet); this is caught and shown as a normal
+     "please try again" message rather than breaking the page. */
+  document.getElementById('contact-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type=submit]');
+    const msg = document.getElementById('cf-msg');
+    const name = document.getElementById('cf-name').value.trim();
+    const email = document.getElementById('cf-email').value.trim();
+    const message = document.getElementById('cf-message').value.trim();
+    if (!name || !email || !message) return;
+
+    btn.disabled = true; btn.textContent = 'Sending…';
+    msg.textContent = '';
+    try {
+      if (!_sb) throw new Error('Supabase client unavailable');
+      const { error } = await _sb.from('feedback').insert([{ name, email, message }]);
+      if (error) throw error;
+      msg.style.color = 'var(--mint)';
+      msg.textContent = "Thanks — we'll get back to you soon.";
+      form.reset();
+    } catch (err) {
+      console.error('contact form submit', err);
+      msg.style.color = 'var(--rust)';
+      msg.textContent = 'Something went wrong — please try again, or email us directly.';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Send message';
+    }
+  });
+</script>
 </body>
 </html>
