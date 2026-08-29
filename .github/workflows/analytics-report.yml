@@ -1,0 +1,51 @@
+name: Analytics report
+
+# Generates reports/analytics/<date>.md (and refreshes latest.md) from
+# Supabase — signups, logins, reviews, feedback. See reports/analytics/README.md
+# for what the numbers mean and scripts/analytics-report.mjs for the query
+# logic. One-time setup required before this produces full data — see
+# supabase/README.md.
+
+on:
+  schedule:
+    # 06:00 UTC daily. GitHub may delay scheduled runs by a few minutes
+    # under load — that's fine for a daily report.
+    - cron: '0 6 * * *'
+  workflow_dispatch: {} # lets you trigger a run manually from the Actions tab
+
+permissions:
+  contents: write # needed to commit the generated report back to the repo
+
+concurrency:
+  group: analytics-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Generate report
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/analytics-report.mjs
+
+      - name: Commit report
+        run: |
+          git config user.name "parfai-analytics-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add reports/analytics
+          if git diff --cached --quiet; then
+            echo "No change in today's report — nothing to commit."
+          else
+            git commit -m "Analytics report: $(date -u +%Y-%m-%d)"
+            git push
+          fi
