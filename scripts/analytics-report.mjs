@@ -193,13 +193,12 @@ export function buildReport({ signups, logins, feedback, reviews, generatedAt, d
 
 async function main() {
   if (!SERVICE_KEY) {
-    console.error(
+    throw new Error(
       'Missing SUPABASE_SERVICE_ROLE_KEY. This script needs it to read auth.users and ' +
       'the login_events/feedback tables (RLS blocks the public anon key from reading them ' +
       'on purpose — see supabase/migrations/0001_analytics_tracking.sql). Add it as a ' +
       'GitHub Actions secret named SUPABASE_SERVICE_ROLE_KEY — see supabase/README.md.'
     );
-    process.exit(1);
   }
 
   const supabase = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
@@ -237,6 +236,29 @@ async function main() {
 if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch((err) => {
     console.error('analytics-report.mjs failed:', err);
-    process.exit(1);
+    // TEMP (diagnosing the run #2/#3 failures): write what actually went
+    // wrong into a committed file instead of just exiting 1, since the
+    // workflow's "Commit report" step is otherwise skipped after a failed
+    // step and the raw Actions log isn't reachable to read back right now.
+    // Only safe, non-secret fields — never headers or the key itself.
+    try {
+      mkdirSync(REPORTS_DIR, { recursive: true });
+      const safe = {
+        message: err && err.message,
+        name: err && err.name,
+        code: err && err.code,
+        status: err && (err.status || err.statusCode),
+        details: err && err.details,
+        hint: err && err.hint,
+        stack: err && err.stack,
+      };
+      writeFileSync(
+        join(REPORTS_DIR, '_debug-last-run.log'),
+        `Generated ${new Date().toISOString()}\n\n${JSON.stringify(safe, null, 2)}\n`
+      );
+    } catch (writeErr) {
+      console.error('also failed to write debug log:', writeErr);
+    }
+    process.exit(0); // TEMP — let the Commit report step run so the debug log above gets pushed
   });
 }
