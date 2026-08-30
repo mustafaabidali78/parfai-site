@@ -91,7 +91,7 @@ async function feedbackStats(supabase) {
 
 async function reviewStats(supabase) {
   const { data, error } = await supabase.from('reviews').select('perfume_id,rating,created_at');
-  if (error) throw error;
+  if (error) return null; // table missing/renamed, or a permissions issue — don't take the whole report down
   const total = data.length;
   const last24h = data.filter((r) => new Date(r.created_at) >= since24h).length;
   const last7d = data.filter((r) => new Date(r.created_at) >= since7d).length;
@@ -129,8 +129,13 @@ export function buildReport({ signups, logins, feedback, reviews, generatedAt, d
 
   lines.push('## Signups & logins');
   lines.push('');
+  if (!signups) {
+    lines.push(notSetUpNote('Signup', 'Could not read the user list this run (see the workflow log for the underlying error) — this needs the `SUPABASE_SERVICE_ROLE_KEY` secret to have admin access to Supabase Auth.'));
+  }
   lines.push(statsTable([
-    `| New signups | ${fmt(signups.new24h)} | ${fmt(signups.new7d)} | ${fmt(signups.total)} |`,
+    signups
+      ? `| New signups | ${fmt(signups.new24h)} | ${fmt(signups.new7d)} | ${fmt(signups.total)} |`
+      : `| New signups | — | — | — |`,
     logins
       ? `| Login events | ${fmt(logins.last24h)} | ${fmt(logins.last7d)} | ${fmt(logins.total)} |`
       : `| Login events | — | — | — |`,
@@ -146,20 +151,24 @@ export function buildReport({ signups, logins, feedback, reviews, generatedAt, d
 
   lines.push('## Reviews');
   lines.push('');
-  lines.push(statsTable([
-    `| New reviews | ${fmt(reviews.last24h)} | ${fmt(reviews.last7d)} | ${fmt(reviews.total)} |`,
-  ]));
-  lines.push('');
-  lines.push(`Average rating (all-time): **${reviews.avgRating ?? 'n/a'} / 5**`);
-  lines.push('');
-  if (reviews.top.length) {
-    lines.push('Most-reviewed fragrances (all-time):');
+  if (reviews) {
+    lines.push(statsTable([
+      `| New reviews | ${fmt(reviews.last24h)} | ${fmt(reviews.last7d)} | ${fmt(reviews.total)} |`,
+    ]));
     lines.push('');
-    reviews.top.forEach(([perfumeId, count], i) => {
-      lines.push(`${i + 1}. \`${perfumeId}\` — ${fmt(count)} review${count === 1 ? '' : 's'}`);
-    });
+    lines.push(`Average rating (all-time): **${reviews.avgRating ?? 'n/a'} / 5**`);
+    lines.push('');
+    if (reviews.top.length) {
+      lines.push('Most-reviewed fragrances (all-time):');
+      lines.push('');
+      reviews.top.forEach(([perfumeId, count], i) => {
+        lines.push(`${i + 1}. \`${perfumeId}\` — ${fmt(count)} review${count === 1 ? '' : 's'}`);
+      });
+    } else {
+      lines.push('_No reviews yet._');
+    }
   } else {
-    lines.push('_No reviews yet._');
+    lines.push(notSetUpNote('Review', 'Could not read the `reviews` table this run — it may not exist yet, or its columns differ from `perfume_id, rating, created_at`.'));
   }
   lines.push('');
 
@@ -195,11 +204,23 @@ async function main() {
 
   const supabase = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
 
+  // Run each section independently: one bad table or a permissions hiccup on
+  // one section should not stop the whole report from being generated — the
+  // real error still gets logged here so it's visible in the workflow run.
+  async function safely(label, fn) {
+    try {
+      return await fn(supabase);
+    } catch (err) {
+      console.error(`${label} query failed:`, err);
+      return null;
+    }
+  }
+
   const [signups, logins, feedback, reviews] = await Promise.all([
-    countSignups(supabase),
-    loginStats(supabase),
-    feedbackStats(supabase),
-    reviewStats(supabase),
+    safely('signups', countSignups),
+    safely('logins', loginStats),
+    safely('feedback', feedbackStats),
+    safely('reviews', reviewStats),
   ]);
 
   const report = buildReport({ signups, logins, feedback, reviews, generatedAt: now, dateStamp });

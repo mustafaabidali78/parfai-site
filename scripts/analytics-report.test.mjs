@@ -63,4 +63,24 @@ const dateStamp = '2026-08-29';
   console.log('✓ scenario 2 (fully populated) OK');
 }
 
+// --- Scenario 3: a section's query failed this run (bad key, missing table,
+// transient error) — the rest of the report should still render, not crash.
+{
+  const report = buildReport({
+    signups: null,   // e.g. auth admin query failed
+    logins: null,
+    feedback: { total: 3, last24h: 0, last7d: 1 },
+    reviews: null,    // e.g. reviews table missing/renamed
+    generatedAt,
+    dateStamp,
+  });
+
+  assert.match(report, /New signups \| — \| — \| — \|/);
+  assert.match(report, /Signup tracking isn't set up yet/);
+  assert.match(report, /Review tracking isn't set up yet/);
+  assert.match(report, /Submissions \| 0 \| 1 \| 3/);
+  assert.doesNotMatch(report, /@/, 'report must not contain anything email-shaped');
+  console.log('✓ scenario 3 (partial query failure) OK');
+}
+
 console.log('\nAll analytics-report tests passed.');
