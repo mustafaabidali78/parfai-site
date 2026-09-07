@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">Note — ParfAI</title>
+<meta id="pgdesc" name="description" content="Browse fragrances featuring this note on ParfAI."/>
 <link rel="stylesheet" href="parfai.css?v=202608301224">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,6 +34,7 @@
     content.innerHTML = `<div class="doc"><h1>Note not found</h1><p>We don't have that one catalogued yet.</p><a class="btn" href="notes.html">← Back to Browse by note</a></div>`;
   } else {
     document.getElementById('pgtitle').textContent = `${n} — ParfAI`;
+    document.getElementById('pgdesc').setAttribute('content', `Fragrances featuring ${n}: browse every ParfAI fragrance with ${n} in its notes, with ratings and where to buy.`);
     const category = noteCategory(n);
     const catIndex = NOTE_CATEGORY_ORDER.indexOf(category);
     const bgGrad = gr(catIndex >= 0 ? catIndex : 0);

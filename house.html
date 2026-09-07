@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">House — ParfAI</title>
+<meta id="pgdesc" name="description" content="Browse fragrances from this house on ParfAI, with notes, ratings, and where to buy."/>
 <link rel="stylesheet" href="parfai.css?v=202608301224">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,6 +31,7 @@
     content.innerHTML = `<div class="doc"><h1>House not found</h1><a class="btn" href="houses.html">← Back to Houses</a></div>`;
   } else {
     document.getElementById('pgtitle').textContent = `${h.name} — ParfAI`;
+    document.getElementById('pgdesc').setAttribute('content', `${h.name}: ${h.blurb} Browse every ${h.name} fragrance on ParfAI, with notes, ratings, and where to buy.`);
     const perfumes = PERFUMES.filter(p=>p.houseId===h.id);
     content.innerHTML = `
       <div class="crumb"><a href="houses.html">Houses</a> / ${h.name}</div>

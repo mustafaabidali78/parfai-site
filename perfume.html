@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">Fragrance — ParfAI</title>
+<meta id="pgdesc" name="description" content="Fragrance notes, ratings, and where to buy on ParfAI."/>
 <link rel="stylesheet" href="parfai.css?v=202608301224">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +37,8 @@
     content.innerHTML = `<div class="doc"><h1>Fragrance not found</h1><p>We couldn't find that one in the catalog yet.</p><a class="btn" href="explore.html">← Back to Explore</a></div>`;
   } else {
     document.getElementById('pgtitle').textContent = `${p.name} by ${houseName(p.houseId)} — ParfAI`;
+    const metaDesc = p.description && p.description.length <= 160 ? p.description : `${p.name} by ${houseName(p.houseId)}: notes, ratings, and where to buy on ParfAI.`;
+    document.getElementById('pgdesc').setAttribute('content', metaDesc);
     const g = famColor(p.family);
     const similar = PERFUMES.filter(x=>x.id!==p.id && (x.family===p.family || x.houseId===p.houseId)).slice(0,4);
     const dupes = (p.dupeIds||[]).map(perfumeById).filter(Boolean);
