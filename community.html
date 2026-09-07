@@ -52,12 +52,12 @@
     <div class="card">
       <h3>Scent of the Day</h3>
       <div id="sotd"></div>
-      <a class="btn ghost block" style="margin-top:16px">Log what you're wearing</a>
+      <a class="btn ghost block" style="margin-top:16px" href="#" data-log-sotd>Log what you're wearing</a>
     </div>
     <div class="card">
       <h3>Trending discussions</h3>
       <div id="threads"></div>
-      <a class="btn ghost block" style="margin-top:16px">Start a discussion</a>
+      <a class="btn ghost block" style="margin-top:16px" href="#" data-start-discussion>Start a discussion</a>
     </div>
   </section>
 
@@ -75,6 +75,7 @@
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script src="reviews.js"></script>
+<script src="community.js"></script>
 <script>
   document.getElementById('stat-fragrances').textContent = PERFUMES.length + '+';
   document.getElementById('stat-houses').textContent = HOUSES.length + '+';
@@ -107,14 +108,34 @@
   refreshCommunityRevs();
   window.addEventListener('parfai:review-posted', refreshCommunityRevs);
 
-  document.getElementById('sotd').innerHTML = SOTD.map((s,i)=>`
-    <div class="sotd"><span class="av" style="${av(i)}"></span>
-      <div class="t"><b>${s.u}</b> <span>is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div>
-      <span class="time">${s.t}</span></div>`).join('');
+  function renderSotd(list){
+    document.getElementById('sotd').innerHTML = list.map((s,i)=>`
+      <div class="sotd"><span class="av" style="${av(i)}"></span>
+        <div class="t"><b>${s.u}</b>${s.live?'<span class="newbadge">NEW</span>':''} <span>is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div>
+        <span class="time">${s.t}</span></div>`).join('');
+  }
+  renderSotd(SOTD);
+  function refreshSotd(){
+    fetchLiveSotd(8).then(rows=>{
+      renderSotd([...rows.map(liveSotdToCardShape), ...SOTD]);
+    });
+  }
+  refreshSotd();
+  window.addEventListener('parfai:sotd-posted', refreshSotd);
 
-  document.getElementById('threads').innerHTML = THREADS.map(t=>`
-    <a class="thread"><div class="ti">${t.t}</div>
-      <div class="mt"><span class="pill">${t.c}</span><span>💬 ${t.r} replies</span></div></a>`).join('');
+  function renderThreads(list){
+    document.getElementById('threads').innerHTML = list.map(t=>`
+      <a class="thread"><div class="ti">${t.t}${t.live?'<span class="newbadge">NEW</span>':''}</div>
+        <div class="mt"><span class="pill">${t.c}</span><span>💬 ${t.r} replies</span></div></a>`).join('');
+  }
+  renderThreads(THREADS);
+  function refreshThreads(){
+    fetchLiveDiscussions(8).then(rows=>{
+      renderThreads([...rows.map(liveDiscussionToCardShape), ...THREADS]);
+    });
+  }
+  refreshThreads();
+  window.addEventListener('parfai:discussion-posted', refreshThreads);
 </script>
 </body>
 </html>

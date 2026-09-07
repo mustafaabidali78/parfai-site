@@ -78,7 +78,7 @@
 
     <div class="csplit" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px">
       <div class="card"><h3>Latest reviews</h3><p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some reviews below are example content shown while our community grows, reviews people submit live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p><div id="rev"></div></div>
-      <div class="card"><h3>Scent of the Day</h3><p style="font-size:12px;color:var(--muted);margin:0 0 12px">Example content shown while our community grows.</p><div id="sotd"></div></div>
+      <div class="card"><h3>Scent of the Day</h3><p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some entries below are example content shown while our community grows, entries people log live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p><div id="sotd"></div></div>
     </div>
   </div>
 
@@ -100,6 +100,7 @@
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script src="reviews.js"></script>
+<script src="community.js"></script>
 <script>
   if (typeof renderWeatherPick === 'function') renderWeatherPick('home-weather-widget');
 
@@ -119,7 +120,13 @@
     if (rows.length) renderHomeRevs([...rows.map(liveToCardShape), ...REVIEWS].slice(0,4));
   });
 
-  document.getElementById('sotd').innerHTML = SOTD.map((s,i)=>`<div class="sotd"><span class="av" style="${av(i)}"></span><div><b>${s.u}</b> <span class="w">is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div><span class="time">${s.t}</span></div>`).join('');
+  function renderHomeSotd(list){
+    document.getElementById('sotd').innerHTML = list.map((s,i)=>`<div class="sotd"><span class="av" style="${av(i)}"></span><div><b>${s.u}</b>${s.live?'<span class="newbadge">NEW</span>':''} <span class="w">is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div><span class="time">${s.t}</span></div>`).join('');
+  }
+  renderHomeSotd(SOTD);
+  fetchLiveSotd(5).then(rows=>{
+    if (rows.length) renderHomeSotd([...rows.map(liveSotdToCardShape), ...SOTD].slice(0,5));
+  });
 </script>
 </body>
 </html>
