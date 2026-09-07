@@ -1409,7 +1409,7 @@ function renderFooter(){
       <div><b>ParfAI</b><span>The world's first AI perfumer</span></div>
       <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="notes.html">Browse by note</a><a href="houses.html">Houses</a></div>
       <div><b>Community</b><a href="community.html">Reviews</a><a href="community.html">Photo wall</a><a href="community.html">Discussions</a></div>
-      <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="credits.html">Photo credits</a><a href="contact.html">Contact</a></div>
+      <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="credits.html">Photo credits</a><a href="contact.html">Contact</a></div>
     </div>
     <div style="margin-top:24px">© 2026 ParfAI · Some links are affiliate links.</div>
   </footer></div>`;
