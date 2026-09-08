@@ -119,13 +119,50 @@ async function fetchLiveDiscussions(limit){
 }
 
 function liveDiscussionToCardShape(row){
-  return { t: row.title, c: row.category, r: 0, live: true };
+  return { t: row.title, c: row.category, r: 0, live: true, id: row.id };
 }
 
 async function submitDiscussion({ category, title, body, author }){
   if (!_sb) return { error: { message: 'This feature is unavailable right now, please try again later.' } };
   try {
     return await _sb.from('discussions').insert([{ category, title, body, author }]);
+  } catch (e) {
+    return { error: e };
+  }
+}
+
+async function fetchDiscussionById(id){
+  if (!_sb) return null;
+  const numericId = Number(id);
+  if (!Number.isFinite(numericId)) return null;
+  try {
+    const { data, error } = await _sb.from('discussions').select('*').eq('id', numericId).maybeSingle();
+    if (error) { console.error('fetchDiscussionById', error); return null; }
+    return data || null;
+  } catch (e) {
+    console.error('fetchDiscussionById', e);
+    return null;
+  }
+}
+
+/* ---------- Discussion replies ---------- */
+
+async function fetchReplies(discussionId, limit){
+  if (!_sb) return [];
+  try {
+    const { data, error } = await _sb.from('discussion_replies').select('*').eq('discussion_id', discussionId).order('created_at', { ascending: true }).limit(limit || 200);
+    if (error) { console.error('fetchReplies', error); return []; }
+    return data || [];
+  } catch (e) {
+    console.error('fetchReplies', e);
+    return [];
+  }
+}
+
+async function submitReply({ discussionId, author, body }){
+  if (!_sb) return { error: { message: 'This feature is unavailable right now, please try again later.' } };
+  try {
+    return await _sb.from('discussion_replies').insert([{ discussion_id: discussionId, author, body }]);
   } catch (e) {
     return { error: e };
   }

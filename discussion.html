@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="pgtitle">Discussion — ParfAI</title>
+<meta id="pgdesc" name="description" content="Join the conversation on ParfAI's community discussions."/>
+<link rel="stylesheet" href="parfai.css?v=202608301224">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+<nav id="nav-slot" data-active="community"></nav>
+
+<div class="wrap"><div class="doc" id="content">
+  <p style="color:var(--muted)">Loading discussion…</p>
+</div></div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js?v=202608301224"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script src="community.js"></script>
+<script>
+  const content = document.getElementById('content');
+  const discussionId = qs('id');
+
+  function notFound(){
+    content.innerHTML = `<h1>Discussion not found</h1><p style="color:var(--muted)">This might be one of the example discussions shown while our community grows, those aren't real posts yet. <a href="community.html" style="color:var(--violet)">Back to Community</a></p>`;
+  }
+
+  async function init(){
+    if (!discussionId){ notFound(); return; }
+    const discussion = await fetchDiscussionById(discussionId);
+    if (!discussion){ notFound(); return; }
+
+    document.getElementById('pgtitle').textContent = `${discussion.title} — ParfAI`;
+    document.getElementById('pgdesc').setAttribute('content', `${discussion.title}: a ParfAI community discussion in ${discussion.category}.`);
+
+    content.innerHTML = `
+      <div class="crumb"><a href="community.html">Community</a> / ${discussion.category}</div>
+      <div class="hero" style="padding:20px 0 30px;text-align:left">
+        <span class="pill">${discussion.category}</span>
+        <h1 style="font-size:38px;margin:14px 0 8px">${discussion.title}</h1>
+        <div style="font-size:13px;color:var(--muted)">Started by <b>${discussion.author}</b> · ${timeAgo(discussion.created_at)} ago</div>
+      </div>
+      <div class="rc" style="margin-bottom:30px">
+        <div class="body" style="font-size:14px">${discussion.body}</div>
+      </div>
+      <h3 style="margin-bottom:14px">Replies</h3>
+      <div id="replies" style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px"></div>
+      <div class="card">
+        <h3>Add a reply</h3>
+        <form id="reply-form">
+          <div class="field"><label>Your name</label><input id="reply-author" type="text" placeholder="e.g. FragBro" maxlength="60" required></div>
+          <div class="field"><label>Reply</label><textarea id="reply-body" rows="3" maxlength="1000" placeholder="Add to the conversation…" required></textarea></div>
+          <button class="btn block" type="submit">Post reply</button>
+          <div id="reply-msg"></div>
+        </form>
+      </div>
+    `;
+
+    const loggedInUser = typeof getCurrentUser === 'function' ? await getCurrentUser() : null;
+    const prefillName = loggedInUser && typeof displayNameFor === 'function' ? displayNameFor(loggedInUser) : '';
+    if (prefillName) document.getElementById('reply-author').value = prefillName;
+
+    function renderReplies(list){
+      const repliesEl = document.getElementById('replies');
+      if (!list.length){
+        repliesEl.innerHTML = `<p style="color:var(--muted);font-size:13px">No replies yet, be the first.</p>`;
+        return;
+      }
+      repliesEl.innerHTML = list.map((r,i)=>`
+        <div class="rc">
+          <div class="foot" style="margin-top:0"><span class="who"><span class="av" style="${av(i)}"></span>${r.author}</span><span>${timeAgo(r.created_at)} ago</span></div>
+          <div class="body" style="margin-top:8px">${r.body}</div>
+        </div>`).join('');
+    }
+
+    async function refreshReplies(){
+      const rows = await fetchReplies(discussion.id);
+      renderReplies(rows);
+    }
+    refreshReplies();
+
+    document.getElementById('reply-form').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const msg = document.getElementById('reply-msg');
+      const author = document.getElementById('reply-author').value.trim();
+      const body = document.getElementById('reply-body').value.trim();
+      if (!author || !body){ msg.className='rvmsg err'; msg.textContent='Please fill in your name and a reply.'; return; }
+
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true;
+      const { error } = await submitReply({ discussionId: discussion.id, author, body });
+      btn.disabled = false;
+      if (error){
+        msg.className='rvmsg err';
+        msg.textContent = 'Something went wrong, please try again.';
+        console.error(error);
+        return;
+      }
+      msg.className = 'rvmsg ok';
+      msg.textContent = 'Posted, thanks!';
+      document.getElementById('reply-body').value = '';
+      refreshReplies();
+      setTimeout(()=>{ msg.textContent=''; }, 2000);
+    });
+  }
+
+  init();
+</script>
+</body>
+</html>
