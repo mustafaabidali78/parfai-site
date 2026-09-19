@@ -23,6 +23,36 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://parfai.org/#organization",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "logo": "https://parfai.org/images/social/logo-square.jpg",
+      "description": "ParfAI is a fragrance discovery platform helping people find their next signature scent through real notes, smart matching tools, and a growing community."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://parfai.org/#website",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "publisher": { "@id": "https://parfai.org/#organization" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://parfai.org/explore.html?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

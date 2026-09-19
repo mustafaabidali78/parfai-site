@@ -36,6 +36,36 @@
   .matchscore{font-family:var(--disp);font-weight:800;font-size:13px;color:var(--mint);white-space:nowrap}
   .savings{font-family:var(--disp);font-weight:900;font-size:22px}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://parfai.org/#organization",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "logo": "https://parfai.org/images/social/logo-square.jpg",
+      "description": "ParfAI is a fragrance discovery platform helping people find their next signature scent through real notes, smart matching tools, and a growing community."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://parfai.org/#website",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "publisher": { "@id": "https://parfai.org/#organization" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://parfai.org/explore.html?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
