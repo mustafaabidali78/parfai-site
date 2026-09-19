@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">House — ParfAI</title>
 <meta id="pgdesc" name="description" content="Browse fragrances from this house on ParfAI, with notes, ratings, and where to buy."/>
+<link id="canonical" rel="canonical" href="https://parfai.org/house.html">
+<meta id="og-type" property="og:type" content="website">
+<meta property="og:site_name" content="ParfAI">
+<meta id="og-title" property="og:title" content="House — ParfAI">
+<meta id="og-desc" property="og:description" content="Browse fragrances from this house on ParfAI, with notes, ratings, and where to buy.">
+<meta id="og-url" property="og:url" content="https://parfai.org/house.html">
+<meta id="og-image" property="og:image" content="https://parfai.org/images/social/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta id="twitter-title" name="twitter:title" content="House — ParfAI">
+<meta id="twitter-desc" name="twitter:description" content="Browse fragrances from this house on ParfAI, with notes, ratings, and where to buy.">
+<meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
 <link rel="stylesheet" href="parfai.css?v=202608301224">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,8 +43,11 @@
   if (!h){
     content.innerHTML = `<div class="doc"><h1>House not found</h1><a class="btn" href="houses.html">← Back to Houses</a></div>`;
   } else {
-    document.getElementById('pgtitle').textContent = `${h.name} — ParfAI`;
-    document.getElementById('pgdesc').setAttribute('content', `${h.name}: ${h.blurb} Browse every ${h.name} fragrance on ParfAI, with notes, ratings, and where to buy.`);
+    updateSocialTags({
+      title: `${h.name} — ParfAI`,
+      desc: `${h.name}: ${h.blurb} Browse every ${h.name} fragrance on ParfAI, with notes, ratings, and where to buy.`,
+      url: `https://parfai.org/house.html?id=${encodeURIComponent(h.id)}`,
+    });
     const perfumes = PERFUMES.filter(p=>p.houseId===h.id);
     content.innerHTML = `
       <div class="crumb"><a href="houses.html">Houses</a> / ${h.name}</div>

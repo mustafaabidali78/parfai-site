@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">Fragrance — ParfAI</title>
 <meta id="pgdesc" name="description" content="Fragrance notes, ratings, and where to buy on ParfAI."/>
+<link id="canonical" rel="canonical" href="https://parfai.org/perfume.html">
+<meta id="og-type" property="og:type" content="website">
+<meta property="og:site_name" content="ParfAI">
+<meta id="og-title" property="og:title" content="Fragrance — ParfAI">
+<meta id="og-desc" property="og:description" content="Fragrance notes, ratings, and where to buy on ParfAI.">
+<meta id="og-url" property="og:url" content="https://parfai.org/perfume.html">
+<meta id="og-image" property="og:image" content="https://parfai.org/images/social/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta id="twitter-title" name="twitter:title" content="Fragrance — ParfAI">
+<meta id="twitter-desc" name="twitter:description" content="Fragrance notes, ratings, and where to buy on ParfAI.">
+<meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
 <link rel="stylesheet" href="parfai.css?v=202608301224">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,9 +49,14 @@
   if (!p){
     content.innerHTML = `<div class="doc"><h1>Fragrance not found</h1><p>We couldn't find that one in the catalog yet.</p><a class="btn" href="explore.html">← Back to Explore</a></div>`;
   } else {
-    document.getElementById('pgtitle').textContent = `${p.name} by ${houseName(p.houseId)} — ParfAI`;
+    const pageTitle = `${p.name} by ${houseName(p.houseId)} — ParfAI`;
     const metaDesc = p.description && p.description.length <= 160 ? p.description : `${p.name} by ${houseName(p.houseId)}: notes, ratings, and where to buy on ParfAI.`;
-    document.getElementById('pgdesc').setAttribute('content', metaDesc);
+    updateSocialTags({
+      title: pageTitle,
+      desc: metaDesc,
+      url: `https://parfai.org/perfume.html?id=${encodeURIComponent(p.id)}`,
+      image: p.image ? (/^https?:\/\//.test(p.image) ? p.image : `https://parfai.org/${p.image}`) : null,
+    });
     const g = famColor(p.family);
     const similar = PERFUMES.filter(x=>x.id!==p.id && (x.family===p.family || x.houseId===p.houseId)).slice(0,4);
     const dupes = (p.dupeIds||[]).map(perfumeById).filter(Boolean);
@@ -57,7 +75,7 @@
       <div class="pdhero" style="background:linear-gradient(135deg,${g[0]},${g[1]})">
         <div class="pdimg">
           ${sigCanvasHTML(p)}
-          ${p.image ? `<img class="realphoto" src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">` : `<div class="bottle"></div>`}
+          ${p.image ? `<img class="realphoto" src="${p.image}" alt="${p.name} bottle" loading="eager" fetchpriority="high" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">` : `<div class="bottle"></div>`}
         </div>
         <div>
           <div class="pdhouse"><a href="house.html?id=${p.houseId}">${houseName(p.houseId)}</a></div>

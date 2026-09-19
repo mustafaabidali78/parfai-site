@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">Note — ParfAI</title>
 <meta id="pgdesc" name="description" content="Browse fragrances featuring this note on ParfAI."/>
+<link id="canonical" rel="canonical" href="https://parfai.org/note.html">
+<meta id="og-type" property="og:type" content="website">
+<meta property="og:site_name" content="ParfAI">
+<meta id="og-title" property="og:title" content="Note — ParfAI">
+<meta id="og-desc" property="og:description" content="Browse fragrances featuring this note on ParfAI.">
+<meta id="og-url" property="og:url" content="https://parfai.org/note.html">
+<meta id="og-image" property="og:image" content="https://parfai.org/images/social/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta id="twitter-title" name="twitter:title" content="Note — ParfAI">
+<meta id="twitter-desc" name="twitter:description" content="Browse fragrances featuring this note on ParfAI.">
+<meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
 <link rel="stylesheet" href="parfai.css?v=202608301224">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,8 +46,12 @@
   if (!exists){
     content.innerHTML = `<div class="doc"><h1>Note not found</h1><p>We don't have that one catalogued yet.</p><a class="btn" href="notes.html">← Back to Browse by note</a></div>`;
   } else {
-    document.getElementById('pgtitle').textContent = `${n} — ParfAI`;
-    document.getElementById('pgdesc').setAttribute('content', `Fragrances featuring ${n}: browse every ParfAI fragrance with ${n} in its notes, with ratings and where to buy.`);
+    updateSocialTags({
+      title: `${n} — ParfAI`,
+      desc: `Fragrances featuring ${n}: browse every ParfAI fragrance with ${n} in its notes, with ratings and where to buy.`,
+      url: `https://parfai.org/note.html?n=${encodeURIComponent(n)}`,
+      image: (img && img.url) ? img.url : null,
+    });
     const category = noteCategory(n);
     const catIndex = NOTE_CATEGORY_ORDER.indexOf(category);
     const bgGrad = gr(catIndex >= 0 ? catIndex : 0);

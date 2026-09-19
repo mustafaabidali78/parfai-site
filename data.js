@@ -998,6 +998,25 @@ function perfumeById(id){ return PERFUMES.find(p=>p.id===id); }
 function qs(name){ return new URLSearchParams(window.location.search).get(name); }
 function perfumeAllNotes(p){ return [...p.notes.top, ...p.notes.heart, ...p.notes.base]; }
 
+/* ---------- social share tags (Open Graph / Twitter Card) ----------
+   Dynamic pages (perfume/house/note/discussion) start with generic
+   fallback tags in their <head> so a link is never blank if it's shared
+   before this runs. Once the real record loads, this fills in the
+   actual title, description, url, and image so the preview card people
+   see on Facebook, Instagram, X, iMessage, etc looks right. */
+function updateSocialTags({ title, desc, url, image }){
+  const set = (id, attr, val) => { const el = document.getElementById(id); if (el && val) el.setAttribute(attr, val); };
+  if (title) { const t = document.getElementById('pgtitle'); if (t) t.textContent = title; }
+  set('og-title', 'content', title);
+  set('twitter-title', 'content', title);
+  set('pgdesc', 'content', desc);
+  set('og-desc', 'content', desc);
+  set('twitter-desc', 'content', desc);
+  set('canonical', 'href', url);
+  set('og-url', 'content', url);
+  if (image) { set('og-image', 'content', image); set('twitter-image', 'content', image); }
+}
+
 /* ---------- note taxonomy (for the note-picker / Explore by note page) ---------- */
 const NOTE_CATEGORY_ORDER = ['Citrus','Floral','Fruity','Green & Aromatic','Spicy','Woody','Amber & Resin','Gourmand & Sweet','Musk & Animalic','Leather & Tobacco','Marine & Mineral','Earthy','Other'];
 const NOTE_CATEGORY_MAP = {

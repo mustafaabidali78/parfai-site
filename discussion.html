@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pgtitle">Discussion — ParfAI</title>
 <meta id="pgdesc" name="description" content="Join the conversation on ParfAI's community discussions."/>
+<link id="canonical" rel="canonical" href="https://parfai.org/discussion.html">
+<meta id="og-type" property="og:type" content="website">
+<meta property="og:site_name" content="ParfAI">
+<meta id="og-title" property="og:title" content="Discussion — ParfAI">
+<meta id="og-desc" property="og:description" content="Join the conversation on ParfAI's community discussions.">
+<meta id="og-url" property="og:url" content="https://parfai.org/discussion.html">
+<meta id="og-image" property="og:image" content="https://parfai.org/images/social/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta id="twitter-title" name="twitter:title" content="Discussion — ParfAI">
+<meta id="twitter-desc" name="twitter:description" content="Join the conversation on ParfAI's community discussions.">
+<meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
 <link rel="stylesheet" href="parfai.css?v=202608301224">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,8 +52,11 @@
     const discussion = await fetchDiscussionById(discussionId);
     if (!discussion){ notFound(); return; }
 
-    document.getElementById('pgtitle').textContent = `${discussion.title} — ParfAI`;
-    document.getElementById('pgdesc').setAttribute('content', `${discussion.title}: a ParfAI community discussion in ${discussion.category}.`);
+    updateSocialTags({
+      title: `${discussion.title} — ParfAI`,
+      desc: `${discussion.title}: a ParfAI community discussion in ${discussion.category}.`,
+      url: `https://parfai.org/discussion.html?id=${encodeURIComponent(discussion.id)}`,
+    });
 
     content.innerHTML = `
       <div class="crumb"><a href="community.html">Community</a> / ${discussion.category}</div>
