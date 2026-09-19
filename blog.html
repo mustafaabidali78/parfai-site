@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blog — ParfAI</title>
+<meta name="description" content="Fragrance guides, dupe comparisons, and note breakdowns from ParfAI, to help you find your next signature scent."/>
+<link rel="canonical" href="https://parfai.org/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ParfAI">
+<meta property="og:title" content="Blog — ParfAI">
+<meta property="og:description" content="Fragrance guides, dupe comparisons, and note breakdowns from ParfAI, to help you find your next signature scent.">
+<meta property="og:url" content="https://parfai.org/blog.html">
+<meta property="og:image" content="https://parfai.org/images/social/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog — ParfAI">
+<meta name="twitter:description" content="Fragrance guides, dupe comparisons, and note breakdowns from ParfAI, to help you find your next signature scent.">
+<meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
+<link rel="stylesheet" href="parfai.css?v=202608301224">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://parfai.org/#organization",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "logo": "https://parfai.org/images/social/logo-square.jpg",
+      "description": "ParfAI is a fragrance discovery platform helping people find their next signature scent through real notes, smart matching tools, and a growing community."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://parfai.org/#website",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "publisher": { "@id": "https://parfai.org/#organization" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://parfai.org/explore.html?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<nav id="nav-slot" data-active="blog"></nav>
+
+<div class="wrap">
+  <div class="hero" style="padding:50px 0 30px">
+    <div class="rule"></div>
+    <div class="k">Guides, comparisons, and fragrance education</div>
+    <h1 style="font-size:52px">The ParfAI Blog</h1>
+    <div class="sub">Dupe comparisons, note guides, and honest fragrance advice, built from our own catalog data.</div>
+  </div>
+
+  <div class="hgrid" id="posts" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))"></div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js?v=202608301224"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script>
+  function formatDate(d){
+    return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  const posts = BLOG_POSTS.slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
+  document.getElementById('posts').innerHTML = posts.length ? posts.map(p=>`
+    <a class="hcard" href="${p.slug}.html">
+      <div class="tier">${p.category.toUpperCase()}</div>
+      <div class="hn">${p.title}</div>
+      <div class="hd">${p.excerpt}</div>
+      <div class="hc">${formatDate(p.date)}</div>
+    </a>`).join('') : `<p style="color:var(--muted)">New posts are on their way, check back soon.</p>`;
+</script>
+</body>
+</html>

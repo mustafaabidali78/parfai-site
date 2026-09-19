@@ -973,6 +973,16 @@ const THREADS = [
   { t:'Decant swap thread — August', c:'Swaps', r:51 },
 ];
 
+/* ---------- blog ----------
+   Each post is one flat HTML file at the site root (slug.html), listed
+   here so blog.html can build its index automatically. Add a new entry
+   plus its HTML file to publish a post; nothing else needs to change. */
+const BLOG_POSTS = [
+  { slug:'blog-aventus-vs-club-de-nuit-intense-man', title:'Best Aventus Dupes: How Close Is Club de Nuit Intense Man?',
+    excerpt:'Creed Aventus is the fragrance that launched a thousand dupes. We compare it note for note against Club de Nuit Intense Man, the $35 alternative everyone talks about.',
+    date:'2026-09-19', category:'Dupes & Comparisons', perfumeIds:['aventus','clubdenuit'] },
+];
+
 /* ---------- helpers ---------- */
 const GRADS = ['#A8613E,#7A4028','#6B7A4F,#47522F','#8B5169,#5C3348','#5E7A93,#3D5266','#C08379,#8A564E','#7C9683,#526B58','#C6963C,#8F6A24','#6B4B3A,#402B20'];
 function gr(i){ return `linear-gradient(140deg,${GRADS[i%GRADS.length]})`; }
@@ -1409,6 +1419,7 @@ function renderNav(active){
             <a class="it" href="community.html"><b>Your feed</b><span>People you follow</span></a></div>
         </div></div>
       </span>
+      ${link('blog.html','Blog','blog')}
       <!-- Pricing nav item removed 2026-08-28 — page archived at archive/pricing.html,
            full content/history preserved in git (see archive/README.md for the
            exact restore steps, including the one nav line to add back here). -->
@@ -1426,7 +1437,7 @@ function renderFooter(){
   return `<div class="wrap"><footer>
     <div class="fcols">
       <div><b>ParfAI</b><span>The world's first AI perfumer</span></div>
-      <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="notes.html">Browse by note</a><a href="houses.html">Houses</a></div>
+      <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="notes.html">Browse by note</a><a href="houses.html">Houses</a><a href="blog.html">Blog</a></div>
       <div><b>Community</b><a href="community.html">Reviews</a><a href="community.html">Photo wall</a><a href="community.html">Discussions</a></div>
       <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="credits.html">Photo credits</a><a href="contact.html">Contact</a></div>
     </div>
