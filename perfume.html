@@ -93,9 +93,6 @@
     const original = p.dupeOf ? perfumeById(p.dupeOf) : null;
 
     const retailers = [
-      {name:'Sephora', url:`https://www.sephora.com/search?keyword=${encodeURIComponent(p.name)}`},
-      {name:'Notino', url:`https://www.notino.com/search/?q=${encodeURIComponent(p.name)}`},
-      {name:'Amazon', url:`https://www.amazon.com/s?k=${encodeURIComponent(p.name+' perfume')}`},
       {name:'FragranceNet', url:`https://www.fragrancenet.com/catalogsearch/result?q=${encodeURIComponent(p.name)}`},
     ];
 
