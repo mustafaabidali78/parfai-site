@@ -984,6 +984,9 @@ const BLOG_POSTS = [
   { slug:'blog-baccarat-rouge-540-dupes-zara-vs-lattafa', title:'Baccarat Rouge 540 Dupes Compared: Zara Red Vanilla vs Lattafa Ameer Al Oudh',
     excerpt:'Baccarat Rouge 540 lists at $325. We compare it note for note against Zara Red Vanilla ($26) and Lattafa Ameer Al Oudh ($28) to see which budget option gets closest.',
     date:'2026-10-04', category:'Dupes & Comparisons', perfumeIds:['baccarat-rouge','zara-red-vanilla','lattafa-ameer'] },
+  { slug:'blog-new-fragrance-launches-september-2026', title:'The Biggest New Fragrance Launches of September 2026',
+    excerpt:'A roundup of real new fragrance launches from September 2026, from Maison Francis Kurkdjian\'s Oud Velvet Mood to Paco Rabanne\'s 1 Million Black, with notes, prices, and sources.',
+    date:'2026-10-05', category:'New Releases', perfumeIds:[] },
 ];
 
 /* ---------- helpers ---------- */
