@@ -25,7 +25,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 /* Note Mixer home page. Styles live here so the rest of the site is untouched. Light sky blue theme. */
-#mixer{border:1px solid rgba(255,255,255,.7);margin:30px 0 0;border-radius:32px;overflow:hidden;color:#0F2C4C;background:radial-gradient(900px 420px at 15% 0%,#E6F4FF,transparent 65%),linear-gradient(160deg,#B4DDFA 0%,#93CBF5 55%,#7DBDF0 100%);padding:44px clamp(18px,4vw,52px) 30px;position:relative;box-shadow:0 30px 60px -36px rgba(40,110,180,.55)}
+#mixer{margin:10px 0 0;color:#0F2C4C;background:none;padding:44px 0 30px;position:relative}
 #mixer .mx-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
 #mixer .mx-k{font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;color:#1B5FA8;margin-bottom:10px}
 #mixer h1{font-family:var(--disp);font-weight:700;font-size:clamp(40px,6vw,72px);line-height:.98;letter-spacing:-.02em;margin:0 0 12px;color:#0F2C4C}
@@ -66,14 +66,19 @@
 .mr .mbuy:hover{background:#1B5FA8}
 .mx-foot{margin-top:22px;padding-top:14px;border-top:1px solid rgba(15,44,76,.2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:#2D4C6E}
 .mx-foot a{color:#0F2C4C;text-decoration:underline;text-underline-offset:3px;font-weight:600}
-@media(max-width:560px){#mixer{border-radius:24px;padding-top:32px}}
+@media(max-width:560px){#mixer{padding-top:28px}}
 /* Light sky blue theme for the whole home page so the Note Mixer and the sections below match. */
-body.hd{--bg:#EAF5FD;--panel:#FFFFFF;--ink:#12304F;--ink2:#43607D;--muted:#6C85A0;--border:rgba(18,48,79,.12);background:radial-gradient(1000px 520px at 85% 0,#D3EBFC 0,transparent 60%),linear-gradient(180deg,#E3F2FD,#F4FAFF 40%,#EAF5FD);color:#12304F}
-body.hd nav{background:rgba(234,245,253,.85)}
+body.hd{--bg:#A6D4F6;--panel:#FFFFFF;--ink:#0F2C4C;--ink2:#2D4C6E;--muted:#3A5F85;--border:rgba(15,44,76,.14);background:linear-gradient(180deg,#B8E0FB 0%,#A3D3F6 50%,#97CCF4 100%);background-color:#A3D3F6;color:#0F2C4C}
+body.hd nav{background:rgba(184,224,251,.88)}
+body.hd #community{background:rgba(255,255,255,.38)!important;border-color:rgba(255,255,255,.7)!important}
+body.hd .soongrid .laypromo:first-child{background:linear-gradient(120deg,#2A74C6,#4E9BE3 60%,#6DB1EE)!important}
+body.hd .soongrid .laypromo:last-child{background:linear-gradient(120deg,#2F66AD,#245690 60%,#1D4778)!important}
+body.hd .card{background:rgba(255,255,255,.88)}
+body.hd .rc{background:rgba(255,255,255,.7)!important}
 body.hd .shead a{color:#1B5FA8}
-body.hd .band{background:linear-gradient(135deg,#2F86D6,#5BAAEB 60%,#86C4F5)}
+body.hd .band{background:linear-gradient(135deg,#1F6FC2,#3C8FDB 60%,#5BAAEB)}
 body.hd .band .btn{background:#fff;color:#12304F}
-body.hd .shot .ph{background:linear-gradient(150deg,#DCEEFC,#BBDDF8);border-bottom-color:rgba(18,48,79,.08)}
+body.hd .shot .ph{background:linear-gradient(150deg,#E6F3FD,#C9E4FA);border-bottom-color:rgba(18,48,79,.08)}
 body.hd .shot .ph:before,body.hd .shot .ph:after{opacity:.35}
 </style>
 <script type="application/ld+json">
