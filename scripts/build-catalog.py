@@ -12,6 +12,10 @@ import json, re, sys, collections
 import xml.etree.ElementTree as ET
 
 GENDERS = {'MEN': 0, 'WOMEN': 1, 'UNISEX': 2}
+HOUSE_FIXES = {
+    'Maison Francis': 'Maison Francis Kurkdjian',
+    'Lorenzo Villoresi': 'Lorenzo Villoresi Firenze',
+}
 LINK = re.compile(r'^(https://click\.linksynergy\.com/link\?id=[^&]+&offerid=\d+\.)(\d+)(&type=15&murl=)(.*)$')
 
 
@@ -45,7 +49,10 @@ def main(src, dst):
                 continue
             gender = GENDERS[gm.group(1)]
             rest = rest[:gm.start()].strip()
+            house = (el.get('manufacturer_name') or '').strip()
             label = re.sub(r'\s+', ' ', rest).strip()
+            if house and label.lower().startswith(house.lower() + ' '):
+                label = label[len(house) + 1:]
             house = (el.get('manufacturer_name') or '').strip()
             long = el.findtext('description/long') or ''
             ym = re.search(r'in (\d{4})', long)
@@ -69,6 +76,10 @@ def main(src, dst):
             g['variants'].append([lm.group(2), label, lm.group(4)])
         finally:
             el.clear()
+
+    # A few houses are cut short in the feed. Add more here as you spot them.
+    for g in groups.values():
+        g['house'] = HOUSE_FIXES.get(g['house'], g['house'])
 
     items, used = [], set()
     for g in sorted(groups.values(), key=lambda g: (g['house'].lower(), g['title'].lower(), g['gender'])):

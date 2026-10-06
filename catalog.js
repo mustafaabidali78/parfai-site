@@ -83,7 +83,7 @@
     document.title = shortTitle(r) + ' by ' + r.house + ' — ParfAI';
     var facts = [GENDER[r.gender] === 'Unisex' ? 'Unisex' : 'For ' + GENDER[r.gender].toLowerCase()];
     if (r.year) facts.push('Launched ' + r.year);
-    var intro = esc(shortTitle(r)) + ' is a ' + (GENDER[r.gender] === 'Unisex' ? 'unisex' : 'fragrance for ' + GENDER[r.gender].toLowerCase()) + ' from ' + esc(r.house) + (r.year ? ', launched in ' + r.year : '') + '.' +
+    var intro = esc(shortTitle(r)) + ' is a ' + (GENDER[r.gender] === 'Unisex' ? 'unisex fragrance' : 'fragrance for ' + GENDER[r.gender].toLowerCase()) + ' from ' + esc(r.house) + (r.year ? ', launched in ' + r.year : '') + '.' +
       (r.notes.length ? ' Its listed notes include ' + esc(r.notes.slice(0, 6).join(', ')) + '.' : '') +
       (r.wear ? ' It is suggested for ' + esc(r.wear) + ' wear.' : '');
     var variants = r.variants.map(function (v) {
