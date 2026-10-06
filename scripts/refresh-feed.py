@@ -63,8 +63,20 @@ def download(sftp, remote, size, local):
                 log(f'Downloaded {done:,} of {size:,} bytes')
                 next_report = done + 500_000
     if size and done != size:
-        raise IOError(f'Only {done:,} of {size:,} bytes arrived')
+        log(f'Note: the server listed {size:,} bytes but sent {done:,}. Checking the file is complete.')
     log(f'Download finished ({done:,} bytes)')
+
+
+def check_zip(path):
+    # A complete .gz file can be read from start to end without errors.
+    total = 0
+    with gzip.open(path, 'rb') as f:
+        while True:
+            block = f.read(1024 * 1024)
+            if not block:
+                break
+            total += len(block)
+    log(f'The downloaded file is complete ({total:,} bytes once unzipped)')
 
 
 def main(dest):
@@ -84,6 +96,7 @@ def main(dest):
             if not remote:
                 sys.exit(f'{FILE} was not found on the server. Check that FragranceNet is still approved.')
             download(sftp, remote, size, gz_path)
+            check_zip(gz_path)
             last_error = None
             break
         except SystemExit:
