@@ -53,16 +53,15 @@ def download(sftp, remote, size, local):
     done = 0
     next_report = 0
     with sftp.open(remote, 'rb') as src, open(local, 'wb') as out:
-        src.prefetch(size)
         while True:
-            chunk = src.read(1024 * 256)
+            chunk = src.read(32768)
             if not chunk:
                 break
             out.write(chunk)
             done += len(chunk)
             if done >= next_report:
                 log(f'Downloaded {done:,} of {size:,} bytes')
-                next_report = done + 5_000_000
+                next_report = done + 500_000
     if size and done != size:
         raise IOError(f'Only {done:,} of {size:,} bytes arrived')
     log(f'Download finished ({done:,} bytes)')
