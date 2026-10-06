@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Weather-Aware Pick of the Day — ParfAI">
 <meta name="twitter:description" content="Get a fragrance recommendation based on today's real weather, powered by ParfAI's Weather-Aware Pick.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610061400">
+<link rel="stylesheet" href="parfai.css?v=202610070900">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -103,64 +103,34 @@
 
   <section>
     <div class="shead"><h2>Works anywhere — not just one climate</h2></div>
-    <p style="color:var(--ink2);font-size:14.5px;max-width:700px;margin-bottom:24px;font-weight:400">Computed from wherever you're actually visiting, worldwide. Same afternoon, three cities, three different picks:</p>
+    <p style="color:var(--ink2);font-size:14.5px;max-width:700px;margin-bottom:24px;font-weight:400">Computed from wherever you're actually visiting, worldwide. Three kinds of weather, three different picks, each drawn today from the full catalogue of more than 12,000 perfumes:</p>
 
     <div class="wcities">
-      <div class="wcity">
+      <div class="wcity" data-bucket="hot">
         <div class="wctop" style="background:linear-gradient(160deg,#E8B04A,#C6963C)">
           <div class="wcloc">Dubai, UAE</div>
           <div class="wctemp">38°C</div>
           <div class="wccond">☀️ Clear &amp; dry</div>
         </div>
-        <div class="wcpick">
-          <div class="wcpickrow">
-            <div class="wcthumb" style="background:linear-gradient(150deg,#5E7A93,#3D5266)"><img src="images/perfumes/erba-pura.png" alt="Erba Pura bottle" loading="lazy" onerror="this.remove()"></div>
-            <div>
-              <div class="wcpicklabel">Today's pick</div>
-              <div class="wcname">Erba Pura</div>
-            </div>
-          </div>
-          <div class="wcfam">Xerjoff · Fresh, Fruity, Sweet</div>
-          <div class="wcwhy">Sicilian lemon and red berries up top with a light musk-and-amber base — reads bright and sun-drenched instead of heavy, and won't turn cloying in the heat.</div>
-        </div>
+        <div class="wcpick"><div class="wcwhy">Choosing from the full catalogue…</div></div>
       </div>
 
-      <div class="wcity">
+      <div class="wcity" data-bucket="rainy">
         <div class="wctop" style="background:linear-gradient(160deg,#7C93A6,#5E7A93)">
           <div class="wcloc">London, UK</div>
           <div class="wctemp">9°C</div>
           <div class="wccond">🌧️ Light rain</div>
         </div>
-        <div class="wcpick">
-          <div class="wcpickrow">
-            <div class="wcthumb" style="background:linear-gradient(150deg,#5E7A93,#3D5266)"><img src="images/perfumes/green-irish-tweed.png" alt="Green Irish Tweed bottle" loading="lazy" onerror="this.remove()"></div>
-            <div>
-              <div class="wcpicklabel">Today's pick</div>
-              <div class="wcname">Green Irish Tweed</div>
-            </div>
-          </div>
-          <div class="wcfam">Creed · Fresh, Green, Woody</div>
-          <div class="wcwhy">Often described as "smells like a shower, but expensive" — a clean, green fresh note that suits overcast, damp weather without fighting it.</div>
-        </div>
+        <div class="wcpick"><div class="wcwhy">Choosing from the full catalogue…</div></div>
       </div>
 
-      <div class="wcity">
+      <div class="wcity" data-bucket="snowy">
         <div class="wctop" style="background:linear-gradient(160deg,#8A6B54,#6B4B3A)">
           <div class="wcloc">New York, USA</div>
           <div class="wctemp">-2°C</div>
           <div class="wccond">❄️ Snow</div>
         </div>
-        <div class="wcpick">
-          <div class="wcpickrow">
-            <div class="wcthumb" style="background:linear-gradient(150deg,#6B4B3A,#402B20)"><img src="images/perfumes/oud-wood.png" alt="Oud Wood bottle" loading="lazy" onerror="this.remove()"></div>
-            <div>
-              <div class="wcpicklabel">Today's pick</div>
-              <div class="wcname">Oud Wood</div>
-            </div>
-          </div>
-          <div class="wcfam">Tom Ford · Woody, Smoky, Warm Spicy</div>
-          <div class="wcwhy">Cold air suppresses projection, so a lighter fragrance would barely register — this smoky, spiced sandalwood has the density to actually show up at freezing temperatures.</div>
-        </div>
+        <div class="wcpick"><div class="wcwhy">Choosing from the full catalogue…</div></div>
       </div>
     </div>
   </section>
@@ -171,7 +141,7 @@
       <div class="lblendtxt" style="margin-top:0;max-width:none">
         <b>Locating you, worldwide, without asking first.</b> The pick above starts from an IP-based location lookup — no permission prompt, resolves instantly — so it works the moment you land on the page, anywhere in the world. If you want it more precise, "Use precise location" asks your browser directly for GPS-level coordinates. Nothing about your exact location is ever stored beyond the resolved city, country, and that day's weather snapshot, cached in your browser only, for a few hours.<br><br>
         <b>Live, not simulated.</b> Current temperature and conditions come from <a href="https://open-meteo.com" target="_blank" rel="noopener" style="color:var(--ink)">Open-Meteo</a>, a free weather API, fetched fresh for your coordinates every time the cache expires. If your network blocks the lookup or it fails for any reason, you get a manual city picker instead of a broken or fake result — pick a city and it pulls real live weather for that city instead.<br><br>
-        <b>Matching weather to fragrance, no AI call needed.</b> Temperature and conditions sort into a handful of bands — hot, mild, cold, rainy, snowy — and each band maps to a small set of target accord families, the same family data already on every product page (Fresh and Aromatic for hot, Woody and Amber and Oriental for cold, Fresh and Chypre for rain). The catalog is filtered and ranked by family match plus rating, and the top result becomes today's pick, with two alternates offered alongside it.<br><br>
+        <b>Matching weather to fragrance, no AI call needed.</b> Temperature and conditions sort into a handful of bands — hot, mild, cold, rainy, snowy — and each band favours a different set of notes. Every perfume in the full catalogue is scored on its listed notes: bright citrus and watery notes score high in the heat, warm amber, vanilla and woody notes score high in the cold, and green, woody notes score high in the rain. The best matches go into a shortlist, and one of them is drawn as today's pick, with two alternates from different houses. The draw changes every day, so you won't see the same perfume all week.<br><br>
         <b>Locale-correct by default.</b> Temperature displays in °C or °F automatically based on your resolved country.
       </div>
     </div>
@@ -180,8 +150,8 @@
   <section style="text-align:center">
     <div class="band" style="background:linear-gradient(120deg,#2A3A47,#3D5266)">
       <h2>Curious what else fits your mood?</h2>
-      <p>The weather pick is one way in — explore the full catalog by family, note, or house to find your own.</p>
-      <a class="btn" href="explore.html">Explore fragrances</a>
+      <p>The weather pick is one way in — browse the full catalogue by note or house to find your own.</p>
+      <a class="btn" href="catalog.html">Browse the full catalogue</a>
     </div>
   </section>
 
@@ -189,8 +159,8 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610061400"></script>
-<script src="weather.js?v=202610061400"></script>
+<script src="data.js?v=202610070900"></script>
+<script src="weather.js?v=202610070900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -199,6 +169,7 @@
     onWeatherResolved(applyWeatherHero);
   }
   if (typeof renderWeatherPick === 'function') renderWeatherPick('weather-live-panel');
+  if (typeof renderWeatherExamples === 'function') renderWeatherExamples();
 </script>
 <script src="cookie-notice.js"></script>
 </body>

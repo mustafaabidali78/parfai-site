@@ -5,16 +5,15 @@
    no permission prompt — with an optional "use precise location"
    upgrade that asks the browser directly) -> fetch real current
    weather for those coordinates from Open-Meteo -> bucket the
-   conditions -> rank the existing PERFUMES catalog by family match.
+   conditions -> pick from the full FragranceNet catalogue (catalog/fragrancenet.json) by notes.
 
    Every network step is wrapped so a CORS block, timeout, or outage
    degrades to the next fallback rather than showing a broken state;
    the last resort is a manual city picker that still pulls real
-   live weather for whichever city is chosen. Requires data.js
-   (PERFUMES, houseName) to already be loaded on the page.
+   live weather for whichever city is chosen. No other script is needed.
    ------------------------------------------------------------- */
 
-const WEATHER_CACHE_KEY = 'parfai_weather_pick_v1';
+const WEATHER_CACHE_KEY = 'parfai_weather_pick_v2';
 const WEATHER_CACHE_MS = 3 * 60 * 60 * 1000; // 3 hours — weather doesn't change fast enough to refetch every load
 
 // Representative cities spanning distinct climates — used as the
@@ -29,14 +28,6 @@ const WEATHER_CITY_PRESETS = [
   { label: 'Tokyo, Japan', lat: 35.6762, lon: 139.6503 },
   { label: 'São Paulo, Brazil', lat: -23.5505, lon: -46.6333 },
 ];
-
-const WEATHER_FAMILY_TARGET = {
-  hot:   ['Fresh', 'Floral', 'Aromatic'],
-  mild:  ['Aromatic', 'Chypre', 'Woody'],
-  cold:  ['Woody', 'Amber', 'Oriental', 'Gourmand'],
-  rainy: ['Fresh', 'Woody', 'Chypre'],
-  snowy: ['Woody', 'Amber', 'Oriental'],
-};
 
 const WEATHER_COND_TEXT = {
   0:'Clear sky',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',
@@ -65,39 +56,171 @@ function weatherBucket(tempC, code){
   return 'mild';
 }
 
-function pickForWeather(bucket){
-  const targets = WEATHER_FAMILY_TARGET[bucket] || WEATHER_FAMILY_TARGET.mild;
-  return PERFUMES
-    .filter(p => targets.includes(p.family))
-    .sort((a, b) => {
-      const ra = targets.indexOf(a.family), rb = targets.indexOf(b.family);
-      if (ra !== rb) return ra - rb;   // earlier = more specific match for this weather
-      return b.rating - a.rating;      // then highest rated
-    })
-    .slice(0, 3);
+/* ---------------- full catalogue picker ----------------
+   Reads catalog/fragrancenet.json (the same file the Catalogue page uses,
+   refreshed every week from FragranceNet). Every perfume is scored by its
+   listed notes: bright citrus and watery notes score high in the heat,
+   warm amber, vanilla and woody notes score high in the cold, and so on.
+   The best matches form a pool, and a seeded draw from that pool picks
+   today's perfume, so it changes every day but is the same for everyone
+   with the same weather on the same day. No prices are used. */
+
+const WEATHER_CATALOG_URL = 'catalog/fragrancenet.json';
+let _weatherCatalogPromise = null;
+function loadWeatherCatalog(){
+  if (!_weatherCatalogPromise) {
+    _weatherCatalogPromise = fetchJSON(WEATHER_CATALOG_URL, 25000).catch(e => { _weatherCatalogPromise = null; throw e; });
+  }
+  return _weatherCatalogPromise;
 }
 
-function whyThisPick(p, bucket){
-  const accordTxt = p.accords.slice(0, 2).join(' and ').toLowerCase();
+// Note groups, checked in this order; each note counts once, in the first group it matches.
+const WEATHER_NOTE_GROUPS = [
+  ['DEEP',    /\b(oud|agarwood|leather|tobacco|incense|resin|labdanum|benzoin|myrrh|cinnamon|clove|saffron|rum|smoke|smoky|birch|opoponax|frankincense|olibanum|cognac|whiskey)\b/],
+  ['WARM',    /\b(amber|ambergris|ambroxan|vanilla|tonka|caramel|honey|praline|cacao|chocolate|coffee|cashmeran|balsam|nutmeg|black pepper|cardamom|patchouli|toffee|almond(?! blossom)|maple|marshmallow)\b/],
+  ['AQUATIC', /\b(aquatic|marine|sea|ozonic|ozone|water|watery|calone|salt|salty|rain|cucumber|melon|watermelon|coconut water|seaweed|driftwood)\b/],
+  ['CITRUS',  /\b(bergamot|lemon|grapefruit|mandarin|tangerine|lime|citrus|yuzu|bitter orange|petitgrain|verbena|lemongrass|bigarade|neroli|orange)\b(?! blossom)/],
+  ['GREEN',   /\b(mint|basil|green|tea|galbanum|violet leaf|rosemary|sage|clary sage|lavender|geranium|grass|cypress|juniper|eucalyptus|tomato|thyme|fir|pine|herbal|aromatic|fern|bamboo|ginger)\b/],
+  ['WOODS',   /\b(cedar|cedarwood|vetiver|sandalwood|oakmoss|moss|guaiac|woody|woods?|amberwood|cashmere wood|papyrus|sandal|teak|hinoki|iso e super)\b/],
+  ['SOFT',    /\b(peony|freesia|lily|lotus|jasmine|magnolia|pear|apple|peach|pineapple|white musk|musk|rose|iris|orris|violet|orange blossom|neroli|mimosa|cherry|raspberry|strawberry|blackcurrant|black currant|plum|lychee|mango|pink pepper|marine|cotton|linen|powder|heliotrope|tuberose|gardenia|ylang|orchid|wisteria|sweet pea)\b/],
+];
+const WEATHER_GROUP_WEIGHTS = {
+  hot:   { CITRUS: 3,   AQUATIC: 3,   GREEN: 1.5, SOFT: 1.5, WOODS: 0,   WARM: -1.5, DEEP: -3 },
+  mild:  { CITRUS: 1.5, AQUATIC: 0.5, GREEN: 1.5, SOFT: 2,   WOODS: 2,   WARM: 0.5,  DEEP: -1 },
+  rainy: { CITRUS: 0.5, AQUATIC: 1.5, GREEN: 3,   SOFT: 0.5, WOODS: 2.5, WARM: 0.5,  DEEP: 0 },
+  cold:  { CITRUS: -0.5, AQUATIC: -2, GREEN: 0,   SOFT: 0,   WOODS: 1.5, WARM: 3,    DEEP: 2 },
+  snowy: { CITRUS: -1,  AQUATIC: -3,  GREEN: 0,   SOFT: 0,   WOODS: 1.5, WARM: 3,    DEEP: 3 },
+};
+const WEATHER_DAY_WEAR = { hot: ['daytime', 'casual'], mild: ['daytime', 'casual'], rainy: ['casual'], cold: ['evening', 'romantic'], snowy: ['evening', 'romantic'] };
+const WEATHER_NOT_PERFUME = /\b(soap|shower|lotion|candle|deodorant|gel|set|hair|bath|baby|kids?)\b/i;
+const WEATHER_JUNK_NOTE = /recommended for wear|^notes?$/;
+
+const _noteGroupCache = new Map();
+function weatherNoteGroup(note){
+  if (_noteGroupCache.has(note)) return _noteGroupCache.get(note);
+  let g = null;
+  for (const [name, re] of WEATHER_NOTE_GROUPS) { if (re.test(note)) { g = name; break; } }
+  _noteGroupCache.set(note, g);
+  return g;
+}
+
+function wxCap(s){ return String(s).replace(/\b([a-z])/g, m => m.toUpperCase()); }
+function wxEsc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function wxShortTitle(house, title){
+  const h = house.toLowerCase();
+  if (title.toLowerCase().indexOf(h + ' ') === 0 && title.length > h.length + 1) return title.slice(h.length + 1);
+  return title;
+}
+function wxList(arr){
+  if (arr.length <= 1) return arr.join('');
+  return arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1];
+}
+function wxDayKey(){
+  const d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+}
+function wxHash(s){
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function wxRandom(seed){ // small seeded random number generator
+  let a = seed >>> 0;
+  return function(){
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function scoreForWeather(item, bucket){
+  const weights = WEATHER_GROUP_WEIGHTS[bucket] || WEATHER_GROUP_WEIGHTS.mild;
+  const notes = item[5].map(n => n.replace(/\s*\((top|heart|base|middle)\)/i, '')).filter(n => !WEATHER_JUNK_NOTE.test(n) && n.indexOf(':') === -1 && n.length <= 28);
+  if (notes.length < 3) return null;
+  let total = 0;
+  const likedAll = [];
+  for (const n of notes) {
+    const g = weatherNoteGroup(n);
+    if (!g) continue;
+    const w = weights[g];
+    total += w;
+    if (w > 0 && likedAll.every(x => x.n !== n)) likedAll.push({ n, w });
+  }
+  // the notes that fit this weather best, strongest first (used in the reason text)
+  const liked = likedAll.sort((a, b) => b.w - a.w).slice(0, 3).map(x => x.n);
+  let score = total / Math.sqrt(notes.length);
+  score += 0.25 * Math.min(item[7].length, 5);                  // more size options usually means a well-known perfume
+  if ((WEATHER_DAY_WEAR[bucket] || []).indexOf(item[6]) !== -1) score += 1;
+  return { score, liked, notes };
+}
+
+function whyForWeather(bucket, liked, notes){
+  const list = wxList((liked.length ? liked : notes.slice(0, 3)).map(n => n.toLowerCase()));
   const reasons = {
-    hot:   `Light and ${accordTxt} — stays pleasant instead of turning heavy in the heat.`,
-    mild:  `A versatile ${accordTxt} pick that performs well without needing extreme weather to carry it.`,
-    cold:  `Dense enough to actually project in the cold — ${accordTxt} holds up when lighter scents would fade fast.`,
-    rainy: `A clean, ${accordTxt} character that suits damp, overcast air.`,
-    snowy: `Rich and warm — built to still show up at freezing temperatures.`,
+    hot:   `Bright ${list} keep it light and fresh, so it stays pleasant instead of turning heavy in the heat.`,
+    mild:  `A balanced mix of ${list}. It works well without needing extreme weather to carry it.`,
+    cold:  `Warm ${list} give it the density to keep projecting in the cold, when lighter scents fade fast.`,
+    rainy: `Notes of ${list} sit well in damp, overcast air without fighting it.`,
+    snowy: `Rich ${list}, built to still show up at freezing temperatures.`,
   };
   return reasons[bucket] || reasons.mild;
 }
 
-function familyGrad(fam){
-  const g = typeof famColor === 'function' ? famColor(fam) : ['#6C4CFF', '#00B8D4'];
-  return `linear-gradient(150deg,${g[0]},${g[1]})`;
+function slimPick(item, data, bucket, scored){
+  const variant = item[7].find(v => !/tester/i.test(v[1])) || item[7][0];
+  return {
+    slug: item[0],
+    house: item[1],
+    name: wxShortTitle(item[1], item[2]),
+    gender: item[3],
+    notes: scored.notes.slice(0, 6),
+    link: variant ? data.pre + variant[0] + data.mid + variant[2] : '',
+    why: whyForWeather(bucket, scored.liked, scored.notes),
+  };
 }
+
+// Picks 3 perfumes (one main pick and two alternates) from the whole catalogue.
+async function pickForWeather(bucket){
+  const data = await loadWeatherCatalog();
+  const scored = [];
+  for (const item of data.items) {
+    if (WEATHER_NOT_PERFUME.test(item[2]) || /bath & body/i.test(item[1])) continue;
+    const s = scoreForWeather(item, bucket);
+    if (s) scored.push({ item, s });
+  }
+  scored.sort((a, b) => b.s.score - a.s.score);
+
+  // Top matches, at most 3 per house, so one brand can't fill the pool.
+  const pool = [], perHouse = {};
+  for (const x of scored) {
+    const h = x.item[1];
+    if ((perHouse[h] || 0) >= 3) continue;
+    perHouse[h] = (perHouse[h] || 0) + 1;
+    pool.push(x);
+    if (pool.length >= 60) break;
+  }
+
+  // Seeded draw: same pick for everyone with this weather today, a new pick tomorrow.
+  const rand = wxRandom(wxHash(wxDayKey() + '|' + bucket));
+  const chosen = [], usedHouses = {};
+  while (chosen.length < 3 && pool.length) {
+    const i = Math.floor(rand() * pool.length);
+    const x = pool.splice(i, 1)[0];
+    if (usedHouses[x.item[1]]) continue;
+    usedHouses[x.item[1]] = 1;
+    chosen.push(slimPick(x.item, data, bucket, x.s));
+  }
+  return chosen;
+}
+
+const WEATHER_GENDER_GRAD = { 0: ['#6C7BFF', '#00B8D4'], 1: ['#FF4D9D', '#FF8C42'], 2: ['#8B7CFF', '#C86BFF'] };
+const WEATHER_GENDER_TEXT = { 0: 'For men', 1: 'For women', 2: 'Unisex' };
 function bottleThumbHTML(p, cls){
-  const art = p.image
-    ? `<img src="${p.image}" alt="${p.name} bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'bottle'}))">`
-    : `<div class="bottle"></div>`;
-  return `<div class="${cls}" style="background:${familyGrad(p.family)}">${art}</div>`;
+  // Bottle photos stay hidden until FragranceNet confirms in writing that we may host them.
+  const g = WEATHER_GENDER_GRAD[p.gender] || WEATHER_GENDER_GRAD[2];
+  return `<div class="${cls}" style="background:linear-gradient(150deg,${g[0]},${g[1]})"><div class="bottle"></div></div>`;
 }
 
 function tempUnitForCountry(countryCode){
@@ -165,7 +288,8 @@ async function reverseGeocode(lat, lon){
 async function weatherForCoords(lat, lon, label, countryCode){
   const w = await fetchWeatherFor(lat, lon);
   const bucket = weatherBucket(w.tempC, w.code);
-  const result = { lat, lon, label, countryCode, tempC: w.tempC, code: w.code, bucket, picks: pickForWeather(bucket), ts: Date.now() };
+  const result = { lat, lon, label, countryCode, tempC: w.tempC, code: w.code, bucket, picks: [], ts: Date.now(), day: wxDayKey() };
+  try { result.picks = await pickForWeather(bucket); } catch (e) { result.picks = []; result.catalogError = true; }
   writeWeatherCache(result);
   return result;
 }
@@ -176,6 +300,7 @@ function readWeatherCache(){
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (!data.ts || Date.now() - data.ts > WEATHER_CACHE_MS) return null;
+    if (data.day !== wxDayKey() || !data.picks || !data.picks.length) return null; // new day or no picks saved: start fresh
     return data;
   } catch (e) { return null; }
 }
@@ -222,6 +347,8 @@ async function renderWeatherPick(containerId){
   notifyWeatherResolved(result);
   if (result && result.picks && result.picks.length) {
     renderWeatherResult(el, result);
+  } else if (result && result.catalogError) {
+    el.innerHTML = `<div class="wpx-loading">We found your weather but couldn't load the perfume catalogue just now. Please refresh the page in a moment.</div>`;
   } else {
     renderManualPicker(el, `Couldn't detect your location automatically — pick a city and we'll still pull real live weather for it.`);
   }
@@ -249,18 +376,19 @@ function renderWeatherResult(el, result){
       <div class="wpxpickwrap">
         <div class="wcpicklabel">Today's pick for you</div>
         <div class="wpxpick">
-          <a href="perfume.html?id=${top.id}">${bottleThumbHTML(top, 'wpxthumb')}</a>
+          <a href="catalog.html?id=${encodeURIComponent(top.slug)}">${bottleThumbHTML(top, 'wpxthumb')}</a>
           <div class="wpxpicktext">
-            <a class="wpxname" href="perfume.html?id=${top.id}">${top.name}</a>
-            <div class="wcfam">${typeof houseName === 'function' ? houseName(top.houseId) : ''} · ${top.accords.slice(0, 3).join(', ')}</div>
-            <div class="wcwhy">${whyThisPick(top, result.bucket)}</div>
+            <a class="wpxname" href="catalog.html?id=${encodeURIComponent(top.slug)}">${wxEsc(top.name)}</a>
+            <div class="wcfam">${wxEsc(top.house)} · ${wxEsc(top.notes.slice(0, 3).map(wxCap).join(', '))}</div>
+            <div class="wcwhy">${wxEsc(top.why)}</div>
+            ${top.link ? `<a class="wpxbuy" href="${wxEsc(top.link)}" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>` : ''}
           </div>
         </div>
-        ${alts.length ? `<div class="wpxaltlabel">Also good today</div><div class="wpxalt">${alts.map(p => `<a class="wpxaltlink" href="perfume.html?id=${p.id}">${bottleThumbHTML(p, 'wpxaltthumb')}${p.name}</a>`).join('')}</div>` : ''}
+        ${alts.length ? `<div class="wpxaltlabel">Also good today</div><div class="wpxalt">${alts.map(p => `<a class="wpxaltlink" href="catalog.html?id=${encodeURIComponent(p.slug)}">${bottleThumbHTML(p, 'wpxaltthumb')}${wxEsc(p.name)}</a>`).join('')}</div>` : ''}
       </div>
     </div>
     <div class="wpxcredit">
-      Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>
+      Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Price links are affiliate links.
       <button class="wpxchange" type="button" data-action="precise">Use precise location</button>
       <button class="wpxchange" type="button" data-action="manual">Not your location?</button>
     </div>
@@ -355,4 +483,29 @@ function renderManualPicker(el, note){
       }
     });
   });
+}
+
+/* ---------------- example cities on weather-pick.html ----------------
+   Fills each ".wcity[data-bucket]" card from the same full-catalogue picker. */
+async function renderWeatherExamples(){
+  const cards = document.querySelectorAll('.wcity[data-bucket]');
+  for (const card of cards) {
+    const slot = card.querySelector('.wcpick');
+    if (!slot) continue;
+    try {
+      const picks = await pickForWeather(card.getAttribute('data-bucket'));
+      const p = picks[0];
+      if (!p) continue;
+      slot.innerHTML = `
+        <div class="wcpickrow">
+          <a href="catalog.html?id=${encodeURIComponent(p.slug)}">${bottleThumbHTML(p, 'wcthumb')}</a>
+          <div>
+            <div class="wcpicklabel">Today's pick</div>
+            <a class="wcname" href="catalog.html?id=${encodeURIComponent(p.slug)}">${wxEsc(p.name)}</a>
+          </div>
+        </div>
+        <div class="wcfam">${wxEsc(p.house)} · ${wxEsc(p.notes.slice(0, 3).map(wxCap).join(', '))}</div>
+        <div class="wcwhy">${wxEsc(p.why)}</div>`;
+    } catch (e) { /* leave the card as it is */ }
+  }
 }
