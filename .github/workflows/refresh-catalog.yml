@@ -1,0 +1,61 @@
+name: Refresh perfume catalogue
+
+# Every Monday, downloads FragranceNet's newest product feed from Rakuten,
+# rebuilds catalog/fragrancenet.json (new perfumes in, out-of-stock ones out),
+# and commits the result. If anything looks wrong, it stops and leaves the
+# live catalogue untouched. One-time setup: add two repository secrets,
+# RAKUTEN_SFTP_USERNAME and RAKUTEN_SFTP_PASSWORD (Settings, Secrets and
+# variables, Actions). You can also run it by hand from the Actions tab.
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'   # Mondays, 03:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-catalog
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install SFTP library
+        run: pip install paramiko
+
+      - name: Download the feed from Rakuten
+        env:
+          RAKUTEN_SFTP_USERNAME: ${{ secrets.RAKUTEN_SFTP_USERNAME }}
+          RAKUTEN_SFTP_PASSWORD: ${{ secrets.RAKUTEN_SFTP_PASSWORD }}
+        run: python scripts/refresh-feed.py "$RUNNER_TEMP/feed.xml"
+
+      - name: Build the new catalogue
+        run: python scripts/build-catalog.py "$RUNNER_TEMP/feed.xml" "$RUNNER_TEMP/new.json"
+
+      - name: Safety check
+        run: python scripts/check-catalog.py catalog/fragrancenet.json "$RUNNER_TEMP/new.json"
+
+      - name: Save the new catalogue
+        run: cp "$RUNNER_TEMP/new.json" catalog/fragrancenet.json
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name "parfai-catalog-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add catalog/fragrancenet.json
+          if git diff --cached --quiet; then
+            echo "No changes this week."
+          else
+            git commit -m "Refresh perfume catalogue: $(date -u +%Y-%m-%d)"
+            git pull --rebase
+            git push
+          fi
