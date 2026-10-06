@@ -42,7 +42,8 @@
             link: variant ? d.pre + variant[0] + d.mid + variant[2] : ''
           };
           r.dupe = !!dupeSet[r.house.toLowerCase()];
-          r.ok = !NOT_PERFUME.test(r.title) && !/bath & body/i.test(r.house) && r.notes.length >= 3;
+          r.listed = !NOT_PERFUME.test(r.title) && !/bath & body/i.test(r.house);
+          r.ok = r.listed && r.notes.length >= 3;
           r.hay = (r.house + ' ' + r.name).toLowerCase();
           return r;
         });
