@@ -75,7 +75,7 @@
   </div>
 
   <section>
-    <div class="shead"><h2>Trending now</h2><a href="explore.html?sort=trending">View all →</a></div>
+    <div class="shead"><h2>Trending now</h2><a href="catalog.html">View all →</a></div>
     <div class="grid" id="grid"></div>
   </section>
 
@@ -137,6 +137,7 @@
 
 <script src="data.js?v=202610061400"></script>
 <script src="weather.js?v=202610070900"></script>
+<script src="catalog-lib.js?v=202610070900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -148,8 +149,24 @@
   document.getElementById('stat-fragrances').textContent = PERFUMES.length + '+';
   document.getElementById('stat-houses').textContent = HOUSES.length + '+';
 
-  document.getElementById('grid').innerHTML = PERFUMES.filter(p=>!p.dupeOf).slice(0,8).map((p,i)=>pcardHTML(p,i)).join('');
-  document.getElementById('dupegrid').innerHTML = PERFUMES.filter(p=>p.dupeOf).slice(0,4).map((p,i)=>pcardHTML(p,i)).join('');
+  // Trending and dupe cards come from the full catalogue, with a new mix every day.
+  if (window.PFC) PFC.load().then(function (cat) {
+    var ok = cat.rows.filter(function (r) { return r.ok; });
+    var houses = {}; ok.forEach(function (r) { houses[r.house] = 1; });
+    document.getElementById('stat-fragrances').textContent = (Math.floor(ok.length / 1000) * 1000).toLocaleString('en-US') + '+';
+    document.getElementById('stat-houses').textContent = (Math.floor(Object.keys(houses).length / 100) * 100).toLocaleString('en-US') + '+';
+    var famous = ok.filter(function (r) { return !r.dupe && r.sizes >= 5; });
+    var budget = ok.filter(function (r) { return r.dupe && r.sizes >= 2 && r.notes.length >= 4; });
+    var trend = PFC.draw(famous, 6, 'trend-famous').concat(PFC.draw(budget, 2, 'trend-dupe'));
+    var used = {}; trend.forEach(function (r) { used[r.slug] = 1; });
+    var dupes = PFC.draw(budget, 4, 'dupe-grid', used);
+    document.getElementById('grid').innerHTML = PFC.draw(trend, 8, 'trend-order').map(PFC.cardHTML).join('');
+    document.getElementById('dupegrid').innerHTML = dupes.map(PFC.cardHTML).join('');
+  }).catch(function () {
+    // If the catalogue can't load, fall back to the starter list so the page is never empty.
+    document.getElementById('grid').innerHTML = PERFUMES.filter(p=>!p.dupeOf).slice(0,8).map((p,i)=>pcardHTML(p,i)).join('');
+    document.getElementById('dupegrid').innerHTML = PERFUMES.filter(p=>p.dupeOf).slice(0,4).map((p,i)=>pcardHTML(p,i)).join('');
+  });
 
   document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`<div class="shot"><div class="ph" style="height:${s.h}px"><div class="tag" style="background:${typeof tagColor==='function'?tagColor(i):GRADS[i%GRADS.length].split(',')[0]}"></div></div><div class="cap"><div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div><div class="tx">${s.t}</div><div class="meta"><span>♥ ${s.l}</span><span>💬 ${s.c}</span></div></div></div>`).join('');
 
