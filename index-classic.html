@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ParfAI — Find your scent, not just a bottle</title>
+<meta name="description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste."/>
+<link rel="canonical" href="https://parfai.org/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ParfAI">
+<meta property="og:title" content="ParfAI — Find your scent, not just a bottle">
+<meta property="og:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
+<meta property="og:url" content="https://parfai.org/">
+<meta property="og:image" content="https://parfai.org/images/social/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ParfAI — Find your scent, not just a bottle">
+<meta name="twitter:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
+<meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
+<link rel="stylesheet" href="parfai.css?v=202610070900">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://parfai.org/#organization",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "logo": "https://parfai.org/images/social/logo-square.jpg",
+      "description": "ParfAI is a fragrance discovery platform helping people find their next signature scent through real notes, smart matching tools, and a growing community."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://parfai.org/#website",
+      "name": "ParfAI",
+      "url": "https://parfai.org/",
+      "publisher": { "@id": "https://parfai.org/#organization" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://parfai.org/explore.html?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap" id="top">
+
+  <div class="hhero">
+    <div class="hhero-text">
+      <div class="hhero-box">
+        <div class="k">The world's first AI perfumer</div>
+        <h1><span class="hhero-l1">Find your scent,</span><br><em>not just a bottle</em></h1>
+      </div>
+      <div class="hhero-sub">Search real fragrances, decode their notes with AI, and find affordable dupes of the ones you love.</div>
+      <div class="cta"><a class="btn" href="dupe-finder.html">Try the Dupe Finder</a><a class="btn ghost" href="explore.html">Find my scent</a></div>
+    </div>
+    <div class="hhero-img">
+      <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3GClRJLPfk4DQWViYV9PO3J6IYl/hf_20260828_064210_f03d987e-9910-47f3-9b43-bf215b04a814.png" alt="Perfume bottle with rose, lemon, incense and birch bark, warm bright light" width="900" height="1152" loading="eager">
+    </div>
+  </div>
+
+  <section>
+    <div class="shead"><h2>Trending now</h2><a href="catalog.html">View all →</a></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Great value dupes</h2><a href="dupe-finder.html">Try the Dupe Finder →</a></div>
+    <div class="grid" id="dupegrid"></div>
+  </section>
+
+  <section>
+    <div class="shead"><h2>Coming soon</h2></div>
+    <div class="soongrid">
+      <a class="laypromo" href="layering.html" style="background:linear-gradient(120deg,#C6963C 0%,#8F6A24 32%,#6B4B3A 68%,#402B20 100%)">
+        <div class="lp-badge">Coming soon</div>
+        <h3>Layering Recipe Builder</h3>
+        <p>Combine two or three fragrances into a saved recipe, see a predicted blend built from real notes and accords, and find out how it actually wore from people who've tried the pairing.</p>
+        <span class="lp-cta">Get a first look →</span>
+      </a>
+      <div class="laypromo" style="background:linear-gradient(120deg,#5E7A93 0%,#3D5266 55%,#2A3A47 100%)">
+        <div class="lp-badge live">● Live</div>
+        <h3>Weather-Aware Pick of the Day</h3>
+        <div id="home-weather-widget"></div>
+        <a class="lp-cta" href="weather-pick.html" style="display:inline-block;margin-top:16px">How this works →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <div class="cwrap" id="community" style="background:var(--panel);border:1px solid var(--border);border-radius:32px;padding:48px 40px;margin:70px 0">
+    <div class="chead" style="text-align:center;margin-bottom:34px">
+      <h2 style="font-family:var(--disp);font-weight:900;font-size:52px;line-height:.95;letter-spacing:-.04em">Welcome to the<br><span class="g">ParfAI community</span></h2>
+      <p style="font-size:18px;color:var(--ink2);max-width:520px;margin:18px auto 22px">Review the scents you love, share your collection, and help others find their signature.</p>
+      <div class="cta"><a class="btn" href="community.html">Write a review</a><a class="btn ghost" href="community.html">Share your collection</a></div>
+      <div style="display:flex;justify-content:center;gap:40px;margin:26px 0 6px;flex-wrap:wrap">
+        <div><span id="stat-fragrances" style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Fragrances</small></div>
+        <div><span id="stat-houses" style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Houses</small></div>
+      </div>
+    </div>
+
+    <div style="font-family:var(--disp);font-weight:700;font-size:16px;color:var(--muted);letter-spacing:.4px;margin:40px 0 16px">PHOTO WALL <span style="font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:0;text-transform:none">— example content while our community grows</span></div>
+    <div class="wall" id="wall"></div>
+
+    <div class="csplit" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px">
+      <div class="card"><h3>Latest reviews</h3><p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some reviews below are example content shown while our community grows, reviews people submit live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p><div id="rev"></div></div>
+      <div class="card"><h3>Scent of the Day</h3><p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some entries below are example content shown while our community grows, entries people log live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p><div id="sotd"></div></div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="e" style="background:linear-gradient(140deg,#8B7CFF,#C86BFF);top:-30px;left:-20px;transform:rotate(-12deg)"></div>
+    <div class="e" style="background:linear-gradient(140deg,#FF4D9D,#FF8C42);bottom:-40px;right:-20px;transform:rotate(14deg)"></div>
+    <h2>Smell like it costs<br>a fortune.</h2>
+    <p>Let ParfAI find the affordable alternative to any scent — with buy links, wherever you are.</p>
+    <a class="btn" href="dupe-finder.html">Try the AI Dupe Finder</a>
+  </div>
+
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js?v=202610061400"></script>
+<script src="weather.js?v=202610070900"></script>
+<script src="catalog-lib.js?v=202610070900"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script src="reviews.js"></script>
+<script src="community.js"></script>
+<script>
+  if (typeof renderWeatherPick === 'function') renderWeatherPick('home-weather-widget');
+
+  document.getElementById('stat-fragrances').textContent = PERFUMES.length + '+';
+  document.getElementById('stat-houses').textContent = HOUSES.length + '+';
+
+  // Trending and dupe cards come from the full catalogue, with a new mix every day.
+  if (window.PFC) PFC.load().then(function (cat) {
+    var ok = cat.rows.filter(function (r) { return r.ok; });
+    var houses = {}; ok.forEach(function (r) { houses[r.house] = 1; });
+    document.getElementById('stat-fragrances').textContent = (Math.floor(ok.length / 1000) * 1000).toLocaleString('en-US') + '+';
+    document.getElementById('stat-houses').textContent = (Math.floor(Object.keys(houses).length / 100) * 100).toLocaleString('en-US') + '+';
+    var famous = ok.filter(function (r) { return !r.dupe && r.sizes >= 5; });
+    var budget = ok.filter(function (r) { return r.dupe && r.sizes >= 2 && r.notes.length >= 4; });
+    var trend = PFC.draw(famous, 6, 'trend-famous').concat(PFC.draw(budget, 2, 'trend-dupe'));
+    var used = {}; trend.forEach(function (r) { used[r.slug] = 1; });
+    var dupes = PFC.draw(budget, 4, 'dupe-grid', used);
+    document.getElementById('grid').innerHTML = PFC.draw(trend, 8, 'trend-order').map(PFC.cardHTML).join('');
+    document.getElementById('dupegrid').innerHTML = dupes.map(PFC.cardHTML).join('');
+  }).catch(function () {
+    // If the catalogue can't load, fall back to the starter list so the page is never empty.
+    document.getElementById('grid').innerHTML = PERFUMES.filter(p=>!p.dupeOf).slice(0,8).map((p,i)=>pcardHTML(p,i)).join('');
+    document.getElementById('dupegrid').innerHTML = PERFUMES.filter(p=>p.dupeOf).slice(0,4).map((p,i)=>pcardHTML(p,i)).join('');
+  });
+
+  document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`<div class="shot"><div class="ph" style="height:${s.h}px"><div class="tag" style="background:${typeof tagColor==='function'?tagColor(i):GRADS[i%GRADS.length].split(',')[0]}"></div></div><div class="cap"><div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div><div class="tx">${s.t}</div><div class="meta"><span>♥ ${s.l}</span><span>💬 ${s.c}</span></div></div></div>`).join('');
+
+  function renderHomeRevs(list){
+    document.getElementById('rev').innerHTML = list.map((r,i)=>`<div class="rc" style="background:var(--bg)"><div class="r1" style="display:flex;gap:10px;align-items:center"><div class="thumb" style="width:34px;height:44px;border-radius:7px;flex-shrink:0;background:${gr(i)}"></div><div><div class="pn" style="font-family:var(--disp);font-weight:700;font-size:14px"><a href="perfume.html?id=${r.id}">${r.p}</a> <span style="color:var(--muted);font-weight:400;font-size:12px">· ${r.b}</span></div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div>${r.live?'<span class="newbadge">NEW</span>':''}</div><div class="tx" style="font-size:12px;color:var(--ink2);margin-top:7px;line-height:1.45">${r.tx}</div><div class="fo" style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">— ${r.who} · 👍 ${r.hp} helpful</div></div>`).join('');
+  }
+  renderHomeRevs(REVIEWS);
+  fetchLiveReviews(null, 4).then(rows=>{
+    if (rows.length) renderHomeRevs([...rows.map(liveToCardShape), ...REVIEWS].slice(0,4));
+  });
+
+  function renderHomeSotd(list){
+    document.getElementById('sotd').innerHTML = list.map((s,i)=>`<div class="sotd"><span class="av" style="${av(i)}"></span><div><b>${s.u}</b>${s.live?'<span class="newbadge">NEW</span>':''} <span class="w">is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div><span class="time">${s.t}</span></div>`).join('');
+  }
+  renderHomeSotd(SOTD);
+  fetchLiveSotd(5).then(rows=>{
+    if (rows.length) renderHomeSotd([...rows.map(liveSotdToCardShape), ...SOTD].slice(0,5));
+  });
+</script>
+<script src="cookie-notice.js"></script>
+</body>
+</html>
