@@ -25,7 +25,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 /* Note Mixer home page. Styles live here so the rest of the site is untouched. */
-#mixer{margin:30px 0 0;border-radius:32px;overflow:hidden;color:#fff;background:radial-gradient(900px 460px at 18% 0%,#2B2370,#120E33 62%);padding:44px clamp(18px,4vw,52px) 30px;position:relative}
+#mixer{border:1px solid rgba(255,255,255,.12);margin:30px 0 0;border-radius:32px;overflow:hidden;color:#fff;background:radial-gradient(900px 460px at 18% 0%,#2B2370,#120E33 62%);padding:44px clamp(18px,4vw,52px) 30px;position:relative}
 #mixer .mx-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
 #mixer .mx-k{font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;color:#FFD36B;margin-bottom:10px}
 #mixer h1{font-family:var(--disp);font-weight:700;font-size:clamp(40px,6vw,72px);line-height:.98;letter-spacing:-.02em;margin:0 0 12px;color:#fff}
@@ -67,6 +67,22 @@
 .mx-foot{margin-top:22px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:#9C97CF}
 .mx-foot a{color:#C4BFEF;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:560px){#mixer{border-radius:24px;padding-top:32px}}
+/* Dark theme for the whole home page so the Note Mixer and the sections below it match. */
+body.hd{--bg:#120E33;--panel:#1D1852;--ink:#FFFFFF;--ink2:#C4BFEF;--muted:#9C97CF;--border:rgba(255,255,255,.13);background:radial-gradient(1100px 600px at 85% 0,#251D63 0,transparent 60%),#120E33;color:#fff}
+body.hd nav{background:rgba(18,14,51,.82)}
+body.hd .btn{background:#fff;color:#120E33}
+body.hd .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+body.hd .shead a{color:#FFB36B}
+body.hd .pcard{box-shadow:0 18px 34px -24px rgba(0,0,0,.7)}
+body.hd .info{background:#1D1852}
+body.hd .pcard .info a.buy,body.hd .buy{background:#fff;color:#120E33}
+body.hd .band{background:linear-gradient(135deg,#2B2370,#4B2A7B 55%,#7A2F6B)}
+body.hd .band .btn{background:#fff;color:#120E33}
+body.hd #community{box-shadow:none}
+body.hd .card{box-shadow:none}
+body.hd .shot .ph{background:linear-gradient(150deg,#3A2F86,#241D5E);border-bottom-color:rgba(255,255,255,.1)}
+body.hd .shot .ph:before,body.hd .shot .ph:after{opacity:.18}
+body.hd footer{border-top-color:rgba(255,255,255,.12)}
 </style>
 <script type="application/ld+json">
 {
@@ -99,7 +115,7 @@
 }
 </script>
 </head>
-<body>
+<body class="hd">
 
 <nav id="nav-slot" data-active="explore"></nav>
 
