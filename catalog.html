@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Full perfume catalogue — ParfAI</title>
+<meta name="description" content="Search thousands of perfumes by name, house or scent note, then check the current price at FragranceNet."/>
+<meta name="robots" content="noindex,follow">
+<link rel="stylesheet" href="parfai.css?v=202610061200">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  .cat-note{font-size:13px;color:var(--ink2);background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin:0 0 22px;max-width:760px}
+  .cat-note a{text-decoration:underline;color:var(--ink)}
+  .ccard{display:block;border-radius:22px;overflow:hidden;background:var(--panel);border:1px solid var(--border);box-shadow:0 18px 34px -26px rgba(20,20,20,.35);transition:transform .18s}
+  .ccard:hover{transform:translateY(-4px)}
+  .ccard .art{height:150px;display:flex;align-items:center;justify-content:center;position:relative}
+  .ccard .art.g0{background:linear-gradient(150deg,#6C7BFF,#00B8D4)}
+  .ccard .art.g1{background:linear-gradient(150deg,#FF4D9D,#FF8C42)}
+  .ccard .art.g2{background:linear-gradient(150deg,#8B7CFF,#C86BFF)}
+  .bottle-ph{width:44px;height:74px;border-radius:9px 9px 14px 14px;background:rgba(255,255,255,.4);border:1.5px solid rgba(255,255,255,.75);position:relative}
+  .bottle-ph:before{content:"";position:absolute;left:50%;top:-14px;width:18px;height:14px;margin-left:-9px;border-radius:4px 4px 0 0;background:rgba(255,255,255,.55);border:1.5px solid rgba(255,255,255,.75);border-bottom:0}
+  .ccard img.photo{max-height:84%;max-width:70%;object-fit:contain;filter:drop-shadow(0 10px 18px rgba(0,0,0,.28))}
+  .ccard .tag{position:absolute;top:12px;left:12px;font-weight:700;font-size:10px;letter-spacing:1px;color:#fff;background:rgba(0,0,0,.2);padding:5px 11px;border-radius:100px;text-transform:uppercase}
+  .ccard .meta{padding:14px 16px 16px}
+  .ccard .bd{font-size:11px;color:var(--muted);font-weight:600}
+  .ccard .nm{font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:-.01em;margin:3px 0 8px;color:var(--ink);line-height:1.2}
+  .ccard .nt{font-size:12px;color:var(--ink2);line-height:1.45}
+  .ccard .sz{font-size:11px;color:var(--muted);margin-top:8px}
+  .more{display:block;margin:34px auto 10px}
+  .dwrap{max-width:900px;margin:0 auto;padding:30px 0 10px}
+  .crumbs{font-size:13px;color:var(--muted);margin-bottom:18px}
+  .crumbs a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  .dhero{display:grid;grid-template-columns:240px 1fr;gap:34px;align-items:center}
+  @media(max-width:700px){.dhero{grid-template-columns:1fr}}
+  .dhero .art{height:260px;border-radius:26px;display:flex;align-items:center;justify-content:center}
+  .dhero h1{font-family:var(--disp);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-.01em;margin:6px 0 10px}
+  .dhero .by{font-size:13px;font-weight:600;color:var(--rust);letter-spacing:.06em;text-transform:uppercase}
+  .dhero .by a{text-decoration:underline;text-underline-offset:3px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+  .chip{font-size:12px;font-weight:600;padding:6px 12px;border-radius:100px;background:rgba(139,124,255,.12);color:var(--violet);cursor:pointer;border:0;font-family:var(--body)}
+  .dsec{margin-top:34px}
+  .dsec h2{font-family:var(--disp);font-weight:600;font-size:24px;margin:0 0 14px}
+  .vrow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:16px;margin-bottom:10px;flex-wrap:wrap}
+  .vrow span{font-size:14px;color:var(--ink);font-weight:600}
+  .dsec p{color:var(--ink2);line-height:1.65;max-width:680px}
+</style>
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap" id="app">
+  <div id="list-view">
+    <div class="hero" style="padding:50px 0 24px">
+      <div class="rule"></div>
+      <div class="k" id="stat-count"></div>
+      <h1 style="font-size:52px">The full perfume catalogue</h1>
+      <div class="sub">Search by name, house or scent note. Every perfume links to FragranceNet, where you can check today's price and size options.</div>
+    </div>
+    <div class="cat-note">ParfAI earns a commission when you buy through these links, at no extra cost to you. Prices change often, so we do not show them here. <a href="affiliate-disclosure.html">Affiliate disclosure</a></div>
+
+    <div class="filterbar">
+      <div class="searchbox">🔍<input id="q" type="search" placeholder="Search by name, house or note (e.g. oud, vanilla, Creed)" autocomplete="off"></div>
+      <select id="gender" class="chip-select" aria-label="Filter by audience">
+        <option value="">Everyone</option><option value="0">For men</option><option value="1">For women</option><option value="2">Unisex</option>
+      </select>
+      <input id="house" class="chip-select" list="houses" placeholder="Any house" aria-label="Filter by house" style="min-width:170px">
+      <datalist id="houses"></datalist>
+      <select id="sort" class="chip-select" aria-label="Sort">
+        <option value="popular">Sort: Most options first</option>
+        <option value="az">Sort: A to Z</option>
+        <option value="new">Sort: Newest</option>
+      </select>
+    </div>
+    <div class="resultcount" id="count">Loading the catalogue...</div>
+    <div class="grid" id="grid"></div>
+    <button class="btn ghost more" id="more" type="button" hidden>Show more</button>
+  </div>
+
+  <div id="detail-view" hidden></div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js?v=202610061200"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script src="catalog.js?v=202610061200"></script>
+<script src="cookie-notice.js"></script>
+</body>
+</html>

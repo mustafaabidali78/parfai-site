@@ -1371,7 +1371,8 @@ function renderNav(active){
             <a class="it" href="explore.html"><b>By family</b><span>Woody, floral, fresh &amp; more</span></a>
             <a class="it" href="notes.html"><b>By note</b><span>Rose, oud, vanilla &amp; more</span></a>
             <a class="it" href="houses.html"><b>By house</b><span>Creed, Dior, Chanel…</span></a>
-            <a class="it" href="explore.html"><b>All fragrances</b><span>Browse the full catalog</span></a></div>
+            <a class="it" href="explore.html"><b>All fragrances</b><span>Browse the full catalog</span></a>
+            <a class="it" href="catalog.html"><b>Full catalogue <span class="newbadge">NEW</span></b><span>12,000+ perfumes to search</span></a></div>
           <div><div class="colhead">&nbsp;</div>
             <a class="it" href="explore.html?sort=new"><b>New releases</b><span>Just dropped</span></a>
             <a class="it" href="explore.html?sort=trending"><b>Trending</b><span>Hot right now</span></a>
