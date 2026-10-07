@@ -4,21 +4,21 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ParfAI — Community</title>
-<meta name="description" content="Join the ParfAI community: share fragrance reviews, browse the photo wall, see what people are wearing today, and get scent recommendations."/>
+<meta name="description" content="Join the ParfAI community: review the fragrances you wear, log your Scent of the Day, and ask or answer scent questions."/>
 <link rel="canonical" href="https://parfai.org/community.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ParfAI">
 <meta property="og:title" content="ParfAI — Community">
-<meta property="og:description" content="Join the ParfAI community: share fragrance reviews, browse the photo wall, see what people are wearing today, and get scent recommendations.">
+<meta property="og:description" content="Join the ParfAI community: review the fragrances you wear, log your Scent of the Day, and ask or answer scent questions.">
 <meta property="og:url" content="https://parfai.org/community.html">
 <meta property="og:image" content="https://parfai.org/images/social/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ParfAI — Community">
-<meta name="twitter:description" content="Join the ParfAI community: share fragrance reviews, browse the photo wall, see what people are wearing today, and get scent recommendations.">
+<meta name="twitter:description" content="Join the ParfAI community: review the fragrances you wear, log your Scent of the Day, and ask or answer scent questions.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610061400">
+<link rel="stylesheet" href="parfai.css?v=202610072000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -53,133 +53,206 @@
   ]
 }
 </script>
+<style>
+/* Community page: every number and post here is real, nothing is made up */
+.cm-hero{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin:30px 0 8px}
+@media(max-width:900px){.cm-hero{grid-template-columns:1fr}}
+.cm-pc{background:var(--ink);color:#fff;border-radius:36px;padding:40px 38px;position:relative;overflow:hidden}
+.cm-pc::after{content:"";position:absolute;right:-90px;top:-90px;width:300px;height:300px;border-radius:50%;background:conic-gradient(#8B7CFF,#FF4D9D,#FF8C42,#F2C94C,#7ED8B5,#8B7CFF);opacity:.5;filter:blur(34px);pointer-events:none}
+.cm-pc>*{position:relative;z-index:2}
+.cm-pc .k{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7ED8B5;margin-bottom:12px}
+.cm-pc h1{font-family:var(--disp);font-weight:600;font-size:clamp(40px,5.4vw,66px);line-height:.98;letter-spacing:-.01em}
+.cm-pc h1 em{font-style:italic;background:linear-gradient(90deg,#B3A8FF,#FF8FC0,#FFB070);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cm-pc p{font-size:15px;opacity:.82;max-width:480px;margin:16px 0 22px}
+.cm-acts{display:flex;gap:10px;flex-wrap:wrap}
+.cm-acts .btn{background:#fff;color:var(--ink)}.cm-acts .btn.d{background:rgba(255,255,255,.14);color:#fff}
+.cm-stats{display:flex;gap:30px;margin-top:26px;flex-wrap:wrap}
+.cm-stats b{display:block;font-family:var(--disp);font-size:38px;line-height:1}.cm-stats small{font-size:12px;opacity:.7}
+.cm-streak{background:linear-gradient(150deg,#FFE9A8,#FFB36B);border-radius:36px;padding:32px;display:flex;flex-direction:column;justify-content:space-between;min-height:260px}
+.cm-streak .k{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a3d00}
+.cm-streak .n{font-family:var(--disp);font-size:84px;line-height:.9;font-weight:600}.cm-streak .n span{font-family:var(--body);font-size:15px;font-weight:700;margin-left:8px}
+.cm-days{display:flex;gap:7px;margin:14px 0}.cm-days span{flex:1;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}.cm-days span.on{background:var(--ink);color:#fff}
+.cm-streak small{display:block;font-size:12px;color:#7a3d00;margin-top:10px}
+.cm-sec{margin-top:54px;scroll-margin-top:96px}
+.cm-sh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.cm-sh h2{font-family:var(--disp);font-size:38px;font-weight:600;letter-spacing:-.01em}.cm-sh span,.cm-sh a{font-size:13px;font-weight:700;color:var(--violet)}
+.cm-pr{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:900px){.cm-pr{grid-template-columns:1fr}}
+.cm-p{border-radius:30px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;min-height:230px;transition:transform .35s cubic-bezier(.2,.9,.3,1.3),box-shadow .3s}
+.cm-p:hover{transform:translateY(-6px);box-shadow:0 26px 36px -24px rgba(0,0,0,.45)}
+.cm-p h3{font-family:var(--disp);font-size:29px;line-height:1.02;font-weight:600;margin:0 0 8px}.cm-p p{font-size:13.5px;opacity:.82}
+.cm-p .btn{align-self:flex-start;margin-top:18px;padding:12px 20px}
+.cm-empty{border:2px dashed rgba(20,20,20,.15);border-radius:28px;padding:34px 26px;text-align:center;background:rgba(255,255,255,.5)}
+.cm-empty b{display:block;font-family:var(--disp);font-size:26px;margin-bottom:6px}.cm-empty p{font-size:14px;color:var(--muted);max-width:420px;margin:0 auto 16px}
+.cm-revs{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}@media(max-width:760px){.cm-revs{grid-template-columns:1fr}}
+.cm-rv{background:var(--panel);border:1px solid var(--border);border-radius:26px;padding:20px 22px;transition:transform .3s}.cm-rv:hover{transform:translateY(-4px)}
+.cm-rv .top{display:flex;gap:14px;align-items:center;margin-bottom:10px}.cm-rv .bt{width:46px;height:60px;border-radius:12px;flex:none}
+.cm-rv .pn{font-family:var(--disp);font-size:23px;font-weight:700;line-height:1.05}.cm-rv .pn a:hover{color:var(--violet)}
+.cm-rv .by{font-size:12px;color:var(--muted)}.cm-rv .st{color:#FF9F1C;letter-spacing:2px;font-size:15px}.cm-rv .st i{font-style:normal;color:#DEDAD0}
+.cm-rv p{font-size:14px;color:var(--ink2);line-height:1.55;overflow-wrap:anywhere}
+.cm-two{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:860px){.cm-two{grid-template-columns:1fr}}
+.cm-box{background:var(--panel);border:1px solid var(--border);border-radius:30px;padding:26px}.cm-box h3{font-family:var(--disp);font-size:28px;font-weight:600;margin-bottom:12px}
+.cm-row{display:flex;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--border);font-size:14px}.cm-row:first-of-type{border-top:0}
+.cm-row .av{width:34px;height:34px;border-radius:50%;flex:none}.cm-row a{color:var(--violet);font-weight:600}.cm-row small{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}
+.cm-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cm-chips button{border:1.5px solid var(--border);background:#fff;border-radius:100px;padding:8px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}.cm-chips button:hover{transform:translateY(-2px)}
+.cm-chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cm-th{display:block;background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:18px 22px;margin-bottom:12px;transition:transform .25s,box-shadow .25s}.cm-th:hover{transform:translateY(-3px);box-shadow:0 20px 30px -24px rgba(0,0,0,.45)}
+.cm-th b{font-family:var(--disp);font-size:22px;line-height:1.1;display:block;overflow-wrap:anywhere}.cm-th div{display:flex;gap:10px;align-items:center;margin-top:8px;font-size:12px;color:var(--muted);font-weight:600;flex-wrap:wrap}
+.cm-sort{margin-left:auto}.cm-sort button{font:inherit;font-size:13px;font-weight:700;color:var(--muted);background:none;border:0;cursor:pointer;padding:6px 8px}.cm-sort button.on{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+.cm-led{display:flex;flex-direction:column;gap:2px}
+.cm-led .cm-row b{font-family:var(--disp);font-size:20px}.cm-led .r{font-family:var(--disp);font-size:26px;width:26px;opacity:.45}
+.pp{position:relative}.pp-list{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 30px -18px rgba(0,0,0,.4);z-index:5;overflow:hidden}.pp-list.on{display:block}
+.pp-list button{display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;border:0;background:none;padding:10px 14px;cursor:pointer;font:inherit}.pp-list button:hover{background:rgba(139,124,255,.09)}
+.pp-list b{font-size:14px}.pp-list span{font-size:12px;color:var(--muted)}.pp-none{padding:12px 14px;font-size:13px;color:var(--muted)}
+.cm-band{margin:64px 0 0;border-radius:36px;padding:54px 34px;text-align:center;background:linear-gradient(120deg,#8B7CFF,#FF4D9D 58%,#FF8C42);color:#fff}
+.cm-band h2{font-family:var(--disp);font-weight:600;font-size:clamp(34px,5vw,56px);line-height:1}.cm-band p{margin:12px 0 22px;opacity:.94}.cm-band .btn{background:#fff;color:var(--ink)}
+.cm-note{margin-top:22px;font-size:12px;color:var(--muted);text-align:center}
+@media(prefers-reduced-motion:reduce){.cm-p,.cm-rv,.cm-th{transition:none}}
+</style>
 </head>
 <body>
 
 <nav id="nav-slot" data-active="community"></nav>
 
 <div class="wrap">
-  <div class="hero">
-    <div class="rule"></div>
-    <h1>Welcome to the<br><span class="g">ParfAI community</span></h1>
-    <p class="sub" style="max-width:520px">Review the scents you love, share your collection, and help others find their signature.</p>
-    <div class="cta">
-      <a class="btn" href="#" data-write-review>Write a review</a>
-      <a class="btn ghost" href="#">Share your collection</a>
+  <div class="cm-hero">
+    <div class="cm-pc">
+      <div class="k">The ParfAI community</div>
+      <h1>Your nose.<br><em>Your take.</em></h1>
+      <p>Review the fragrances you wear, log your Scent of the Day, and help others find their signature. No account needed.</p>
+      <div class="cm-acts"><button class="btn" type="button" data-write-review>Write a review</button><button class="btn d" type="button" data-log-sotd>Log today's scent</button><button class="btn d" type="button" data-start-discussion>Start a discussion</button></div>
+      <div class="cm-stats" id="stats"></div>
     </div>
+    <div class="cm-streak"><div><div class="k">Your Scent of the Day streak</div><div class="n"><b id="sn" style="font-weight:600">0</b><span>days in a row</span></div></div>
+      <div><div class="cm-days" id="days"></div><button class="btn" type="button" data-log-sotd style="width:100%">Log today's scent</button><small>Saved only on this device. Nothing is sent to anyone.</small></div></div>
   </div>
 
-  <p style="text-align:center;font-size:12px;color:var(--muted);margin:8px 0 0">Some activity below is example content shown while our community grows — reviews you and others submit live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p>
-
-  <div style="display:flex;justify-content:center;gap:44px;margin:6px 0 40px;flex-wrap:wrap">
-    <div><span id="stat-fragrances" style="display:block;font-family:var(--disp);font-weight:800;font-size:26px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Fragrances</small></div>
-    <div><span id="stat-houses" style="display:block;font-family:var(--disp);font-weight:800;font-size:26px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Houses</small></div>
-  </div>
-
-  <div class="tabs">
-    <span class="tab on">All</span><span class="tab">Reviews</span><span class="tab">Photo wall</span>
-    <span class="tab">Scent of the Day</span><span class="tab">Discussions</span><span class="tab">Ask &amp; recommend</span>
-  </div>
-
-  <section>
-    <div class="shead"><h2>Photo wall</h2><a href="#">Share yours →</a></div>
-    <div class="wall" id="wall"></div>
+  <section class="cm-sec" id="prompts">
+    <div class="cm-sh"><h2>This week's prompts</h2><span id="weekstat">New ideas every Monday</span></div>
+    <div class="cm-pr" id="pr"></div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Latest reviews</h2><a href="#" data-write-review>Write a review →</a></div>
-    <div class="rev" id="rev"></div>
+  <section class="cm-sec" id="reviews">
+    <div class="cm-sh"><h2>Latest reviews</h2><a href="#" data-write-review>Write a review &rarr;</a></div>
+    <div class="cm-revs" id="rev"><div class="cm-empty" style="grid-column:1/-1"><p>Loading…</p></div></div>
   </section>
 
-  <section class="split">
-    <div class="card">
-      <h3>Scent of the Day</h3>
-      <div id="sotd"></div>
-      <a class="btn ghost block" style="margin-top:16px" href="#" data-log-sotd>Log what you're wearing</a>
-    </div>
-    <div class="card">
-      <h3>Trending discussions</h3>
-      <p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some discussions below are example content and can't be opened, discussions people start live are marked <span class="newbadge" style="margin-left:0">NEW</span> and open for real.</p>
-      <div id="threads"></div>
-      <a class="btn ghost block" style="margin-top:16px" href="#" data-start-discussion>Start a discussion</a>
-    </div>
+  <section class="cm-sec cm-two">
+    <div class="cm-box" id="today"><h3>Scent of the Day</h3><div id="sotd"><p style="color:var(--muted);font-size:14px">Loading…</p></div><button class="btn ghost" type="button" data-log-sotd style="width:100%;margin-top:16px">Log what you're wearing</button></div>
+    <div class="cm-box" id="reviewers"><h3>Most active reviewers</h3><p style="font-size:12.5px;color:var(--muted);margin:-6px 0 8px">Counted from reviews in the last 30 days.</p><div class="cm-led" id="led"><p style="color:var(--muted);font-size:14px">Loading…</p></div></div>
   </section>
 
-  <div class="band">
-    <h2>Your nose. Your take.<br>Your people.</h2>
-    <p>Join the ParfAI community — free forever. Review, share, discover.</p>
-    <a class="btn" href="signup.html">Join the community</a>
-  </div>
+  <section class="cm-sec" id="discussions">
+    <div class="cm-sh"><h2>Discussions</h2><a href="#" data-start-discussion>Start a discussion &rarr;</a></div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div class="cm-chips" id="cats"></div><div class="cm-sort" id="sort"><button data-s="new" class="on">Newest</button><button data-s="hot">Most replies</button></div></div>
+    <div id="threads"><div class="cm-empty"><p>Loading…</p></div></div>
+  </section>
+
+  <div class="cm-band"><h2>Every review helps<br>someone choose.</h2><p>Free to join. Post as a guest, or create an account to keep your name.</p><a class="btn" href="signup.html">Create a free account</a></div>
+  <p class="cm-note">Everything on this page was written by real visitors. Posts are public.</p>
 </div>
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610061400"></script>
+<script src="data.js?v=202610072000"></script>
+<script src="catalog-lib.js?v=202610072000"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
-<script src="reviews.js"></script>
-<script src="community.js"></script>
+<script src="reviews.js?v=202610072000"></script>
+<script src="community.js?v=202610072000"></script>
 <script>
-  document.getElementById('stat-fragrances').textContent = PERFUMES.length + '+';
-  document.getElementById('stat-houses').textContent = HOUSES.length + '+';
+(function(){
+  var $ = function(i){ return document.getElementById(i); };
+  var E = escHtml;
+  var COL = ['#F2C94C','#F08CB0','#F2705A','#7FBF6A','#8B7CFF','#6FB7D8','#FF9A4D','#7ED8B5'];
+  function hue(s){ var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
+  function dot(name){ var h = hue(name); return 'background:linear-gradient(150deg,' + COL[h % 8] + ',' + COL[(h >>> 3) % 8] + ')'; }
+  function stars(n){ return '&#9733;'.repeat(n) + '<i>' + '&#9733;'.repeat(5 - n) + '</i>'; }
+  function empty(title, text, attrs, btn){ return '<div class="cm-empty"><b>' + title + '</b><p>' + text + '</p>' + (btn ? '<button class="btn" type="button" ' + attrs + '>' + btn + '</button>' : '') + '</div>'; }
+  var params = new URLSearchParams(location.search), cat = params.get('cat') || '', sort = params.get('sort') === 'hot' ? 'hot' : 'new';
 
-  document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`
-    <div class="shot">
-      <div class="ph" style="height:${s.h}px"><div class="tag" style="background:${typeof tagColor==='function'?tagColor(i):GRADS[i%GRADS.length].split(',')[0]}"></div></div>
-      <div class="cap">
-        <div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div>
-        <div class="tx">${s.t}</div>
-        <div class="meta"><span>♥ ${s.l}</span><span>💬 ${s.c}</span></div>
-      </div>
-    </div>`).join('');
-
-  function renderCommunityRevs(list){
-    document.getElementById('rev').innerHTML = list.map((r,i)=>`
-      <div class="rc">
-        <div class="top"><div class="thumb" style="background:${gr(i)}"></div>
-          <div><div class="pn"><a href="perfume.html?id=${r.id}">${r.p}</a>${r.live?'<span class="newbadge">NEW</span>':''}</div><div class="pb">${r.b}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div>
-        <div class="body">${r.tx}</div>
-        <div class="foot"><span class="who"><span class="av" style="${av(i)}"></span>${r.who}</span><span class="helpful">👍 ${r.hp} found helpful</span></div>
-      </div>`).join('');
+  // streak
+  function drawStreak(){
+    var st = readStreak(); $('sn').textContent = st.n; $('sn').nextElementSibling.textContent = st.n === 1 ? 'day in a row' : 'days in a row';
+    var days = ['M','T','W','T','F','S','S'], now = new Date(), dow = (now.getDay() + 6) % 7, logged = {};
+    st.days.forEach(function(d){ logged[d] = 1; });
+    $('days').innerHTML = days.map(function(l, i){ var d = new Date(now); d.setDate(now.getDate() - dow + i); return '<span class="' + (logged[dayStr(d)] ? 'on' : '') + '">' + l + '</span>'; }).join('');
   }
-  renderCommunityRevs(REVIEWS);
-  function refreshCommunityRevs(){
-    fetchLiveReviews(null, 12).then(rows=>{
-      renderCommunityRevs([...rows.map(liveToCardShape), ...REVIEWS]);
+  drawStreak();
+
+  // weekly prompts
+  var PC = ['#D7D0FF','#FFD0E1','#CDEFE2'];
+  $('pr').innerHTML = thisWeekPrompts().map(function(p, i){ return '<div class="cm-p" style="background:' + PC[i] + '"><div><h3>' + E(p[0]) + '</h3><p>' + E(p[1]) + '</p></div><button class="btn" type="button" data-write-review>Write this review</button></div>'; }).join('');
+
+  // stats
+  function drawStats(c){
+    var tot = c.r + c.s + c.d;
+    $('stats').innerHTML = tot ? [[c.r,'review','reviews'],[c.s,'scent logged','scents logged'],[c.d,'discussion','discussions']].map(function(x){ return '<div><b>' + x[0].toLocaleString('en-US') + '</b><small>' + (x[0] === 1 ? x[1] : x[2]) + '</small></div>'; }).join('') : '<div style="font-size:14px;opacity:.85;max-width:340px">The community is just getting started. Your review could be the first one on this page.</div>';
+    if (c.w) $('weekstat').textContent = c.w + ' review' + (c.w === 1 ? '' : 's') + ' written this week';
+  }
+
+  var catRows = [];
+  function drawThreads(rows, counts){
+    var list = rows.filter(function(r){ return !cat || r.category === cat; });
+    if (sort === 'hot') list = list.slice().sort(function(a, b){ return (counts[b.id] || 0) - (counts[a.id] || 0) || new Date(b.created_at) - new Date(a.created_at); });
+    $('threads').innerHTML = list.length ? list.map(function(t){
+      var n = counts[t.id] || 0;
+      return '<a class="cm-th" href="discussion.html?id=' + encodeURIComponent(t.id) + '"><b>' + E(t.title) + '</b><div><span class="pill">' + E(DISCUSSION_LABELS[t.category] || t.category) + '</span><span>' + E(t.author) + '</span><span>' + timeAgo(t.created_at) + ' ago</span><span>' + n + ' repl' + (n === 1 ? 'y' : 'ies') + '</span></div></a>';
+    }).join('') : empty(cat ? 'Nothing here yet' : 'No discussions yet', cat ? 'Be the first to start a conversation in this topic.' : 'Ask a question or share a tip. Others can reply.', 'data-start-discussion data-category="' + E(cat) + '"', 'Start a discussion');
+    bind();
+  }
+  function drawCats(){
+    $('cats').innerHTML = [''].concat(DISCUSSION_CATEGORIES).map(function(c){ return '<button data-c="' + E(c) + '" class="' + (c === cat ? 'on' : '') + '">' + (c ? E(DISCUSSION_LABELS[c]) : 'All topics') + '</button>'; }).join('');
+  }
+  function bind(){ if (window.bindReviewButtons) bindReviewButtons(); if (window.bindCommunityButtons) bindCommunityButtons(); }
+
+  var rows = {}, dRows = [], dCounts = {};
+  function loadReviews(){
+    fetchLiveReviews(null, 200).then(function(list){
+      var recent = list.slice(0, 10);
+      $('rev').innerHTML = recent.length ? recent.map(function(r){
+        var p = perfumeInfo(r.perfume_id);
+        return '<div class="cm-rv"><div class="top"><div class="bt" style="' + dot(p.name) + '"></div><div><div class="pn"><a href="' + E(p.href) + '">' + E(p.name) + '</a></div><div class="by">' + (p.house ? E(p.house) + ' &middot; ' : '') + E(r.author) + ' &middot; ' + timeAgo(r.created_at) + ' ago</div><div class="st">' + stars(Math.max(0, Math.min(5, r.rating | 0))) + '</div></div></div><p>' + E(r.body) + '</p></div>';
+      }).join('') : '<div style="grid-column:1/-1">' + empty('No reviews yet', 'Be the first to review a fragrance. It takes about a minute and you do not need an account.', 'data-write-review', 'Write the first review') + '</div>';
+      // reviewers (last 30 days)
+      var since = Date.now() - 30 * 864e5, by = {};
+      list.forEach(function(r){ if (new Date(r.created_at).getTime() >= since) by[r.author] = (by[r.author] || 0) + 1; });
+      var top = Object.keys(by).map(function(k){ return [k, by[k]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 5);
+      $('led').innerHTML = top.length ? top.map(function(t, i){ return '<div class="cm-row"><span class="r">' + (i + 1) + '</span><span class="av" style="' + dot(t[0]) + '"></span><b>' + E(t[0]) + '</b><small>' + t[1] + ' review' + (t[1] === 1 ? '' : 's') + '</small></div>'; }).join('') : empty('No reviewers yet', 'Write a review and you could be first on this list.', 'data-write-review', 'Write a review');
+      bind();
     });
   }
-  refreshCommunityRevs();
-  window.addEventListener('parfai:review-posted', refreshCommunityRevs);
-
-  function renderSotd(list){
-    document.getElementById('sotd').innerHTML = list.map((s,i)=>`
-      <div class="sotd"><span class="av" style="${av(i)}"></span>
-        <div class="t"><b>${s.u}</b>${s.live?'<span class="newbadge">NEW</span>':''} <span>is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div>
-        <span class="time">${s.t}</span></div>`).join('');
-  }
-  renderSotd(SOTD);
-  function refreshSotd(){
-    fetchLiveSotd(8).then(rows=>{
-      renderSotd([...rows.map(liveSotdToCardShape), ...SOTD]);
+  function loadSotd(){
+    fetchLiveSotd(8).then(function(list){
+      $('sotd').innerHTML = list.length ? list.map(function(s){ var p = perfumeInfo(s.perfume_id); return '<div class="cm-row"><span class="av" style="' + dot(s.author) + '"></span><span><b>' + E(s.author) + '</b> is wearing <a href="' + E(p.href) + '">' + E(p.name) + '</a></span><small>' + timeAgo(s.created_at) + '</small></div>'; }).join('') : '<p style="color:var(--muted);font-size:14px">Nobody has logged a scent yet. Be the first to share what you are wearing today.</p>';
+      drawStreak();
     });
   }
-  refreshSotd();
-  window.addEventListener('parfai:sotd-posted', refreshSotd);
+  function loadThreads(){
+    Promise.all([fetchLiveDiscussions(60), fetchReplyCounts()]).then(function(r){ dRows = r[0]; dCounts = r[1]; drawThreads(dRows, dCounts); });
+  }
+  function loadCounts(){
+    Promise.all([fetchCount('reviews'), fetchCount('sotd_logs'), fetchCount('discussions'), fetchCount('reviews', mondayIso())]).then(function(a){ drawStats({ r: a[0], s: a[1], d: a[2], w: a[3] }); });
+  }
+  function refreshAll(){ loadReviews(); loadSotd(); loadThreads(); loadCounts(); }
 
-  function renderThreads(list){
-    document.getElementById('threads').innerHTML = list.map(t=>`
-      <a class="thread" ${t.live?`href="discussion.html?id=${t.id}"`:'style="cursor:default"'}><div class="ti">${t.t}${t.live?'<span class="newbadge">NEW</span>':''}</div>
-        <div class="mt"><span class="pill">${t.c}</span><span>${t.live?'💬 Open discussion →':`💬 ${t.r} replies`}</span></div></a>`).join('');
-  }
-  renderThreads(THREADS);
-  function refreshThreads(){
-    fetchLiveDiscussions(8).then(rows=>{
-      renderThreads([...rows.map(liveDiscussionToCardShape), ...THREADS]);
-    });
-  }
-  refreshThreads();
-  window.addEventListener('parfai:discussion-posted', refreshThreads);
+  $('cats').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; cat = b.dataset.c; drawCats(); drawThreads(dRows, dCounts); });
+  $('sort').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; sort = b.dataset.s; document.querySelectorAll('#sort button').forEach(function(x){ x.classList.toggle('on', x === b); }); drawThreads(dRows, dCounts); });
+  document.querySelectorAll('#sort button').forEach(function(x){ x.classList.toggle('on', x.dataset.s === sort); });
+  drawCats();
+  window.addEventListener('parfai:review-posted', refreshAll);
+  window.addEventListener('parfai:sotd-posted', refreshAll);
+  window.addEventListener('parfai:discussion-posted', refreshAll);
+
+  primePerfumes().then(function(){
+    refreshAll();
+    var d = params.get('do');
+    setTimeout(function(){
+      if (d === 'review') openReviewModal(); else if (d === 'today') openSotdModal(); else if (d === 'discuss') openDiscussionModal({ category: cat });
+    }, 400);
+  });
+})();
 </script>
 <script src="cookie-notice.js"></script>
 </body>

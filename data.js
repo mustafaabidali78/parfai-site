@@ -938,40 +938,13 @@ const PERFUMES = [
     dupeIds:['herod'] },
 ];
 
-/* ---------- community sample data (shared across community.html + homepage) ---------- */
-const PHOTOWALL = [
-  { u:'ScentSofia', t:'My winter shelf 🖤 Tobacco Vanille living here rent free', h:190, l:214, c:32 },
-  { u:'OudMike', t:'Today’s haul — decant day!', h:150, l:98, c:11 },
-  { u:'Lena_P', t:'Baccarat 540 in the morning light', h:230, l:341, c:54 },
-  { u:'FragBro', t:'The everyday rotation', h:150, l:120, c:9 },
-  { u:'Amira', t:'Niche corner ✨ Xerjoff + PdM', h:200, l:276, c:41 },
-  { u:'DanC', t:'Blind buy that paid off', h:150, l:66, c:7 },
-  { u:'RoseW', t:'Spring florals are back out', h:210, l:188, c:26 },
-  { u:'KaiT', t:'Sample vials > full bottles, change my mind', h:160, l:143, c:19 },
-];
-
-const REVIEWS = [
-  { p:'Aventus', b:'Creed', s:5, who:'ScentSofia', tx:'The pineapple opening is unreal and the smoky dry-down lasts all day. A compliment magnet — worth the hype.', hp:214, id:'aventus' },
-  { p:'Black Opium', b:'YSL', s:4, who:'Lena_P', tx:'Cozy coffee-vanilla bomb. Perfect for autumn nights, though a little sweet for the office.', hp:88, id:'black-opium' },
-  { p:'Sauvage', b:'Dior', s:4, who:'FragBro', tx:'Yes it’s everywhere, but for a reason. Fresh, loud, safe. My go-to for a first date.', hp:132, id:'sauvage' },
-  { p:'Baccarat Rouge 540', b:'MFK', s:5, who:'Amira', tx:'Ethereal and addictive. A little goes a long way — 2 sprays and people ask what you’re wearing.', hp:176, id:'baccarat-rouge' },
-];
-
-const SOTD = [
-  { u:'OudMike', w:'Tom Ford Oud Wood', t:'12m', id:'oud-wood' },
-  { u:'RoseW', w:'Chanel No. 5', t:'34m', id:'coco-mademoiselle' },
-  { u:'KaiT', w:'Dior Sauvage', t:'1h', id:'sauvage' },
-  { u:'DanC', w:'Armaf Club de Nuit', t:'2h', id:'clubdenuit' },
-  { u:'Amira', w:'PdM Delina', t:'3h', id:'delina' },
-];
-
-const THREADS = [
-  { t:'Best affordable Aventus dupe in 2026?', c:'Recommendations', r:142 },
-  { t:'What’s your most complimented fragrance?', c:'General talk', r:308 },
-  { t:'New to fragrance — where do I even start?', c:'Beginners', r:97 },
-  { t:'Notino vs Sephora — where are you buying?', c:'Deals', r:64 },
-  { t:'Decant swap thread — August', c:'Swaps', r:51 },
-];
+/* ---------- community data ----------
+   Everything on the Community page is real posts from visitors (stored in Supabase). The old example photo wall,
+   reviews, Scent of the Day entries and discussions were removed. These empty lists stay only so older pages do not break. */
+const PHOTOWALL = [];
+const REVIEWS = [];
+const SOTD = [];
+const THREADS = [];
 
 /* ---------- blog ----------
    Each post is one flat HTML file at the site root (slug.html), listed
@@ -1411,22 +1384,22 @@ function renderNav(active){
         </div></div>
       </span>
       <span class="megawrap"><span class="menu">Community <span class="car">▾</span></span>
-        <div class="mega"><div class="cols">
+        <div class="mega mc"><div class="cols">
           <div><div class="colhead">Join in</div>
-            <a class="it" href="community.html"><b>Reviews &amp; ratings</b><span>Rate any fragrance</span></a>
-            <a class="it" href="community.html"><b>Scent of the Day</b><span>What you're wearing today</span></a>
-            <a class="it" href="community.html"><b>Photo wall</b><span>Shelfies &amp; collections</span></a>
-            <a class="it" href="community.html"><b>Ask &amp; recommend</b><span>Get help finding scents</span></a></div>
+            <a class="it c1" href="community.html?do=review"><b>Write a review</b><span>Rate any fragrance in a minute</span></a>
+            <a class="it c2" href="community.html?do=today"><b>Scent of the Day</b><span>Log what you're wearing, keep a streak</span></a>
+            <a class="it c3" href="community.html?do=discuss"><b>Start a discussion</b><span>Ask a question, share a tip</span></a>
+            <a class="it c4" href="community.html?cat=Recommendations#discussions"><b>Ask &amp; recommend</b><span>Get help finding your scent</span></a></div>
           <div><div class="colhead">Discuss</div>
-            <a class="it" href="community.html"><b>General perfume talk</b><span>Everything fragrance</span></a>
-            <a class="it" href="community.html"><b>New to fragrance</b><span>Beginner friendly</span></a>
-            <a class="it" href="community.html"><b>Deals &amp; where to buy</b><span>Best prices &amp; drops</span></a>
-            <a class="it" href="community.html"><b>Decants &amp; swaps</b><span>Trade samples</span></a></div>
+            <a class="it c5" href="community.html?cat=General%20talk#discussions"><b>General perfume talk</b><span>Everything fragrance</span></a>
+            <a class="it c6" href="community.html?cat=Beginners#discussions"><b>New to fragrance</b><span>Beginner friendly</span></a>
+            <a class="it c7" href="community.html?cat=Deals#discussions"><b>Deals &amp; where to buy</b><span>Stores, offers and drops</span></a>
+            <a class="it c8" href="community.html?cat=Swaps#discussions"><b>Decants &amp; swaps</b><span>Share and trade samples</span></a></div>
           <div><div class="colhead">Highlights</div>
-            <a class="it" href="community.html"><b>Trending discussions</b><span>Hot right now</span></a>
-            <a class="it" href="community.html"><b>Top reviewers</b><span>Community leaderboard</span></a>
-            <a class="it" href="community.html"><b>Fragrance of the week</b><span>Community pick</span></a>
-            <a class="it" href="community.html"><b>Your feed</b><span>People you follow</span></a></div>
+            <a class="it c1" href="community.html#reviews"><b>Latest reviews</b><span>Fresh from the community</span></a>
+            <a class="it c2" href="community.html?sort=hot#discussions"><b>Trending discussions</b><span>Most replies first</span></a>
+            <a class="it c3" href="community.html#reviewers"><b>Most active reviewers</b><span>This month's top names</span></a>
+            <a class="it c4" href="community.html#prompts"><b>This week's prompts</b><span>New ideas every Monday</span></a></div>
         </div></div>
       </span>
       ${link('blog.html','Blog','blog')}
@@ -1448,7 +1421,7 @@ function renderFooter(){
     <div class="fcols">
       <div><b>ParfAI</b><span>The world's first AI perfumer</span></div>
       <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="notes.html">Browse by note</a><a href="houses.html">Houses</a><a href="blog.html">Blog</a></div>
-      <div><b>Community</b><a href="community.html">Reviews</a><a href="community.html">Photo wall</a><a href="community.html">Discussions</a></div>
+      <div><b>Community</b><a href="community.html#reviews">Reviews</a><a href="community.html#today">Scent of the Day</a><a href="community.html#discussions">Discussions</a></div>
       <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="credits.html">Photo credits</a><a href="contact.html">Contact</a></div>
     </div>
     <div style="margin-top:24px">© 2026 ParfAI · Some links are affiliate links.</div>

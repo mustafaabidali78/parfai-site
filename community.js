@@ -51,9 +51,6 @@ async function submitSotd({ perfumeId, author }){
 async function openSotdModal(){
   const loggedInUser = typeof getCurrentUser === 'function' ? await getCurrentUser() : null;
   const prefillName = loggedInUser && typeof displayNameFor === 'function' ? displayNameFor(loggedInUser) : '';
-  const perfumeOptions = PERFUMES.slice().sort((a,b)=>a.name.localeCompare(b.name))
-    .map(p=>`<option value="${p.id}">${p.name} (${houseName(p.houseId)})</option>`).join('');
-
   const backdrop = document.createElement('div');
   backdrop.className = 'rvmodal-backdrop';
   backdrop.innerHTML = `
@@ -62,14 +59,15 @@ async function openSotdModal(){
       <h2>Log what you're wearing</h2>
       <p class="sub" style="font-size:13px;color:var(--muted);margin-bottom:18px">Let the community know what's on today.</p>
       <form id="sotd-form">
-        <div class="field"><label>Fragrance</label><select id="sotd-perfume" required><option value="">Choose a fragrance…</option>${perfumeOptions}</select></div>
-        <div class="field"><label>Your name</label><input id="sotd-author" type="text" value="${prefillName.replace(/"/g,'&quot;')}" placeholder="e.g. FragBro" maxlength="60" required></div>
+        <div class="field"><label>Fragrance</label>${perfumePickerHTML('sotd')}</div>
+        <div class="field"><label>Your name</label><input id="sotd-author" type="text" value="${escHtml(prefillName)}" placeholder="e.g. FragBro" maxlength="60" required></div>
         <button class="btn block" type="submit">Log it</button>
         <div id="sotd-msg"></div>
       </form>
     </div>`;
   document.body.appendChild(backdrop);
 
+  const getPerfume = bindPerfumePicker(backdrop, 'sotd');
   function close(){ backdrop.remove(); }
   backdrop.addEventListener('click', (e)=>{ if (e.target === backdrop) close(); });
   backdrop.querySelector('.close').addEventListener('click', close);
@@ -78,9 +76,9 @@ async function openSotdModal(){
   backdrop.querySelector('#sotd-form').addEventListener('submit', async (e)=>{
     e.preventDefault();
     const msg = backdrop.querySelector('#sotd-msg');
-    const perfumeId = backdrop.querySelector('#sotd-perfume').value;
+    const perfumeId = getPerfume();
     const author = backdrop.querySelector('#sotd-author').value.trim();
-    if (!perfumeId){ msg.className='rvmsg err'; msg.textContent='Please choose a fragrance.'; return; }
+    if (!perfumeId){ msg.className='rvmsg err'; msg.textContent='Please pick a fragrance from the list.'; return; }
     if (!author){ msg.className='rvmsg err'; msg.textContent='Please enter your name.'; return; }
 
     const btn = e.target.querySelector('button[type=submit]');
@@ -97,6 +95,7 @@ async function openSotdModal(){
     }
     msg.className = 'rvmsg ok';
     msg.textContent = "Logged, thanks for sharing!";
+    bumpStreak();
     window.dispatchEvent(new CustomEvent('parfai:sotd-posted'));
     setTimeout(close, 1200);
   });
@@ -168,10 +167,11 @@ async function submitReply({ discussionId, author, body }){
   }
 }
 
-async function openDiscussionModal(){
+async function openDiscussionModal(opts){
+  opts = opts || {};
   const loggedInUser = typeof getCurrentUser === 'function' ? await getCurrentUser() : null;
   const prefillName = loggedInUser && typeof displayNameFor === 'function' ? displayNameFor(loggedInUser) : '';
-  const categoryOptions = DISCUSSION_CATEGORIES.map(c=>`<option value="${c}">${c}</option>`).join('');
+  const categoryOptions = DISCUSSION_CATEGORIES.map(c=>`<option value="${c}"${opts.category===c?' selected':''}>${DISCUSSION_LABELS[c]||c}</option>`).join('');
 
   const backdrop = document.createElement('div');
   backdrop.className = 'rvmodal-backdrop';
@@ -184,7 +184,7 @@ async function openDiscussionModal(){
         <div class="field"><label>Category</label><select id="disc-category" required><option value="">Choose a category…</option>${categoryOptions}</select></div>
         <div class="field"><label>Title</label><input id="disc-title" type="text" placeholder="What's on your mind?" maxlength="120" required></div>
         <div class="field"><label>Message</label><textarea id="disc-body" rows="4" maxlength="1000" placeholder="Add some detail…" required></textarea></div>
-        <div class="field"><label>Your name</label><input id="disc-author" type="text" value="${prefillName.replace(/"/g,'&quot;')}" placeholder="e.g. FragBro" maxlength="60" required></div>
+        <div class="field"><label>Your name</label><input id="disc-author" type="text" value="${escHtml(prefillName)}" placeholder="e.g. FragBro" maxlength="60" required></div>
         <button class="btn block" type="submit">Post discussion</button>
         <div id="disc-msg"></div>
       </form>
@@ -226,14 +226,80 @@ async function openDiscussionModal(){
   });
 }
 
+
+/* ---------- extras for the Community page ---------- */
+const DISCUSSION_LABELS = { 'Recommendations': 'Ask & recommend', 'General talk': 'General perfume talk', 'Beginners': 'New to fragrance', 'Deals': 'Deals & where to buy', 'Swaps': 'Decants & swaps' };
+
+async function fetchCount(table, sinceIso){
+  if (!_sb) return 0;
+  try {
+    let q = _sb.from(table).select('*', { count: 'exact', head: true });
+    if (sinceIso) q = q.gte('created_at', sinceIso);
+    const { count, error } = await q;
+    return error ? 0 : (count || 0);
+  } catch (e) { return 0; }
+}
+async function fetchReplyCounts(){
+  if (!_sb) return {};
+  try {
+    const { data, error } = await _sb.from('discussion_replies').select('discussion_id').limit(2000);
+    if (error) return {};
+    const m = {}; (data || []).forEach(r => { m[r.discussion_id] = (m[r.discussion_id] || 0) + 1; });
+    return m;
+  } catch (e) { return {}; }
+}
+
+/* Scent of the Day streak. It is kept on this device only (nothing is sent anywhere), so it is honest but private. */
+function dayStr(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function readStreak(){
+  try {
+    const o = JSON.parse(localStorage.getItem('parfai_streak') || 'null');
+    if (!o || !o.last) return { n: 0, today: false, days: [] };
+    const t = dayStr(new Date()), y = dayStr(new Date(Date.now() - 864e5));
+    const alive = o.last === t || o.last === y;
+    return { n: alive ? o.n : 0, today: o.last === t, days: o.days || [] };
+  } catch (e) { return { n: 0, today: false, days: [] }; }
+}
+function bumpStreak(){
+  try {
+    const t = dayStr(new Date()), y = dayStr(new Date(Date.now() - 864e5));
+    const o = JSON.parse(localStorage.getItem('parfai_streak') || 'null') || { n: 0, last: '', days: [] };
+    if (o.last === t) return;
+    o.n = (o.last === y) ? o.n + 1 : 1; o.last = t;
+    o.days = (o.days || []).concat(t).slice(-14);
+    localStorage.setItem('parfai_streak', JSON.stringify(o));
+  } catch (e) {}
+}
+
+/* Weekly prompts: ideas for what to review. They rotate every Monday. Nothing here is a score or a prize. */
+const WEEKLY_PROMPTS = [
+  ['Review something woody', 'Pick any fragrance with oud, cedar, vetiver or sandalwood and tell us how it wears.'],
+  ['Review your most worn scent', 'The bottle you reach for without thinking. What makes it yours?'],
+  ['Review a dupe you love', 'An affordable fragrance that smells far more expensive than it is.'],
+  ['Review a summer scent', 'Something fresh, citrusy or light that works in the heat.'],
+  ['Review a vanilla you like', 'Sweet, creamy, smoky or spicy. How does it behave on skin?'],
+  ['Review a signature scent', 'The one people recognise you by. Do you get compliments?'],
+  ['Review a blind buy', 'Did it pay off or not? Help someone avoid a mistake or take a chance.'],
+  ['Review a gift you gave or got', 'How did it go down, and would you do it again?'],
+  ['Review a fall favourite', 'Warm, spicy, smoky or cosy. What do you wear when the weather turns?'],
+  ['Review a floral', 'Rose, jasmine, iris or something unexpected. Soft or loud?'],
+  ['Review an office-safe scent', 'Something polite that will not bother anyone at work.'],
+  ['Review a date-night scent', 'What do you wear when you want to be remembered?']
+];
+function weekIndex(){ const d = new Date(); const s = new Date(d.getFullYear(), 0, 1); return Math.floor((d - s) / 6048e5); }
+function thisWeekPrompts(){ const w = weekIndex(), n = WEEKLY_PROMPTS.length; return [0, 1, 2].map(i => WEEKLY_PROMPTS[(w * 3 + i) % n]); }
+function mondayIso(){ const d = new Date(); const day = (d.getDay() + 6) % 7; d.setHours(0,0,0,0); d.setDate(d.getDate() - day); return d.toISOString(); }
+
 /* ---------- wire up buttons ---------- */
 
 function bindCommunityButtons(){
   document.querySelectorAll('[data-log-sotd]').forEach(el=>{
+    if (el.dataset.bound) return; el.dataset.bound = '1';
     el.addEventListener('click', (e)=>{ e.preventDefault(); openSotdModal(); });
   });
   document.querySelectorAll('[data-start-discussion]').forEach(el=>{
-    el.addEventListener('click', (e)=>{ e.preventDefault(); openDiscussionModal(); });
+    if (el.dataset.bound) return; el.dataset.bound = '1';
+    el.addEventListener('click', (e)=>{ e.preventDefault(); openDiscussionModal({ category: el.dataset.category || '' }); });
   });
 }
 document.addEventListener('DOMContentLoaded', bindCommunityButtons);

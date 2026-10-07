@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="ParfAI — Find your scent, not just a bottle">
 <meta name="twitter:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610070900">
+<link rel="stylesheet" href="parfai.css?v=202610072000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -282,20 +282,18 @@
   <div class="cwrap" id="community" style="background:var(--panel);border:1px solid var(--border);border-radius:32px;padding:48px 40px;margin:70px 0">
     <div class="chead" style="text-align:center;margin-bottom:34px">
       <h2 style="font-family:var(--disp);font-weight:900;font-size:52px;line-height:.95;letter-spacing:-.04em">Welcome to the<br><span class="g">ParfAI community</span></h2>
-      <p style="font-size:18px;color:var(--ink2);max-width:520px;margin:18px auto 22px">Review the scents you love, share your collection, and help others find their signature.</p>
-      <div class="cta"><a class="btn" href="community.html">Write a review</a><a class="btn ghost" href="community.html">Share your collection</a></div>
+      <p style="font-size:18px;color:var(--ink2);max-width:520px;margin:18px auto 22px">Review the scents you love, log what you wear today, and help others find their signature.</p>
+      <div class="cta" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn" href="community.html?do=review">Write a review</a><a class="btn ghost" href="community.html?do=today">Log today's scent</a></div>
       <div style="display:flex;justify-content:center;gap:40px;margin:26px 0 6px;flex-wrap:wrap">
         <div><span id="stat-fragrances" style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Fragrances</small></div>
         <div><span id="stat-houses" style="display:block;font-family:var(--disp);font-weight:800;font-size:24px;text-align:center"></span><small style="color:var(--muted);font-size:12px">Houses</small></div>
       </div>
     </div>
 
-    <div style="font-family:var(--disp);font-weight:700;font-size:16px;color:var(--muted);letter-spacing:.4px;margin:40px 0 16px">PHOTO WALL <span style="font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:0;text-transform:none">— example content while our community grows</span></div>
-    <div class="wall" id="wall"></div>
 
-    <div class="csplit" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px">
-      <div class="card"><h3>Latest reviews</h3><p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some reviews below are example content shown while our community grows, reviews people submit live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p><div id="rev"></div></div>
-      <div class="card"><h3>Scent of the Day</h3><p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some entries below are example content shown while our community grows, entries people log live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p><div id="sotd"></div></div>
+<div class="csplit" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px">
+      <div class="card"><h3>Latest reviews</h3><div id="rev"></div><a href="community.html#reviews" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--violet)">See all reviews \u2192</a></div>
+      <div class="card"><h3>Scent of the Day</h3><div id="sotd"></div><a href="community.html#today" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--violet)">Log what you\u2019re wearing \u2192</a></div>
     </div>
   </div>
 
@@ -311,7 +309,7 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610061400"></script>
+<script src="data.js?v=202610072000"></script>
 <script src="weather.js?v=202610070900"></script>
 <script src="catalog-lib.js?v=202610070900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -438,22 +436,20 @@
     document.getElementById('pk-pairs').innerHTML = '';
   });
 
-  document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`<div class="shot"><div class="ph" style="height:${s.h}px"><div class="tag" style="background:${typeof tagColor==='function'?tagColor(i):GRADS[i%GRADS.length].split(',')[0]}"></div></div><div class="cap"><div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div><div class="tx">${s.t}</div><div class="meta"><span>♥ ${s.l}</span><span>💬 ${s.c}</span></div></div></div>`).join('');
-
-  function renderHomeRevs(list){
-    document.getElementById('rev').innerHTML = list.map((r,i)=>`<div class="rc" style="background:var(--bg)"><div class="r1" style="display:flex;gap:10px;align-items:center"><div class="thumb" style="width:34px;height:44px;border-radius:7px;flex-shrink:0;background:${gr(i)}"></div><div><div class="pn" style="font-family:var(--disp);font-weight:700;font-size:14px"><a href="perfume.html?id=${r.id}">${r.p}</a> <span style="color:var(--muted);font-weight:400;font-size:12px">· ${r.b}</span></div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div>${r.live?'<span class="newbadge">NEW</span>':''}</div><div class="tx" style="font-size:12px;color:var(--ink2);margin-top:7px;line-height:1.45">${r.tx}</div><div class="fo" style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">— ${r.who} · 👍 ${r.hp} helpful</div></div>`).join('');
-  }
-  renderHomeRevs(REVIEWS);
-  fetchLiveReviews(null, 4).then(rows=>{
-    if (rows.length) renderHomeRevs([...rows.map(liveToCardShape), ...REVIEWS].slice(0,4));
-  });
-
-  function renderHomeSotd(list){
-    document.getElementById('sotd').innerHTML = list.map((s,i)=>`<div class="sotd"><span class="av" style="${av(i)}"></span><div><b>${s.u}</b>${s.live?'<span class="newbadge">NEW</span>':''} <span class="w">is wearing <i><a href="perfume.html?id=${s.id}">${s.w}</a></i></span></div><span class="time">${s.t}</span></div>`).join('');
-  }
-  renderHomeSotd(SOTD);
-  fetchLiveSotd(5).then(rows=>{
-    if (rows.length) renderHomeSotd([...rows.map(liveSotdToCardShape), ...SOTD].slice(0,5));
+  function homeEmpty(t, href, btn){ return '<p style="font-size:14px;color:var(--muted);margin:0 0 14px">' + t + '</p><a class="btn sm" href="' + href + '">' + btn + '</a>'; }
+  primePerfumes().then(function(){
+    fetchLiveReviews(null, 4).then(function(rows){
+      document.getElementById('rev').innerHTML = rows.length ? rows.map(function(r,i){
+        var p = perfumeInfo(r.perfume_id), n = Math.max(0, Math.min(5, r.rating|0));
+        return '<div class="rc" style="background:var(--bg);margin-bottom:10px"><div class="r1" style="display:flex;gap:10px;align-items:center"><div class="thumb" style="width:34px;height:44px;border-radius:7px;flex-shrink:0;background:' + gr(i) + '"></div><div><div class="pn" style="font-family:var(--disp);font-weight:700;font-size:14px"><a href="' + escHtml(p.href) + '">' + escHtml(p.name) + '</a></div><div class="stars" style="color:#FF9F1C;font-size:13px">' + '\u2605'.repeat(n) + '\u2606'.repeat(5-n) + '</div></div></div><div class="body" style="margin-top:8px;overflow-wrap:anywhere">' + escHtml(r.body) + '</div><div class="foot" style="margin-top:8px;font-size:12px;color:var(--muted)">' + escHtml(r.author) + ' \u00b7 ' + timeAgo(r.created_at) + ' ago</div></div>';
+      }).join('') : homeEmpty('No reviews yet. Be the first to share your take on a fragrance.', 'community.html?do=review', 'Write the first review');
+    });
+    fetchLiveSotd(5).then(function(rows){
+      document.getElementById('sotd').innerHTML = rows.length ? rows.map(function(s,i){
+        var p = perfumeInfo(s.perfume_id);
+        return '<div class="sotd"><span class="av" style="' + av(i) + '"></span><div><b>' + escHtml(s.author) + '</b> <span class="w">is wearing <i><a href="' + escHtml(p.href) + '">' + escHtml(p.name) + '</a></i></span></div><span class="time">' + timeAgo(s.created_at) + '</span></div>';
+      }).join('') : homeEmpty('Nobody has logged a scent yet. Tell us what you are wearing today.', 'community.html?do=today', 'Log today\u2019s scent');
+    });
   });
 </script>
 <script>

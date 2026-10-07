@@ -18,7 +18,7 @@
 <meta id="twitter-title" name="twitter:title" content="Fragrance — ParfAI">
 <meta id="twitter-desc" name="twitter:description" content="Fragrance notes, ratings, and where to buy on ParfAI.">
 <meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610061400">
+<link rel="stylesheet" href="parfai.css?v=202610072000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -64,7 +64,7 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610061400"></script>
+<script src="data.js?v=202610072000"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -159,7 +159,7 @@
       <section class="split">
         <div class="card">
           <h3>Reviews</h3>
-          <p style="font-size:12px;color:var(--muted);margin:0 0 12px">Some reviews below are example content shown while our community grows, reviews people submit live are marked <span class="newbadge" style="margin-left:0">NEW</span>.</p>
+          
           <div id="revs"></div>
           <a class="btn ghost block" style="margin-top:16px" href="#" data-write-review data-perfume-id="${p.id}">Write a review</a>
         </div>
@@ -202,20 +202,16 @@
       document.head.appendChild(s);
     });
 
-    const staticRevs = REVIEWS.filter(r=>r.id===p.id);
-    const fallbackRevs = [{p:p.name,b:houseName(p.houseId),s:5,who:'FragBro',tx:'Genuinely one of the better bottles in my collection — reach for it constantly.',hp:41,id:p.id}];
-
     function renderRevs(list){
-      document.getElementById('revs').innerHTML = list.map((r,i)=>`<div class="rc" style="background:var(--bg);padding:0;border:none"><div class="top" style="margin-bottom:8px"><div class="thumb" style="background:${gr(i)}"></div><div><div class="pn">${r.who}${r.live?'<span class="newbadge">NEW</span>':''}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div><div class="body">${r.tx}</div></div>`).join('');
+      const E = escHtml;
+      document.getElementById('revs').innerHTML = list.length ? list.map((r,i)=>`<div class="rc" style="background:var(--bg);padding:0;border:none;margin-bottom:14px"><div class="top" style="margin-bottom:8px"><div class="thumb" style="background:${gr(i)}"></div><div><div class="pn">${E(r.who)}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div><div class="body" style="overflow-wrap:anywhere">${E(r.tx)}</div></div>`).join('') : `<p style="font-size:14px;color:var(--muted)">No reviews yet. Be the first to share your take.</p>`;
     }
 
-    renderRevs(staticRevs.length ? staticRevs : fallbackRevs);
+    renderRevs([]);
 
     function refreshLiveRevs(){
       fetchLiveReviews(p.id).then(rows=>{
-        const live = rows.map(liveToCardShape);
-        const combined = [...live, ...staticRevs];
-        renderRevs(combined.length ? combined : fallbackRevs);
+        renderRevs(rows.map(liveToCardShape));
       });
     }
     refreshLiveRevs();

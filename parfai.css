@@ -611,3 +611,13 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .pdbig{position:relative;border-radius:26px;background:radial-gradient(circle at 50% 40%,var(--c1),transparent 70%),#fff;border:1px solid var(--border);overflow:hidden}
 .pdbig .pd-stage{height:300px}
 @media(prefers-reduced-motion:reduce){.pd,.pd-bw,.pd-bub,.pd-plat{transition:none}}
+
+/* ---------- Community menu: colour tiles ---------- */
+.mega.mc .it{margin-bottom:10px;border-radius:18px;padding:14px 16px;transition:transform .3s,box-shadow .3s}
+.mega.mc .it:hover{transform:translateY(-3px);box-shadow:0 16px 24px -16px rgba(0,0,0,.4)}
+.mega.mc .it b{font-size:18px;color:var(--ink)}.mega.mc .it:hover b{color:var(--ink)}
+.mega.mc .it span{color:rgba(20,20,20,.68);margin-top:2px}
+.mega.mc .it.c1{background:#FFD9C2}.mega.mc .it.c2{background:#D7D0FF}.mega.mc .it.c3{background:#FFD0E1}.mega.mc .it.c4{background:#CDEFE2}
+.mega.mc .it.c5{background:#FFE9A8}.mega.mc .it.c6{background:#CDEFE2}.mega.mc .it.c7{background:#FFD9C2}.mega.mc .it.c8{background:#D7D0FF}
+.mega.mc{left:-170px;width:min(920px,calc(100vw - 40px))}
+@media(max-width:900px){.mega.mc{left:0}}
