@@ -19,6 +19,18 @@
     if (t.toLowerCase().indexOf(h + ' ') === 0 && t.length > h.length + 1) return t.slice(h.length + 1);
     return t;
   }
+  // Short search words for Amazon and Noon: house plus the first few words of the name,
+  // without size, strength or "for men" words, so more perfumes are found.
+  var SKIP = {for:1,men:1,man:1,women:1,woman:1,pour:1,homme:1,femme:1,unisex:1,edp:1,edt:1,eau:1,de:1,parfum:1,toilette:1,cologne:1,spray:1,set:1,gift:1,tester:1,and:1,'&':1,the:1,by:1,extrait:1,intense:1,elixir:1,pure:1,perfume:1};
+  var ART = {al:1,el:1,la:1,le:1,les:1,l:1,du:1,del:1,der:1};
+  function shopWords(r) {
+    var words = shortTitle(r).replace(/[()\[\],.]/g, ' ').replace(/'/g, '').split(/\s+/).filter(Boolean);
+    var keep = words.filter(function (w) { return !SKIP[w.toLowerCase()]; });
+    if (!keep.length) keep = words;
+    var n = ART[keep[0].toLowerCase()] ? 3 : 2;
+    return keep.slice(0, n).join(' ');
+  }
+  function shopQuery(r) { return r.house + ' ' + shopWords(r); }
   function labelFor(v) {
     return cap(v[1].toLowerCase()).replace(/\b(\d+(?:\.\d+)?) (Oz|Ml|G)\b/g, function (m, n, u) { return n + ' ' + u.toLowerCase(); }) || 'Standard size';
   }
@@ -88,8 +100,8 @@
       var label = labelFor(v);
       return '<div class="vrow"><span>' + esc(label) + '</span><a class="btn sm" href="' + esc(linkFor(v)) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a></div>';
     }).join('');
-    var uae = '<div class="vrow uae"><span>In the UAE? Search this perfume on Amazon.ae</span><a class="btn sm" href="' + esc(amazonAE(shortTitle(r) + ' ' + r.house)) + '" target="_blank" rel="sponsored nofollow noopener">Shop in the UAE ↗</a></div>';
-    var noon = '<div class="vrow uae"><span>Or shop at Noon UAE. Use code <b>' + esc(NOON_CODE) + '</b> at checkout for cashback (terms apply)</span><a class="btn sm" href="' + esc(noonAE(shortTitle(r) + ' ' + r.house)) + '" target="_blank" rel="sponsored nofollow noopener">Shop at Noon ↗</a></div>';
+    var uae = '<div class="vrow uae"><span>In the UAE? Search this perfume on Amazon.ae</span><a class="btn sm" href="' + esc(amazonAE(shopQuery(r))) + '" target="_blank" rel="sponsored nofollow noopener">Shop in the UAE ↗</a><a class="vmore" href="' + esc(amazonAE(r.house)) + '" target="_blank" rel="sponsored nofollow noopener">More ' + esc(r.house) + ' on Amazon.ae</a></div>';
+    var noon = '<div class="vrow uae"><span>Or shop at Noon UAE. Use code <b>' + esc(NOON_CODE) + '</b> at checkout for cashback (terms apply)</span><a class="btn sm" href="' + esc(noonAE(shopQuery(r))) + '" target="_blank" rel="sponsored nofollow noopener">Shop at Noon ↗</a><a class="vmore" href="' + esc(noonAE(r.house)) + '" target="_blank" rel="sponsored nofollow noopener">More ' + esc(r.house) + ' on Noon</a></div>';
     var more = rows.filter(function (x) { return x.house === r.house && x.slug !== r.slug; }).slice(0, 8);
     $('detail-view').innerHTML = '<div class="dwrap">' +
       '<div class="crumbs"><a href="catalog.html">Catalogue</a> / <a href="catalog.html?house=' + encodeURIComponent(r.house) + '">' + esc(r.house) + '</a></div>' +
