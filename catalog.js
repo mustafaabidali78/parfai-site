@@ -1,11 +1,10 @@
 /* ---------- ParfAI full catalogue ----------
    Reads catalog/fragrancenet.json (built by scripts/build-catalog.py from the Rakuten feed).
    No prices are stored or shown. Bottle photos stay hidden until FragranceNet
-   confirms in writing that we may host copies: then set SHOW_PHOTOS = true and
+   confirms in writing that we may host copies: then set PHOTOS = true in catalog-lib.js and
    put the files in catalog-img/<product id>.jpg.
 */
 (function () {
-  var SHOW_PHOTOS = false;
   var PAGE = 48;
   var GENDER = ['Men', 'Women', 'Unisex'];
   var data = null, rows = [], filtered = [], shown = 0;
@@ -25,20 +24,19 @@
   }
   function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
 
-  function artHTML(r, big) {
-    var first = r.variants[0];
-    var photo = SHOW_PHOTOS ? '<img class="photo" src="catalog-img/' + esc(first[0]) + '.jpg" alt="' + esc(shortTitle(r)) + ' bottle" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'bottle-ph\'}))">' : '<div class="bottle-ph"></div>';
-    return photo;
-  }
-
+  // Cards use the same pedestal look as Explore. Bottle drawings are made in catalog-lib.js,
+  // which also holds the photo switch (PHOTOS) for when FragranceNet approves hosting.
   function cardHTML(r) {
-    var notes = r.notes.slice(0, 4).map(cap).join(', ');
-    return '<a class="ccard" href="catalog.html?id=' + encodeURIComponent(r.slug) + '">' +
-      '<div class="art g' + r.gender + '"><span class="tag">' + GENDER[r.gender] + '</span>' + artHTML(r) + '</div>' +
-      '<div class="meta"><div class="bd">' + esc(r.house) + '</div><div class="nm">' + esc(shortTitle(r)) + '</div>' +
-      (notes ? '<div class="nt">' + esc(notes) + '</div>' : '') +
-      '<div class="sz">' + plural(r.variants.length, 'size option') + '</div></div></a>';
+    var notes = r.notes.slice(0, 3).map(cap).join(', ');
+    var R = rowFor(r);
+    return '<a class="pd" style="--c1:' + PFC.tint(R) + ';text-decoration:none;color:inherit" href="catalog.html?id=' + encodeURIComponent(r.slug) + '">' +
+      '<div class="pd-tg"><span class="gt">' + GENDER[r.gender] + '</span></div>' + PFC.stage(R, 170) +
+      '<div class="pd-hh">' + esc(r.house) + '</div><div class="pd-nm">' + esc(shortTitle(r)) + '</div>' +
+      (notes ? '<div class="pd-nt">' + esc(notes) + '</div>' : '') +
+      '<div class="pd-sz">' + plural(r.variants.length, 'size option') + '</div></a>';
   }
+  // PFC wants a slug, name and notes; the catalogue row already has them under other names.
+  function rowFor(r) { return { slug: r.slug, name: shortTitle(r), notes: r.notes, pid: r.variants[0] ? r.variants[0][0] : '' }; }
 
   function applyFilters() {
     var q = $('q').value.trim().toLowerCase(), g = $('gender').value, h = $('house').value.trim().toLowerCase(), sort = $('sort').value;
@@ -93,7 +91,7 @@
     var more = rows.filter(function (x) { return x.house === r.house && x.slug !== r.slug; }).slice(0, 8);
     $('detail-view').innerHTML = '<div class="dwrap">' +
       '<div class="crumbs"><a href="catalog.html">Catalogue</a> / <a href="catalog.html?house=' + encodeURIComponent(r.house) + '">' + esc(r.house) + '</a></div>' +
-      '<div class="dhero"><div class="art g' + r.gender + '" style="background:linear-gradient(150deg,var(--g1),var(--g2))">' + artHTML(r, true) + '</div>' +
+      '<div class="dhero"><div class="pdbig" style="--c1:' + PFC.tint(rowFor(r)) + '">' + PFC.stage(rowFor(r), 230) + '</div>' +
       '<div><div class="by"><a href="catalog.html?house=' + encodeURIComponent(r.house) + '">' + esc(r.house) + '</a></div><h1>' + esc(shortTitle(r)) + '</h1>' +
       '<div style="color:var(--ink2);font-size:14px">' + esc(facts.join('  ·  ')) + '</div>' +
       '<div class="chips">' + r.notes.slice(0, 12).map(function (n) { return '<a class="chip" href="catalog.html?q=' + encodeURIComponent(n) + '">' + esc(cap(n)) + '</a>'; }).join('') + '</div></div></div>' +
@@ -102,9 +100,6 @@
       '<div class="cat-note" style="margin-top:14px">ParfAI earns a commission when you buy through these links, at no extra cost to you. Prices change often, so check the current price on the FragranceNet page. <a href="affiliate-disclosure.html">Affiliate disclosure</a></div></div>' +
       (more.length ? '<div class="dsec"><h2>More from ' + esc(r.house) + '</h2><div class="grid">' + more.map(cardHTML).join('') + '</div></div>' : '') +
       '</div>';
-    var gcol = { 0: ['#6C7BFF', '#00B8D4'], 1: ['#FF4D9D', '#FF8C42'], 2: ['#8B7CFF', '#C86BFF'] }[r.gender];
-    var art = $('detail-view').querySelector('.dhero .art');
-    art.style.setProperty('--g1', gcol[0]); art.style.setProperty('--g2', gcol[1]);
     window.scrollTo(0, 0);
   }
 

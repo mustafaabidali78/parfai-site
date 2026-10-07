@@ -76,17 +76,50 @@
     return out;
   }
 
-  // A home page card. The picture and name open the catalogue page; the button is the affiliate link.
+
+  // ---------- Bottle pictures ----------
+  // Until FragranceNet confirms in writing that we may host copies, every perfume shows a drawn bottle
+  // coloured from its own notes. When photos are allowed: set PHOTOS = true and put the files in
+  // catalog-img/<product id>.jpg. A perfume without a photo keeps its drawing.
+  var PHOTOS = false;
+  var NC = {lemon:'#F4D03F',pineapple:'#F2B84B',bergamot:'#B6D36B','black currant':'#5B3A6B',apple:'#8FCB6A',birch:'#CDBB9E',cedar:'#A67B5B','cacao pod':'#6B4130',iris:'#A99BE8',patchouli:'#6F7C4C',sandalwood:'#D2A679',jasmine:'#F4EDB5',mint:'#7ED8B5','green sap':'#8CC152',kumquat:'#FFA726',caramel:'#D9904A','tonka bean':'#B57C4D',vetiver:'#7A8C5A','clary sage':'#A7B89A',strawberry:'#F0627A','violet leaf':'#6FAF8C','blood grapefruit':'#F0705A',violet:'#9B7FD4',gardenia:'#F3E7DA',lavender:'#B9A2E6','bitter almond':'#E8C9A0',vanilla:'#F3DFA2',amber:'#E0A040',amberwood:'#C47F3B',ambergris:'#B7B1A6',saffron:'#E0742B','fir resin':'#4F7A5A',rose:'#EE7C9B',musk:'#D9CFC4',oud:'#6B4A3A',orange:'#FFA64D',pepper:'#C94B4B',cardamom:'#C9B27A',sandal:'#D2A679',coconut:'#F2EDE4'};
+  function noteCol(n) { if (NC[n]) return NC[n]; var h = (n.length * 47 + n.charCodeAt(0) * 13) % 360; return 'hsl(' + h + ' 55% 70%)'; }
+  function noteTxt(c) { var m = c.match(/^#(..)(..)(..)$/); if (!m) return '#141414'; var l = (.299 * parseInt(m[1], 16) + .587 * parseInt(m[2], 16) + .114 * parseInt(m[3], 16)) / 255; return l > .58 ? '#141414' : '#fff'; }
+  function alpha(c, a) {
+    if (c.charAt(0) === '#') return 'rgba(' + parseInt(c.substr(1, 2), 16) + ',' + parseInt(c.substr(3, 2), 16) + ',' + parseInt(c.substr(5, 2), 16) + ',' + a + ')';
+    return c.replace(')', ' / ' + a + ')');
+  }
+  var bid = 0;
+  function bottle(r, h) {
+    var n = r.notes, c1 = noteCol(n[0] || 'musk'), c2 = noteCol(n[1] || n[0] || 'musk'), id = 'bg' + (++bid), s = hash(r.slug) % 4, body, cp;
+    var lab = '<rect x="30" y="92" width="40" height="30" rx="3" fill="rgba(255,255,255,.88)"/><rect x="36" y="100" width="28" height="3" rx="1.5" fill="#141414" opacity=".7"/><rect x="40" y="107" width="20" height="2" rx="1" fill="#141414" opacity=".35"/>';
+    if (s === 0) { body = '<rect x="14" y="48" width="72" height="104" rx="9" fill="url(#' + id + ')" stroke="rgba(255,255,255,.7)" stroke-width="2"/>'; cp = '<rect x="38" y="14" width="24" height="34" rx="3" fill="#2a2a2e"/><rect x="38" y="14" width="24" height="6" rx="3" fill="#C9A96A"/>'; }
+    else if (s === 1) { body = '<circle cx="50" cy="104" r="48" fill="url(#' + id + ')" stroke="rgba(255,255,255,.7)" stroke-width="2"/>'; cp = '<rect x="40" y="26" width="20" height="14" rx="2" fill="#C9A96A"/><rect x="33" y="8" width="34" height="20" rx="10" fill="#C9A96A"/>'; lab = lab.replace('y="92"', 'y="96"'); }
+    else if (s === 2) { body = '<rect x="28" y="40" width="44" height="116" rx="8" fill="url(#' + id + ')" stroke="rgba(255,255,255,.7)" stroke-width="2"/>'; cp = '<rect x="36" y="6" width="28" height="36" rx="14" fill="#1b1b1f"/>'; lab = '<rect x="33" y="92" width="34" height="30" rx="3" fill="rgba(255,255,255,.88)"/><rect x="38" y="100" width="24" height="3" rx="1.5" fill="#141414" opacity=".7"/>'; }
+    else { body = '<path d="M30 44 H70 L90 70 V140 Q90 154 76 154 H24 Q10 154 10 140 V70 Z" fill="url(#' + id + ')" stroke="rgba(255,255,255,.7)" stroke-width="2"/>'; cp = '<rect x="38" y="16" width="24" height="30" rx="4" fill="#E9E4DA" stroke="#C9A96A" stroke-width="2"/>'; }
+    return '<svg class="bt" viewBox="0 0 100 160" width="' + Math.round(h * 100 / 160) + '" height="' + h + '" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c1 + '"/><stop offset="1" stop-color="' + c2 + '"/></linearGradient></defs>' + body + lab + '<path d="M22 70 V140" stroke="rgba(255,255,255,.55)" stroke-width="5" stroke-linecap="round" fill="none"/>' + cp + '</svg>';
+  }
+  // The bottle on its stage: a photo if allowed and available, otherwise the drawing.
+  function art(r, h) {
+    var ph = PHOTOS && r.pid ? '<img class="pd-ph" src="catalog-img/' + esc(r.pid) + '.jpg" alt="' + esc(r.name) + ' bottle" loading="lazy" style="max-height:' + h + 'px" onload="this.parentNode.classList.add(\'has\')" onerror="this.remove()">' : '';
+    return '<div class="pd-bw">' + bottle(r, h) + ph + '</div>';
+  }
+  // A card in the "pedestal" style, used by Explore and Catalogue. "inner" is the text under the bottle.
+  function stage(r, h) {
+    var n = r.notes, bubs = n.slice(0, 3).map(function (x) { var c = noteCol(x); return '<span class="pd-bub" style="background:' + c + ';color:' + noteTxt(c) + '">' + esc(cap(x.split(' ')[0])) + '</span>'; }).join('');
+    return '<div class="pd-stage"><div class="pd-disc"></div><div class="pd-plat"></div>' + bubs + art(r, h) + '</div>';
+  }
+  function tint(r) { return alpha(noteCol(r.notes[0] || 'musk'), .35); }
+
+  // A card in the pedestal style. The picture and name open the catalogue page; the button is the affiliate link.
   function cardHTML(r) {
-    var g = GENDER_GRAD[r.gender] || GENDER_GRAD[2];
     var href = 'catalog.html?id=' + encodeURIComponent(r.slug);
-    var buy = r.link ? '<a class="buy" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price ↗</a>' : '<a class="buy" href="' + href + '">View ↗</a>';
-    return '<div class="pcard" style="background:linear-gradient(150deg,' + g[0] + ',' + g[1] + ')">' +
-      '<a class="em" href="' + href + '" aria-label="' + esc(r.name) + ' by ' + esc(r.house) + '"><span class="fam">' + GENDER[r.gender].toUpperCase() + '</span>' + (r.dupe ? '<span class="dupe">DUPE</span>' : '') + '<div class="bottle"></div></a>' +
-      '<div class="info"><a href="' + href + '"><div class="bd">' + esc(r.house) + '</div><div class="nm">' + esc(r.name) + '</div>' +
-      '<div class="hnotes">' + esc(r.notes.slice(0, 3).map(cap).join(', ')) + '</div></a>' +
-      '<div class="prow">' + buy + '</div></div></div>';
+    var buy = r.link ? '<a class="pd-buy" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price ↗</a>' : '<a class="pd-buy" href="' + href + '">View ↗</a>';
+    return '<div class="pd" style="--c1:' + tint(r) + '"><div class="pd-tg"><span class="gt">' + esc(GENDER[r.gender]) + '</span>' + (r.dupe ? '<span class="dp">DUPE</span>' : '') + '</div>' +
+      '<a class="pd-main" href="' + href + '" aria-label="' + esc(r.name) + ' by ' + esc(r.house) + '">' + stage(r, 170) +
+      '<div class="pd-hh">' + esc(r.house) + '</div><div class="pd-nm">' + esc(r.name) + '</div><div class="pd-nt">' + esc(r.notes.slice(0, 3).map(cap).join(', ')) + '</div></a>' +
+      '<div class="pd-act">' + buy + '</div></div>';
   }
 
-  window.PFC = { load: load, cardHTML: cardHTML, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
+  window.PFC = { load: load, cardHTML: cardHTML, stage: stage, art: art, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
 })();
