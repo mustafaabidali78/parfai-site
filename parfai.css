@@ -612,13 +612,37 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .pdbig .pd-stage{height:300px}
 @media(prefers-reduced-motion:reduce){.pd,.pd-bw,.pd-bub,.pd-plat{transition:none}}
 
-/* ---------- Community menu: colour tiles ---------- */
-.mega.mc .it{margin-bottom:10px;border-radius:18px;padding:14px 16px;transition:transform .3s,box-shadow .3s}
-.mega.mc .it:hover{transform:translateY(-3px);box-shadow:0 16px 24px -16px rgba(0,0,0,.4)}
-.mega.mc .it b{font-size:16px;color:var(--ink)}.mega.mc .it:hover b{color:var(--ink)}
-.mega.mc .it span{color:rgba(20,20,20,.68);margin-top:2px}
-.mega.mc .it.c1{background:#FFD9C2}.mega.mc .it.c2{background:#D7D0FF}.mega.mc .it.c3{background:#FFD0E1}.mega.mc .it.c4{background:#CDEFE2}
-.mega.mc .it.c5{background:#FFE9A8}.mega.mc .it.c6{background:#CDEFE2}.mega.mc .it.c7{background:#FFD9C2}.mega.mc .it.c8{background:#D7D0FF}
-.mega.mc .newbadge{margin-left:6px;padding:2px 7px;font-size:9px}
+/* ---------- nav dropdowns: one dark feature card + clean list ---------- */
 .mega.mc{left:-170px;width:min(920px,calc(100vw - 40px))}
-@media(max-width:900px){.mega.mc{left:0}}
+.mega.mc .mwrap{display:grid;grid-template-columns:1.05fr 1.6fr;gap:34px}
+.mega.mc .mcols{display:grid;grid-template-columns:1fr 1fr;gap:6px 34px}
+.mega.mc .colhead{margin-bottom:12px}
+.mega.mc .it{margin:0;padding:10px 0;border-bottom:1px solid var(--border)}
+.mega.mc .it b{font-size:17px;color:var(--ink)}
+.mega.mc .it:hover b{color:var(--violet)}
+.mega.mc .it .newbadge{margin-left:6px;padding:2px 7px;font-size:9px;color:#fff}
+.mega.mc .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.mega.mc .chips a{font-size:13px;font-weight:600;padding:8px 16px;border:1px solid var(--border);border-radius:100px;color:var(--ink);background:#fff;transition:.15s}
+.mega.mc .chips a:hover{background:var(--ink);color:#fff}
+.mega.mc .feat{border-radius:20px;padding:28px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;min-height:330px;position:relative;overflow:hidden;background:#161421}
+.mega.mc .feat:before{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;filter:blur(34px);opacity:.55}
+.mega.mc .feat:after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 0% 0%,var(--tint) 0%,transparent 60%)}
+.mega.mc .feat>*{position:relative;z-index:1}
+.mega.mc .feat small{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#cfc8ff}
+.mega.mc .feat .big{font-family:var(--disp);font-size:42px;line-height:1.02;font-weight:600;margin:8px 0}
+.mega.mc .feat .big.sm{font-size:28px;line-height:1.08}
+.mega.mc .feat p{font-size:13px;color:#d9d6e6;margin-bottom:16px}
+.mega.mc .feat .go{display:inline-block;background:#fff;color:#141414;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:11px 18px;border-radius:100px;align-self:flex-start;transition:.15s}
+.mega.mc .feat:hover .go{background:#E9E5FF}
+.mega.mc .f1{--tint:#3a2f7a}.mega.mc .f1:before{background:conic-gradient(from 90deg,#8B7CFF,#FF4D9D,#FF8C42,#8B7CFF)}
+.mega.mc .f2{--tint:#6a3a1c}.mega.mc .f2:before{background:conic-gradient(from 90deg,#FF8C42,#FFD27A,#FF4D9D,#FF8C42)}
+.mega.mc .f3{--tint:#1c5a52}.mega.mc .f3:before{background:conic-gradient(from 90deg,#00C48B,#00B8D4,#8B7CFF,#00C48B)}
+.mega.mc .f4{--tint:#7a2f58}.mega.mc .f4:before{background:conic-gradient(from 90deg,#FF4D9D,#C86BFF,#FF8C42,#FF4D9D)}
+@media(max-width:900px){
+  .mega.mc{left:0}
+  .navlinks.mobileopen .mega.mc .mwrap{display:flex;flex-direction:column;gap:18px}
+  .navlinks.mobileopen .mega.mc .mcols{grid-template-columns:1fr}
+  .navlinks.mobileopen .mega.mc .feat{min-height:170px;padding:22px}
+  .navlinks.mobileopen .mega.mc .feat .big{font-size:32px}
+  .navlinks.mobileopen .mega.mc .feat .big.sm{font-size:24px}
+}

@@ -1338,86 +1338,59 @@ function logoSVG(w,h){
   </svg>`;
 }
 
+/* ---------- nav dropdown (feature card + clean list) ---------- */
+function navMega(label, m){
+  const esc = t => String(t).replace(/&(?!amp;|lt;|gt;|quot;|#)/g,'&amp;').replace(/</g,'&lt;');
+  const badge = t => t ? ` <span class="newbadge"${t==='SOON'?' style="background:var(--rust)"':''}>${t}</span>` : '';
+  const big = m.feat[1].length>26 ? ' sm' : '';
+  const list = arr => arr.map(i=>`<a class="it" href="${i[2]}"><b>${esc(i[0])}${badge(i[3])}</b><span>${esc(i[1])}</span></a>`).join('');
+  return `<span class="megawrap"><span class="menu${m.on?' on':''}">${label} <span class="car">▾</span></span>
+        <div class="mega mc"><div class="mwrap">
+          <a class="feat ${m.f}" href="${m.feat[4]}"><small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
+          <div class="mrest"><div class="colhead">${m.head}</div>
+            <div class="chips">${m.chips.map(c=>`<a href="${c[1]}">${c[0]}</a>`).join('')}</div>
+            <div class="mcols">${m.cols.map(c=>`<div><div class="colhead">${c[0]}</div>${list(c[1])}</div>`).join('')}</div>
+          </div>
+        </div></div>
+      </span>`;
+}
+
 /* ---------- nav + footer chrome ---------- */
 function renderNav(active){
   const link = (href,label,key)=>`<a href="${href}"${active===key?' class="on"':''}>${label}</a>`;
   return `<div class="wrap nav">
     <a class="logo" href="index.html">${logoSVG(44,55)}ParfAI</a>
     <div class="navlinks" id="navlinks-drawer">
-      <span class="megawrap"><span class="menu">Explore <span class="car">▾</span></span>
-        <div class="mega mc"><div class="cols">
-          <div><div class="colhead">Browse fragrances</div>
-            <a class="it c1" href="explore.html"><b>By family</b><span>Woody, floral, fresh &amp; more</span></a>
-            <a class="it c2" href="notes.html"><b>By note</b><span>Rose, oud, vanilla &amp; more</span></a>
-            <a class="it c3" href="houses.html"><b>By house</b><span>Creed, Dior, Chanel…</span></a>
-            <a class="it c4" href="explore.html"><b>All fragrances</b><span>Browse the full catalog</span></a>
-            <a class="it c5" href="catalog.html"><b>Full catalogue <span class="newbadge">NEW</span></b><span>12,000+ perfumes to search</span></a></div>
-          <div><div class="colhead">&nbsp;</div>
-            <a class="it c5" href="explore.html?sort=new"><b>New releases</b><span>Just dropped</span></a>
-            <a class="it c6" href="explore.html?sort=trending"><b>Trending</b><span>Hot right now</span></a>
-            <a class="it c7" href="explore.html?tier=Affordable"><b>Best value</b><span>Big scent, small price</span></a></div>
-          <div><div class="colhead">Smart tools</div>
-            <a class="it c3" href="dupe-finder.html"><b>Dupe Finder</b><span>Affordable alternatives</span></a>
-            <a class="it c4" href="explore.html"><b>Find My Scent</b><span>Filter by family, note &amp; more</span></a>
-            <a class="it c1" href="explore.html"><b>Scent DNA</b><span>Any fragrance's note fingerprint</span></a>
-            <a class="it c8" href="layering.html"><b>Layering Recipe Builder <span class="newbadge" style="background:var(--rust)">SOON</span></b><span>Combine fragrances into a recipe</span></a>
-            <a class="it c5" href="weather-pick.html"><b>Weather-Aware Pick <span class="newbadge">LIVE</span></b><span>Today's pick, based on real weather</span></a></div>
-        </div></div>
-      </span>
-      <span class="megawrap"><span class="menu">Houses <span class="car">▾</span></span>
-        <div class="mega mc"><div class="cols">
-          <div><div class="colhead">Designer</div>
-            <a class="it c1" href="house.html?id=dior"><b>Dior</b><span>Sauvage, Homme…</span></a>
-            <a class="it c2" href="house.html?id=chanel"><b>Chanel</b><span>Bleu, No. 5, Coco…</span></a>
-            <a class="it c3" href="house.html?id=ysl"><b>Yves Saint Laurent</b><span>Y, Libre, Black Opium</span></a>
-            <a class="it c4" href="house.html?id=versace"><b>Versace</b><span>Eros, Bright Crystal</span></a></div>
-          <div><div class="colhead">Niche</div>
-            <a class="it c5" href="house.html?id=creed"><b>Creed</b><span>Aventus, Green Irish Tweed</span></a>
-            <a class="it c6" href="house.html?id=mfk"><b>Maison Francis Kurkdjian</b><span>Baccarat Rouge 540</span></a>
-            <a class="it c7" href="house.html?id=pdm"><b>Parfums de Marly</b><span>Layton, Delina</span></a>
-            <a class="it c8" href="house.html?id=xerjoff"><b>Xerjoff</b><span>Erba Pura, Naxos</span></a></div>
-          <div><div class="colhead">Browse</div>
-            <a class="it c3" href="houses.html"><b>All houses A–Z</b><span>Every brand</span></a>
-            <a class="it c4" href="houses.html?tier=Affordable"><b>Affordable houses</b><span>Armaf, Lattafa, Zara</span></a>
-            <a class="it c1" href="houses.html?tier=Niche"><b>Niche vs designer</b><span>Explore the difference</span></a>
-            <a class="it c2" href="houses.html"><b>All houses</b><span>Full directory</span></a></div>
-        </div></div>
-      </span>
-      <span class="megawrap"><span class="menu">Community <span class="car">▾</span></span>
-        <div class="mega mc"><div class="cols">
-          <div><div class="colhead">Join in</div>
-            <a class="it c1" href="community.html?do=review"><b>Write a review</b><span>Rate any fragrance in a minute</span></a>
-            <a class="it c2" href="community.html?do=today"><b>Scent of the Day</b><span>Log what you're wearing, keep a streak</span></a>
-            <a class="it c3" href="community.html?do=discuss"><b>Start a discussion</b><span>Ask a question, share a tip</span></a>
-            <a class="it c4" href="community.html?cat=Recommendations#discussions"><b>Ask &amp; recommend</b><span>Get help finding your scent</span></a></div>
-          <div><div class="colhead">Discuss</div>
-            <a class="it c5" href="community.html?cat=General%20talk#discussions"><b>General perfume talk</b><span>Everything fragrance</span></a>
-            <a class="it c6" href="community.html?cat=Beginners#discussions"><b>New to fragrance</b><span>Beginner friendly</span></a>
-            <a class="it c7" href="community.html?cat=Deals#discussions"><b>Deals &amp; where to buy</b><span>Stores, offers and drops</span></a>
-            <a class="it c8" href="community.html?cat=Swaps#discussions"><b>Decants &amp; swaps</b><span>Share and trade samples</span></a></div>
-          <div><div class="colhead">Highlights</div>
-            <a class="it c1" href="community.html#reviews"><b>Latest reviews</b><span>Fresh from the community</span></a>
-            <a class="it c2" href="community.html?sort=hot#discussions"><b>Trending discussions</b><span>Most replies first</span></a>
-            <a class="it c3" href="community.html#reviewers"><b>Most active reviewers</b><span>This month's top names</span></a>
-            <a class="it c4" href="community.html#prompts"><b>This week's prompts</b><span>New ideas every Monday</span></a></div>
-        </div></div>
-      </span>
-      <span class="megawrap"><span class="menu${active==='blog'?' on':''}">Blog <span class="car">▾</span></span>
-        <div class="mega mc"><div class="cols">
-          <div><div class="colhead">Topics</div>
-            <a class="it c1" href="blog.html"><b>All articles</b><span>Everything we have written</span></a>
-            <a class="it c2" href="blog.html?cat=Dupes%20%26%20Comparisons"><b>Dupes &amp; comparisons</b><span>Note for note, side by side</span></a>
-            <a class="it c3" href="blog.html?cat=Guides%20%26%20Picks"><b>Guides &amp; picks</b><span>Our favourites by season</span></a>
-            <a class="it c4" href="blog.html?cat=New%20Releases"><b>New releases</b><span>What just launched</span></a></div>
-          <div><div class="colhead">Latest</div>
-            ${BLOG_POSTS.slice().sort((x,y)=>new Date(y.date)-new Date(x.date)).slice(0,3).map((p,i)=>`<a class="it c${['5','6','7'][i]}" href="${p.slug}.html"><b>${p.title.replace(/&/g,'&amp;')}</b><span>${p.category.replace(/&/g,'&amp;')}</span></a>`).join('')}</div>
-          <div><div class="colhead">Keep exploring</div>
-            <a class="it c3" href="dupe-finder.html"><b>Dupe Finder</b><span>Affordable alternatives</span></a>
-            <a class="it c4" href="notes.html"><b>Browse by note</b><span>Rose, oud, vanilla &amp; more</span></a>
-            <a class="it c1" href="community.html"><b>Join the community</b><span>Reviews and discussions</span></a>
-            <a class="it c8" href="catalog.html"><b>Full catalogue</b><span>12,000+ perfumes to search</span></a></div>
-        </div></div>
-      </span>
+      ${navMega('Explore', {
+        f:'f1', feat:['New','Full catalogue','12,000+ perfumes. Search by name, house or note.','Search now','catalog.html'],
+        head:'Browse by', chips:[['Family','explore.html'],['Note','notes.html'],['House','houses.html'],['All fragrances','explore.html']],
+        cols:[['Discover',[['New releases','Just dropped','explore.html?sort=new'],['Trending','Hot right now','explore.html?sort=trending'],['Best value','Big scent, small price','explore.html?tier=Affordable']]],
+              ['Smart tools',[['Dupe Finder','Affordable alternatives','dupe-finder.html'],['Find My Scent','Filter by family, note &amp; more','explore.html'],['Scent DNA',"Any fragrance's note fingerprint",'explore.html'],['Layering Recipe Builder','Combine fragrances into a recipe','layering.html','SOON'],['Weather-Aware Pick',"Today's pick, based on real weather",'weather-pick.html','LIVE']]]]
+      })}
+      ${navMega('Houses', {
+        f:'f2', feat:['Directory','Every house','From designer to niche, all in one A to Z directory.','See all houses','houses.html'],
+        head:'Browse by', chips:[['Affordable houses','houses.html?tier=Affordable'],['Niche vs designer','houses.html?tier=Niche']],
+        cols:[['Designer',[['Dior','Sauvage, Homme…','house.html?id=dior'],['Chanel','Bleu, No. 5, Coco…','house.html?id=chanel'],['Yves Saint Laurent','Y, Libre, Black Opium','house.html?id=ysl'],['Versace','Eros, Bright Crystal','house.html?id=versace']]],
+              ['Niche',[['Creed','Aventus, Green Irish Tweed','house.html?id=creed'],['Maison Francis Kurkdjian','Baccarat Rouge 540','house.html?id=mfk'],['Parfums de Marly','Layton, Delina','house.html?id=pdm'],['Xerjoff','Erba Pura, Naxos','house.html?id=xerjoff']]]]
+      })}
+      ${navMega('Community', {
+        f:'f4', feat:['Join in','Write a review','Rate any fragrance in a minute. Help others find their scent.','Write a review','community.html?do=review'],
+        head:'Join in', chips:[['Scent of the Day','community.html?do=today'],['Start a discussion','community.html?do=discuss'],['Ask &amp; recommend','community.html?cat=Recommendations#discussions']],
+        cols:[['Discuss',[['General perfume talk','Everything fragrance','community.html?cat=General%20talk#discussions'],['New to fragrance','Beginner friendly','community.html?cat=Beginners#discussions'],['Deals &amp; where to buy','Stores, offers and drops','community.html?cat=Deals#discussions'],['Decants &amp; swaps','Share and trade samples','community.html?cat=Swaps#discussions']]],
+              ['Highlights',[['Latest reviews','Fresh from the community','community.html#reviews'],['Trending discussions','Most replies first','community.html?sort=hot#discussions'],['Most active reviewers',"This month's top names",'community.html#reviewers'],["This week's prompts",'New ideas every Monday','community.html#prompts']]]]
+      })}
+      ${(()=>{
+        const ps = BLOG_POSTS.slice().sort((x,y)=>new Date(y.date)-new Date(x.date));
+        const cats = Array.from(new Set(ps.map(p=>p.category)));
+        const top = ps[0];
+        return navMega('Blog', {
+          on: active==='blog', f:'f3',
+          feat:['New article', top.title, top.excerpt.length>110 ? top.excerpt.slice(0,107).replace(/\s+\S*$/,'')+'…' : top.excerpt, 'Read now', top.slug+'.html'],
+          head:'Topics', chips:[['All articles','blog.html']].concat(cats.map(c=>[c, 'blog.html?cat='+encodeURIComponent(c)])),
+          cols:[['Latest', ps.slice(1,4).map(p=>[p.title, p.category, p.slug+'.html'])],
+                ['Keep exploring',[['Dupe Finder','Affordable alternatives','dupe-finder.html'],['Browse by note','Rose, oud, vanilla &amp; more','notes.html'],['Join the community','Reviews and discussions','community.html'],['Full catalogue','12,000+ perfumes to search','catalog.html']]]]
+        });
+      })()}
       <!-- Pricing nav item removed 2026-08-28 — page archived at archive/pricing.html,
            full content/history preserved in git (see archive/README.md for the
            exact restore steps, including the one nav line to add back here). -->
