@@ -38,7 +38,7 @@
           var variant = i[7].filter(function (v) { return !/tester/i.test(v[1]); })[0] || i[7][0];
           var r = {
             slug: i[0], house: i[1], title: i[2], name: shortTitle(i[1], i[2]), gender: i[3], year: i[4],
-            notes: cleanNotes(i[5]), wear: i[6], sizes: i[7].length,
+            notes: cleanNotes(i[5]), wear: i[6], sizes: i[7].length, pid: i[7][0] ? i[7][0][0] : '',
             link: variant ? d.pre + variant[0] + d.mid + variant[2] : ''
           };
           r.dupe = !!dupeSet[r.house.toLowerCase()];
