@@ -1361,6 +1361,62 @@ var NOON_CODE='NDY353';
 function noonAE(q){ return 'https://www.noon.com/uae-en/search/?q='+encodeURIComponent(q); }
 function amazonAE(q){ return 'https://www.amazon.ae/s?k='+encodeURIComponent(q)+'&tag='+AMZ_TAG; }
 
+// Noon code pop-up: shown when someone clicks a Noon link (any link with class noonlink),
+// so they see and copy the code before leaving the site.
+(function(){
+  var box=null,lastFocus=null;
+  function close(){
+    if(!box)return;
+    document.removeEventListener('keydown',onKey);
+    box.parentNode.removeChild(box);box=null;
+    if(lastFocus&&lastFocus.focus){try{lastFocus.focus();}catch(e){}}
+  }
+  function onKey(e){if(e.key==='Escape')close();}
+  function copyCode(btn,note){
+    function done(ok){
+      btn.textContent=ok?'Copied':'Copy code';
+      note.textContent=ok?'The code is copied. Paste it in the promo code box at checkout.':'Please copy the code by hand: '+NOON_CODE;
+    }
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(NOON_CODE).then(function(){done(true);},function(){done(false);});return;}
+    }catch(e){}
+    try{
+      var ta=document.createElement('textarea');ta.value=NOON_CODE;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);done(ok);
+    }catch(e2){done(false);}
+  }
+  function open(href){
+    close();
+    lastFocus=document.activeElement;
+    box=document.createElement('div');
+    box.className='ncode-back';
+    box.innerHTML='<div class="ncode" role="dialog" aria-modal="true" aria-labelledby="ncode-t">'+
+      '<h3 id="ncode-t">Before you go to Noon</h3>'+
+      '<p>Use this code at checkout to get cashback.</p>'+
+      '<div class="ncode-row"><b class="ncode-code">'+NOON_CODE+'</b><button type="button" class="btn sm ncode-copy">Copy code</button></div>'+
+      '<p class="ncode-note" aria-live="polite">Paste it in the promo code box when you pay.</p>'+
+      '<div class="ncode-go"><a class="btn ncode-cont" target="_blank" rel="sponsored nofollow noopener">Continue to Noon ↗</a><button type="button" class="ncode-x">Not now</button></div>'+
+      '<p class="ncode-fine">Cashback terms apply. Valid on orders above AED 40. ParfAI earns a commission when you use this code.</p>'+
+      '</div>';
+    document.body.appendChild(box);
+    var cont=box.querySelector('.ncode-cont'),copy=box.querySelector('.ncode-copy'),note=box.querySelector('.ncode-note');
+    cont.setAttribute('href',href);
+    cont.addEventListener('click',function(){copyCode(copy,note);setTimeout(close,150);});
+    copy.addEventListener('click',function(){copyCode(copy,note);});
+    box.querySelector('.ncode-x').addEventListener('click',close);
+    box.addEventListener('click',function(e){if(e.target===box)close();});
+    document.addEventListener('keydown',onKey);
+    copyCode(copy,note);
+    cont.focus();
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest?e.target.closest('a.noonlink'):null;
+    if(!a)return;
+    e.preventDefault();
+    open(a.getAttribute('href'));
+  });
+})();
+
 /* ---------- nav + footer chrome ---------- */
 function renderNav(active){
   const link = (href,label,key)=>`<a href="${href}"${active===key?' class="on"':''}>${label}</a>`;

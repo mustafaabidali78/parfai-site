@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="ParfAI — Find your scent, not just a bottle">
 <meta name="twitter:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610072400">
+<link rel="stylesheet" href="parfai.css?v=202610080010">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -60,7 +60,8 @@
 .mr small{display:block;color:var(--ink2);font-size:12px;line-height:1.5}
 .mr em{font-style:normal;background:#FBE3C8;color:#6B3317;border-radius:6px;padding:0 5px}
 .mr .d{position:absolute;top:12px;right:12px;font:700 10px var(--body);letter-spacing:.1em;background:#FBE3C8;color:#6B3317;border-radius:100px;padding:3px 9px}
-.mr .mbuy{display:inline-block;margin-top:8px;font:700 11px var(--body);color:#fff;background:var(--ink);border-radius:100px;padding:6px 12px;text-decoration:none}
+.mr .mbuys{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mr .mbuy{display:inline-block;margin-top:0;font:700 11px var(--body);color:#fff;background:var(--ink);border-radius:100px;padding:6px 12px;text-decoration:none}
 .mr .mbuy:hover{background:var(--rust)}
 .mx-foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .mx-foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-weight:600}
@@ -232,7 +233,7 @@
         <div class="mx-list" id="mx-list" aria-live="polite"></div>
       </div>
     </div>
-    <div class="mx-foot"><span>Matches come from FragranceNet's catalogue. We may earn a commission if you buy through a link.</span></div>
+    <div class="mx-foot"><span>Matches come from FragranceNet's catalogue. The Amazon UAE and Noon UAE buttons search for the same perfume, so check it is the right one. We may earn a commission if you buy through a link.</span></div>
   </section>
 
   <section class="pk" id="picks">
@@ -309,9 +310,9 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610072330"></script>
+<script src="data.js?v=202610080010"></script>
 <script src="weather.js?v=202610070900"></script>
-<script src="catalog-lib.js?v=202610070900"></script>
+<script src="catalog-lib.js?v=202610080010"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -534,7 +535,10 @@
       list.innerHTML = m.picked.map(function (p, k) {
         var r = p.r, href = 'catalog.html?id=' + encodeURIComponent(r.slug);
         var notes = r.notes.slice(0, 9).map(function (n) { return mix.indexOf(n) >= 0 ? '<em>' + esc(PFC.cap(n)) + '</em>' : esc(PFC.cap(n)); }).join(', ');
-        var buy = r.link ? '<a class="mbuy" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '';
+        var q = PFC.shopQuery(r);
+        var buy = '<div class="mbuys">' + (r.link ? '<a class="mbuy" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '') +
+          '<a class="mbuy" href="' + esc(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE ↗</a>' +
+          '<a class="mbuy noonlink" href="' + esc(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE ↗</a></div>';
         return '<div class="mr" style="animation-delay:' + (k * 60) + 'ms">' + (r.dupe ? '<span class="d">DUPE</span>' : '') +
           '<a class="mn" href="' + href + '"><b>' + esc(r.name) + '</b><small>' + esc(r.house) + '</small><small>' + notes + '</small></a>' + buy + '</div>';
       }).join('');

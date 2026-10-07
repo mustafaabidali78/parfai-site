@@ -30,6 +30,18 @@
       .filter(function (n) { return n && !JUNK_NOTE.test(n) && n.indexOf(':') === -1 && n.length <= 28; });
   }
 
+
+  // Short search words for Amazon.ae and Noon: house plus the first few words of the name.
+  var SKIP = {for:1,men:1,man:1,women:1,woman:1,pour:1,homme:1,femme:1,unisex:1,edp:1,edt:1,eau:1,de:1,parfum:1,toilette:1,cologne:1,spray:1,set:1,gift:1,tester:1,and:1,'&':1,the:1,by:1,extrait:1,intense:1,elixir:1,pure:1,perfume:1};
+  var ART = {al:1,el:1,la:1,le:1,les:1,l:1,du:1,del:1,der:1};
+  function shopQuery(r) {
+    var words = r.name.replace(/[()\[\],.]/g, ' ').replace(/'/g, '').split(/\s+/).filter(Boolean);
+    var keep = words.filter(function (w) { return !SKIP[w.toLowerCase()]; });
+    if (!keep.length) keep = words;
+    var n = keep.length && ART[keep[0].toLowerCase()] ? 3 : 2;
+    return r.house + ' ' + keep.slice(0, n).join(' ');
+  }
+
   // Loads the catalogue once and turns each row into a friendly object.
   function load() {
     if (!promise) {
@@ -152,5 +164,5 @@
       '<div class="pd-act">' + buy + '</div></div>';
   }
 
-  window.PFC = { load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
+  window.PFC = { shopQuery: shopQuery, load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
 })();
