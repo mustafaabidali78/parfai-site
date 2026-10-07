@@ -43,7 +43,8 @@ a{color:inherit;text-decoration:none}
 nav{position:sticky;top:0;z-index:40;background:rgba(250,250,247,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
 .nav{display:flex;align-items:center;gap:24px;height:76px}
 .logo{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:-.02em}
-.navlinks{display:flex;gap:22px;font-size:14px;color:var(--ink);font-weight:500;align-items:center}
+.navlinks{display:flex;gap:30px;font-size:17px;color:var(--ink);font-weight:600;align-items:center}
+.navlinks .menu .car{font-size:12px}
 .navlinks a:hover,.navlinks .menu:hover{color:var(--violet)}
 .navlinks a.on,.navlinks .menu.on{color:var(--violet)}
 .navsp{flex:1}
