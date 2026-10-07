@@ -65,6 +65,45 @@
 .mx-foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .mx-foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-weight:600}
 @media(max-width:560px){#mixer{padding-top:28px}}
+/* Today's picks and Great value dupes (editorial style) */
+.pk{margin:64px 0}
+.pk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.pk-k{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.pk-k i{width:8px;height:8px;border-radius:50%;background:#00C48B;display:inline-block;animation:pkpulse 2s infinite}
+.pk h2{font-family:var(--disp);font-weight:500;font-size:46px;line-height:1.05;letter-spacing:-.01em}
+.pk h2 em{font-style:italic}
+.pk-sub{color:var(--ink2);font-size:15px;margin-top:8px;max-width:540px}
+.pk-all{font-weight:700;font-size:13px;color:var(--ink);border-bottom:2px solid var(--ink);padding-bottom:2px}
+.pk-all:hover{color:var(--rust);border-color:var(--rust)}
+.pk-list{border-top:1px solid var(--ink)}
+.pk-row{display:grid;grid-template-columns:190px 1fr auto;align-items:center;gap:24px;padding:20px 0;border-bottom:1px solid var(--border);position:relative;transition:.25s}
+.pk-row .eh{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pk-row .eh span{display:block;font-weight:500;letter-spacing:.04em;text-transform:none;margin-top:2px}
+.pk-row .en{font-family:var(--disp);font-size:clamp(32px,5vw,62px);font-weight:500;line-height:1;letter-spacing:-.015em;transition:.3s}
+.pk-row .nn{font-size:13px;color:var(--ink2);margin-top:8px}
+.pk-row:hover .en{font-style:italic;transform:translateX(12px)}
+.pk-row .eb{position:absolute;right:100px;top:50%;transform:translateY(-50%);display:flex;gap:6px;opacity:0;transition:.3s;pointer-events:none}
+.pk-row:hover .eb{opacity:1}
+.pk-row .ea{width:46px;height:46px;border-radius:50%;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:18px;transition:.25s}
+.pk-row:hover .ea{background:var(--ink);color:#fff}
+.pk-dp{display:inline-block;margin-left:8px;font-family:var(--body);font-size:10px;font-weight:800;letter-spacing:.08em;background:#00C48B;color:#06281d;padding:4px 9px;border-radius:100px;vertical-align:middle;font-style:normal}
+.pk .bub{border-radius:50%;display:flex;align-items:center;justify-content:center;width:62px;height:62px;font-size:10.5px;font-weight:600;text-align:center;line-height:1.1;padding:4px;box-shadow:0 12px 22px -12px rgba(20,20,20,.5),inset 0 -6px 12px rgba(0,0,0,.08),inset 0 6px 10px rgba(255,255,255,.45)}
+.pk-pair{border-top:1px solid var(--ink);padding:34px 0 30px;border-bottom:1px solid var(--border)}
+.pk-pair .lead{font-family:var(--disp);font-size:clamp(28px,4.4vw,52px);line-height:1.12;font-weight:500;letter-spacing:-.01em}
+.pk-pair .lead u{text-decoration-thickness:3px;text-underline-offset:6px;text-decoration-color:#00C48B}
+.pk-pair .lead em{font-style:italic;color:var(--rust)}
+.pk-pair .why{margin:18px 0 22px;font-size:16px;color:var(--ink2);max-width:660px}
+.pk-pair .why mark{background:none;font-weight:700;padding:1px 8px;border-radius:100px}
+.pk-pair .acts{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pk-pair .acts .buy{display:inline-block;background:var(--ink);color:#fff;font-weight:700;font-size:13px;padding:12px 20px;border-radius:100px;transition:.18s}
+.pk-pair .acts .buy:hover{background:var(--rust)}
+.pk-pair .acts .gh{display:inline-block;font-weight:600;font-size:13px;padding:11px 18px;border-radius:100px;border:1px solid var(--border)}
+.pk-pair .acts .gh:hover{border-color:var(--ink)}
+.pk-pair .pill{font-size:11px;font-weight:800;letter-spacing:.08em;background:#00C48B;color:#06281d;padding:5px 11px;border-radius:100px}
+.pk-disc{font-size:12.5px;color:var(--muted);margin-top:22px;max-width:720px}
+@keyframes pkpulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media(max-width:760px){.pk h2{font-size:36px}.pk-row{grid-template-columns:1fr auto;gap:8px 14px}.pk-row .eh{grid-column:1/-1}.pk-row .eb{display:none}.pk-row:hover .en{transform:none}}
+@media(prefers-reduced-motion:reduce){.pk-k i{animation:none}.pk-row,.pk-row .en{transition:none}}
 </style>
 <script type="application/ld+json">
 {
@@ -128,14 +167,29 @@
     <div class="mx-foot"><span>Matches come from FragranceNet's catalogue. We may earn a commission if you buy through a link.</span></div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Trending now</h2><a href="catalog.html">View all →</a></div>
-    <div class="grid" id="grid"></div>
+  <section class="pk" id="picks">
+    <div class="pk-head">
+      <div>
+        <div class="pk-k"><i></i><span id="pk-date">Fresh every day</span></div>
+        <h2>Today's <em>picks</em></h2>
+        <p class="pk-sub">Five perfumes from the full catalogue. Hover a name to see what is inside.</p>
+      </div>
+      <a class="pk-all" href="explore.html">View all →</a>
+    </div>
+    <div class="pk-list" id="pk-list"></div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Great value dupes</h2><a href="dupe-finder.html">Try the Dupe Finder →</a></div>
-    <div class="grid" id="dupegrid"></div>
+  <section class="pk" id="dupes">
+    <div class="pk-head">
+      <div>
+        <div class="pk-k">Same notes, smaller price tag</div>
+        <h2>Great value <em>dupes</em></h2>
+        <p class="pk-sub">If you love one, try the other. We match them by the notes they share.</p>
+      </div>
+      <a class="pk-all" href="dupe-finder.html">Try the Dupe Finder →</a>
+    </div>
+    <div id="pk-pairs"></div>
+    <p class="pk-disc">Dupes are similar, not identical. We compare listed notes only. Prices change often, so tap through to FragranceNet to check today's price. ParfAI may earn a commission if you buy through a link.</p>
   </section>
 
   <section>
@@ -212,15 +266,58 @@
     document.getElementById('stat-houses').textContent = (Math.floor(Object.keys(houses).length / 100) * 100).toLocaleString('en-US') + '+';
     var famous = ok.filter(function (r) { return !r.dupe && r.sizes >= 5; });
     var budget = ok.filter(function (r) { return r.dupe && r.sizes >= 2 && r.notes.length >= 4; });
-    var trend = PFC.draw(famous, 6, 'trend-famous').concat(PFC.draw(budget, 2, 'trend-dupe'));
-    var used = {}; trend.forEach(function (r) { used[r.slug] = 1; });
-    var dupes = PFC.draw(budget, 4, 'dupe-grid', used);
-    document.getElementById('grid').innerHTML = PFC.draw(trend, 8, 'trend-order').map(PFC.cardHTML).join('');
-    document.getElementById('dupegrid').innerHTML = dupes.map(PFC.cardHTML).join('');
+
+    // ---- Today's picks: four famous perfumes and one great value one, new every day ----
+    var NC = {lemon:'#F4D03F',pineapple:'#F2B84B',bergamot:'#B6D36B','black currant':'#5B3A6B',apple:'#8FCB6A',birch:'#CDBB9E',cedar:'#A67B5B','cacao pod':'#6B4130',iris:'#A99BE8',patchouli:'#6F7C4C',sandalwood:'#D2A679',jasmine:'#F4EDB5',mint:'#7ED8B5','green sap':'#8CC152',kumquat:'#FFA726',caramel:'#D9904A','tonka bean':'#B57C4D',vetiver:'#7A8C5A','clary sage':'#A7B89A',strawberry:'#F0627A','violet leaf':'#6FAF8C','blood grapefruit':'#F0705A',violet:'#9B7FD4',gardenia:'#F3E7DA',lavender:'#B9A2E6','bitter almond':'#E8C9A0',vanilla:'#F3DFA2',amber:'#E0A040',amberwood:'#C47F3B',ambergris:'#B7B1A6',saffron:'#E0742B','fir resin':'#4F7A5A',rose:'#EE7C9B',musk:'#D9CFC4',oud:'#6B4A3A',orange:'#FFA64D',pepper:'#C94B4B',cardamom:'#C9B27A',sandal:'#D2A679',coconut:'#F2EDE4'};
+    function noteCol(n){ if (NC[n]) return NC[n]; var hue = (n.length * 47 + n.charCodeAt(0) * 13) % 360; return 'hsl(' + hue + ' 55% 70%)'; }
+    function noteTxt(c){ var m = c.match(/^#(..)(..)(..)$/); if (!m) return '#141414'; var l = (.299 * parseInt(m[1],16) + .587 * parseInt(m[2],16) + .114 * parseInt(m[3],16)) / 255; return l > .58 ? '#141414' : '#fff'; }
+    function uniq(a){ var s = {}; return a.filter(function (n) { if (s[n]) return false; s[n] = 1; return true; }); }
+    var E = PFC.esc, C = PFC.cap;
+    var picks = PFC.draw(famous, 4, 'pk-famous');
+    var used = {}; picks.forEach(function (r) { used[r.slug] = 1; });
+    picks = picks.concat(PFC.draw(budget, 1, 'pk-dupe', used));
+    picks.forEach(function (r) { used[r.slug] = 1; });
+    picks = PFC.draw(picks, picks.length, 'pk-order');
+    var dateEl = document.getElementById('pk-date');
+    if (dateEl) dateEl.textContent = 'Picked for ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('pk-list').innerHTML = picks.map(function (r) {
+      var seenW = {}, nts = uniq(r.notes).filter(function (n) { var w = n.split(' ').pop(); if (seenW[w]) return false; seenW[w] = 1; return true; }).slice(0, 4);
+      var bubs = nts.slice(0, 3).map(function (n) { var c = noteCol(n); return '<span class="bub" style="background:' + c + ';color:' + noteTxt(c) + '">' + E(C(n)) + '</span>'; }).join('');
+      return '<a class="pk-row" href="catalog.html?id=' + encodeURIComponent(r.slug) + '"><div class="eh">' + E(r.house) + '<span>' + PFC.GENDER[r.gender] + '</span></div>' +
+        '<div><div class="en">' + E(r.name) + (r.dupe ? '<span class="pk-dp">DUPE</span>' : '') + '</div><div class="nn">' + E(nts.map(C).join(', ')) + '</div></div>' +
+        '<div class="eb">' + bubs + '</div><div class="ea">&rarr;</div></a>';
+    }).join('');
+
+    // ---- Great value dupes: pair each affordable perfume with the famous one it shares the most notes with ----
+    var cands = [];
+    budget.forEach(function (d) {
+      if (used[d.slug]) return;
+      var dn = uniq(d.notes).slice(0, 6), best = null;
+      famous.forEach(function (f) {
+        var fn = uniq(f.notes).slice(0, 6);
+        var sh = dn.filter(function (n) { return fn.indexOf(n) > -1; });
+        if (!best || sh.length > best.sh.length) best = { f: f, fn: fn, sh: sh };
+      });
+      if (best && best.sh.length >= 3 && best.sh.length / Math.min(dn.length, best.fn.length) >= 0.6) cands.push({ d: d, dn: dn, f: best.f, fn: best.fn, sh: best.sh });
+    });
+    var chosen = [], seenF = {};
+    PFC.draw(cands.map(function (c) { var o = Object.create(c.d); o._c = c; o.house = c.d.house; return o; }), 12, 'pk-pairs').forEach(function (o) {
+      var c = o._c; if (chosen.length < 2 && !seenF[c.f.slug]) { seenF[c.f.slug] = 1; chosen.push(c); }
+    });
+    function words(a){
+      var w = a.map(function (n) { var c = noteCol(n); return '<mark style="background:' + c + ';color:' + noteTxt(c) + '">' + E(n) + '</mark>'; });
+      return w.length > 1 ? w.slice(0, -1).join(', ') + ' and ' + w[w.length - 1] : w[0];
+    }
+    document.getElementById('pk-pairs').innerHTML = chosen.map(function (c) {
+      var buy = c.d.link ? '<a class="buy" href="' + E(c.d.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price \u2197</a>' : '<a class="buy" href="catalog.html?id=' + encodeURIComponent(c.d.slug) + '">View \u2197</a>';
+      return '<div class="pk-pair"><div class="lead">If you love <em>' + E(c.f.name) + '</em>, try <u>' + E(c.d.name) + '</u> by ' + E(c.d.house) + '.</div>' +
+        '<p class="why">Both share ' + words(c.sh) + '. That is ' + c.sh.length + ' notes in common.</p>' +
+        '<div class="acts"><span class="pill">DUPE</span>' + buy + '<a class="gh" href="catalog.html?id=' + encodeURIComponent(c.f.slug) + '">See ' + E(c.f.name) + '</a></div></div>';
+    }).join('') || '<p class="pk-sub">Try the Dupe Finder to match any perfume with an affordable alternative.</p>';
   }).catch(function () {
-    // If the catalogue can't load, fall back to the starter list so the page is never empty.
-    document.getElementById('grid').innerHTML = PERFUMES.filter(p=>!p.dupeOf).slice(0,8).map((p,i)=>pcardHTML(p,i)).join('');
-    document.getElementById('dupegrid').innerHTML = PERFUMES.filter(p=>p.dupeOf).slice(0,4).map((p,i)=>pcardHTML(p,i)).join('');
+    // If the catalogue can't load, point people to the catalogue so the page is never empty.
+    document.getElementById('pk-list').innerHTML = '<p class="pk-sub" style="padding:20px 0">Browse everything in the <a href="catalog.html" style="text-decoration:underline">full catalogue</a>.</p>';
+    document.getElementById('pk-pairs').innerHTML = '';
   });
 
   document.getElementById('wall').innerHTML = PHOTOWALL.map((s,i)=>`<div class="shot"><div class="ph" style="height:${s.h}px"><div class="tag" style="background:${typeof tagColor==='function'?tagColor(i):GRADS[i%GRADS.length].split(',')[0]}"></div></div><div class="cap"><div class="u"><span class="av" style="${av(i)}"></span><span class="un">${s.u}</span></div><div class="tx">${s.t}</div><div class="meta"><span>♥ ${s.l}</span><span>💬 ${s.c}</span></div></div></div>`).join('');
