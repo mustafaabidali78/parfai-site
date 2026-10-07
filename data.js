@@ -1355,6 +1355,10 @@ function navMega(label, m){
       </span>`;
 }
 
+// Amazon.ae (UAE) affiliate link. Store ID from Amazon Associates.
+var AMZ_TAG='parfai-21';
+function amazonAE(q){ return 'https://www.amazon.ae/s?k='+encodeURIComponent(q)+'&tag='+AMZ_TAG; }
+
 /* ---------- nav + footer chrome ---------- */
 function renderNav(active){
   const link = (href,label,key)=>`<a href="${href}"${active===key?' class="on"':''}>${label}</a>`;
@@ -1412,7 +1416,7 @@ function renderFooter(){
       <div><b>Community</b><a href="community.html#reviews">Reviews</a><a href="community.html#today">Scent of the Day</a><a href="community.html#discussions">Discussions</a></div>
       <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="credits.html">Photo credits</a><a href="contact.html">Contact</a></div>
     </div>
-    <div style="margin-top:24px">© 2026 ParfAI · Some links are affiliate links.</div>
+    <div style="margin-top:24px">© 2026 ParfAI · Some links are affiliate links. As an Amazon Associate I earn from qualifying purchases.</div>
   </footer></div>`;
 }
 
