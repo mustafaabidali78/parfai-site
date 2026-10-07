@@ -45,7 +45,7 @@ nav{position:sticky;top:0;z-index:40;background:rgba(250,250,247,.82);backdrop-f
 .logo{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:-.02em}
 .navlinks{display:flex;gap:22px;font-size:14px;color:var(--ink);font-weight:500;align-items:center}
 .navlinks a:hover,.navlinks .menu:hover{color:var(--violet)}
-.navlinks a.on{color:var(--violet)}
+.navlinks a.on,.navlinks .menu.on{color:var(--violet)}
 .navsp{flex:1}
 .menu{display:flex;align-items:center;gap:5px;cursor:pointer}
 .menu .car{font-size:11px;transition:transform .15s}
@@ -615,9 +615,10 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 /* ---------- Community menu: colour tiles ---------- */
 .mega.mc .it{margin-bottom:10px;border-radius:18px;padding:14px 16px;transition:transform .3s,box-shadow .3s}
 .mega.mc .it:hover{transform:translateY(-3px);box-shadow:0 16px 24px -16px rgba(0,0,0,.4)}
-.mega.mc .it b{font-size:18px;color:var(--ink)}.mega.mc .it:hover b{color:var(--ink)}
+.mega.mc .it b{font-size:16px;color:var(--ink)}.mega.mc .it:hover b{color:var(--ink)}
 .mega.mc .it span{color:rgba(20,20,20,.68);margin-top:2px}
 .mega.mc .it.c1{background:#FFD9C2}.mega.mc .it.c2{background:#D7D0FF}.mega.mc .it.c3{background:#FFD0E1}.mega.mc .it.c4{background:#CDEFE2}
 .mega.mc .it.c5{background:#FFE9A8}.mega.mc .it.c6{background:#CDEFE2}.mega.mc .it.c7{background:#FFD9C2}.mega.mc .it.c8{background:#D7D0FF}
+.mega.mc .newbadge{margin-left:6px;padding:2px 7px;font-size:9px}
 .mega.mc{left:-170px;width:min(920px,calc(100vw - 40px))}
 @media(max-width:900px){.mega.mc{left:0}}

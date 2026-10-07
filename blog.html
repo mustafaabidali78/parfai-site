@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Blog — ParfAI">
 <meta name="twitter:description" content="Fragrance guides, dupe comparisons, and note breakdowns from ParfAI, to help you find your next signature scent.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610072000">
+<link rel="stylesheet" href="parfai.css?v=202610072100">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -71,7 +71,7 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610072000"></script>
+<script src="data.js?v=202610072100"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -80,7 +80,15 @@
     return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   }
 
-  const posts = BLOG_POSTS.slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
+  const allPosts = BLOG_POSTS.slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
+  const cats = Array.from(new Set(allPosts.map(p=>p.category)));
+  const want = new URLSearchParams(location.search).get('cat') || '';
+  const cur = cats.indexOf(want) >= 0 ? want : '';
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const chip = (label, val) => `<a class="tab${val===cur?' on':''}" href="${val?'blog.html?cat='+encodeURIComponent(val):'blog.html'}">${esc(label)}</a>`;
+  document.getElementById('posts').insertAdjacentHTML('beforebegin',
+    `<div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px">${chip('All','')}${cats.map(c=>chip(c,c)).join('')}</div>`);
+  const posts = cur ? allPosts.filter(p=>p.category===cur) : allPosts;
   document.getElementById('posts').innerHTML = posts.length ? posts.map(p=>`
     <a class="hcard" href="${p.slug}.html">
       <div class="tier">${p.category.toUpperCase()}</div>

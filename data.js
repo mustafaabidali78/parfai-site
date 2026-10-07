@@ -1345,42 +1345,42 @@ function renderNav(active){
     <a class="logo" href="index.html">${logoSVG(44,55)}ParfAI</a>
     <div class="navlinks" id="navlinks-drawer">
       <span class="megawrap"><span class="menu">Explore <span class="car">▾</span></span>
-        <div class="mega"><div class="cols">
+        <div class="mega mc"><div class="cols">
           <div><div class="colhead">Browse fragrances</div>
-            <a class="it" href="explore.html"><b>By family</b><span>Woody, floral, fresh &amp; more</span></a>
-            <a class="it" href="notes.html"><b>By note</b><span>Rose, oud, vanilla &amp; more</span></a>
-            <a class="it" href="houses.html"><b>By house</b><span>Creed, Dior, Chanel…</span></a>
-            <a class="it" href="explore.html"><b>All fragrances</b><span>Browse the full catalog</span></a>
-            <a class="it" href="catalog.html"><b>Full catalogue <span class="newbadge">NEW</span></b><span>12,000+ perfumes to search</span></a></div>
+            <a class="it c1" href="explore.html"><b>By family</b><span>Woody, floral, fresh &amp; more</span></a>
+            <a class="it c2" href="notes.html"><b>By note</b><span>Rose, oud, vanilla &amp; more</span></a>
+            <a class="it c3" href="houses.html"><b>By house</b><span>Creed, Dior, Chanel…</span></a>
+            <a class="it c4" href="explore.html"><b>All fragrances</b><span>Browse the full catalog</span></a>
+            <a class="it c5" href="catalog.html"><b>Full catalogue <span class="newbadge">NEW</span></b><span>12,000+ perfumes to search</span></a></div>
           <div><div class="colhead">&nbsp;</div>
-            <a class="it" href="explore.html?sort=new"><b>New releases</b><span>Just dropped</span></a>
-            <a class="it" href="explore.html?sort=trending"><b>Trending</b><span>Hot right now</span></a>
-            <a class="it" href="explore.html?tier=Affordable"><b>Best value</b><span>Big scent, small price</span></a></div>
+            <a class="it c5" href="explore.html?sort=new"><b>New releases</b><span>Just dropped</span></a>
+            <a class="it c6" href="explore.html?sort=trending"><b>Trending</b><span>Hot right now</span></a>
+            <a class="it c7" href="explore.html?tier=Affordable"><b>Best value</b><span>Big scent, small price</span></a></div>
           <div><div class="colhead">Smart tools</div>
-            <a class="it" href="dupe-finder.html"><b>Dupe Finder</b><span>Affordable alternatives</span></a>
-            <a class="it" href="explore.html"><b>Find My Scent</b><span>Filter by family, note &amp; more</span></a>
-            <a class="it" href="explore.html"><b>Scent DNA</b><span>Any fragrance's note fingerprint</span></a>
-            <a class="it" href="layering.html"><b>Layering Recipe Builder <span class="newbadge" style="background:var(--rust)">SOON</span></b><span>Combine fragrances into a recipe</span></a>
-            <a class="it" href="weather-pick.html"><b>Weather-Aware Pick <span class="newbadge">LIVE</span></b><span>Today's pick, based on real weather</span></a></div>
+            <a class="it c3" href="dupe-finder.html"><b>Dupe Finder</b><span>Affordable alternatives</span></a>
+            <a class="it c4" href="explore.html"><b>Find My Scent</b><span>Filter by family, note &amp; more</span></a>
+            <a class="it c1" href="explore.html"><b>Scent DNA</b><span>Any fragrance's note fingerprint</span></a>
+            <a class="it c8" href="layering.html"><b>Layering Recipe Builder <span class="newbadge" style="background:var(--rust)">SOON</span></b><span>Combine fragrances into a recipe</span></a>
+            <a class="it c5" href="weather-pick.html"><b>Weather-Aware Pick <span class="newbadge">LIVE</span></b><span>Today's pick, based on real weather</span></a></div>
         </div></div>
       </span>
       <span class="megawrap"><span class="menu">Houses <span class="car">▾</span></span>
-        <div class="mega"><div class="cols">
+        <div class="mega mc"><div class="cols">
           <div><div class="colhead">Designer</div>
-            <a class="it" href="house.html?id=dior"><b>Dior</b><span>Sauvage, Homme…</span></a>
-            <a class="it" href="house.html?id=chanel"><b>Chanel</b><span>Bleu, No. 5, Coco…</span></a>
-            <a class="it" href="house.html?id=ysl"><b>Yves Saint Laurent</b><span>Y, Libre, Black Opium</span></a>
-            <a class="it" href="house.html?id=versace"><b>Versace</b><span>Eros, Bright Crystal</span></a></div>
+            <a class="it c1" href="house.html?id=dior"><b>Dior</b><span>Sauvage, Homme…</span></a>
+            <a class="it c2" href="house.html?id=chanel"><b>Chanel</b><span>Bleu, No. 5, Coco…</span></a>
+            <a class="it c3" href="house.html?id=ysl"><b>Yves Saint Laurent</b><span>Y, Libre, Black Opium</span></a>
+            <a class="it c4" href="house.html?id=versace"><b>Versace</b><span>Eros, Bright Crystal</span></a></div>
           <div><div class="colhead">Niche</div>
-            <a class="it" href="house.html?id=creed"><b>Creed</b><span>Aventus, Green Irish Tweed</span></a>
-            <a class="it" href="house.html?id=mfk"><b>Maison Francis Kurkdjian</b><span>Baccarat Rouge 540</span></a>
-            <a class="it" href="house.html?id=pdm"><b>Parfums de Marly</b><span>Layton, Delina</span></a>
-            <a class="it" href="house.html?id=xerjoff"><b>Xerjoff</b><span>Erba Pura, Naxos</span></a></div>
+            <a class="it c5" href="house.html?id=creed"><b>Creed</b><span>Aventus, Green Irish Tweed</span></a>
+            <a class="it c6" href="house.html?id=mfk"><b>Maison Francis Kurkdjian</b><span>Baccarat Rouge 540</span></a>
+            <a class="it c7" href="house.html?id=pdm"><b>Parfums de Marly</b><span>Layton, Delina</span></a>
+            <a class="it c8" href="house.html?id=xerjoff"><b>Xerjoff</b><span>Erba Pura, Naxos</span></a></div>
           <div><div class="colhead">Browse</div>
-            <a class="it" href="houses.html"><b>All houses A–Z</b><span>Every brand</span></a>
-            <a class="it" href="houses.html?tier=Affordable"><b>Affordable houses</b><span>Armaf, Lattafa, Zara</span></a>
-            <a class="it" href="houses.html?tier=Niche"><b>Niche vs designer</b><span>Explore the difference</span></a>
-            <a class="it" href="houses.html"><b>All houses</b><span>Full directory</span></a></div>
+            <a class="it c3" href="houses.html"><b>All houses A–Z</b><span>Every brand</span></a>
+            <a class="it c4" href="houses.html?tier=Affordable"><b>Affordable houses</b><span>Armaf, Lattafa, Zara</span></a>
+            <a class="it c1" href="houses.html?tier=Niche"><b>Niche vs designer</b><span>Explore the difference</span></a>
+            <a class="it c2" href="houses.html"><b>All houses</b><span>Full directory</span></a></div>
         </div></div>
       </span>
       <span class="megawrap"><span class="menu">Community <span class="car">▾</span></span>
@@ -1402,7 +1402,22 @@ function renderNav(active){
             <a class="it c4" href="community.html#prompts"><b>This week's prompts</b><span>New ideas every Monday</span></a></div>
         </div></div>
       </span>
-      ${link('blog.html','Blog','blog')}
+      <span class="megawrap"><span class="menu${active==='blog'?' on':''}">Blog <span class="car">▾</span></span>
+        <div class="mega mc"><div class="cols">
+          <div><div class="colhead">Topics</div>
+            <a class="it c1" href="blog.html"><b>All articles</b><span>Everything we have written</span></a>
+            <a class="it c2" href="blog.html?cat=Dupes%20%26%20Comparisons"><b>Dupes &amp; comparisons</b><span>Note for note, side by side</span></a>
+            <a class="it c3" href="blog.html?cat=Guides%20%26%20Picks"><b>Guides &amp; picks</b><span>Our favourites by season</span></a>
+            <a class="it c4" href="blog.html?cat=New%20Releases"><b>New releases</b><span>What just launched</span></a></div>
+          <div><div class="colhead">Latest</div>
+            ${BLOG_POSTS.slice().sort((x,y)=>new Date(y.date)-new Date(x.date)).slice(0,3).map((p,i)=>`<a class="it c${['5','6','7'][i]}" href="${p.slug}.html"><b>${p.title.replace(/&/g,'&amp;')}</b><span>${p.category.replace(/&/g,'&amp;')}</span></a>`).join('')}</div>
+          <div><div class="colhead">Keep exploring</div>
+            <a class="it c3" href="dupe-finder.html"><b>Dupe Finder</b><span>Affordable alternatives</span></a>
+            <a class="it c4" href="notes.html"><b>Browse by note</b><span>Rose, oud, vanilla &amp; more</span></a>
+            <a class="it c1" href="community.html"><b>Join the community</b><span>Reviews and discussions</span></a>
+            <a class="it c8" href="catalog.html"><b>Full catalogue</b><span>12,000+ perfumes to search</span></a></div>
+        </div></div>
+      </span>
       <!-- Pricing nav item removed 2026-08-28 — page archived at archive/pricing.html,
            full content/history preserved in git (see archive/README.md for the
            exact restore steps, including the one nav line to add back here). -->
@@ -1436,6 +1451,18 @@ function renderFooter(){
    "open" class instead, with a short grace period on mouseleave so a
    diagonal or gap-crossing path doesn't kill the hover state.
 */
+function fitMega(w){
+  const m = w.querySelector('.mega');
+  if (!m || window.matchMedia('(max-width: 900px)').matches) return;
+  m.style.left = '';
+  const r = m.getBoundingClientRect();
+  const vw = document.documentElement.clientWidth;
+  let dx = 0;
+  if (r.right > vw - 16) dx = vw - 16 - r.right;
+  if (r.left + dx < 16) dx = 16 - r.left;
+  if (dx) m.style.left = ((parseFloat(getComputedStyle(m).left) || 0) + dx) + 'px';
+}
+
 function bindMegaMenus(navSlot){
   const wraps = navSlot.querySelectorAll('.megawrap');
   if (!wraps.length) return;
@@ -1454,7 +1481,7 @@ function bindMegaMenus(navSlot){
       if (window.matchMedia('(max-width: 900px)').matches) return;
       clearTimeout(closeTimer);
       closeAll(w);
-      w.classList.add('open');
+      w.classList.add('open'); fitMega(w);
     });
     w.addEventListener('mouseleave', () => {
       if (window.matchMedia('(max-width: 900px)').matches) return;
@@ -1481,7 +1508,7 @@ function bindMegaMenus(navSlot){
         } else {
           clearTimeout(closeTimer);
           closeAll(w);
-          w.classList.add('open');
+          w.classList.add('open'); fitMega(w);
         }
       });
     }
