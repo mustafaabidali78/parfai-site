@@ -73,7 +73,7 @@
 
   function showList() {
     $('detail-view').hidden = true; $('list-view').hidden = false;
-    $('q').value = param('q'); $('gender').value = param('gender'); $('house').value = param('house'); $('sort').value = param('sort') || 'popular';
+    $('q').value = param('q'); $('gender').value = param('gender'); $('house').value = ''; var hp = param('house').toLowerCase(); Array.prototype.forEach.call($('house').options, function (o) { if (hp && o.value.toLowerCase() === hp) $('house').value = o.value; }); $('sort').value = param('sort') || 'popular';
     document.title = 'Full perfume catalogue — ParfAI';
     applyFilters();
   }
@@ -125,7 +125,7 @@
       return r;
     });
     var houses = {}; rows.forEach(function (r) { houses[r.house] = 1; });
-    $('houses').innerHTML = Object.keys(houses).sort().map(function (h) { return '<option value="' + esc(h) + '">'; }).join('');
+    $('house').innerHTML = '<option value="">All houses</option>' + Object.keys(houses).sort(function (a, b) { return a.localeCompare(b); }).map(function (h) { return '<option value="' + esc(h) + '">' + esc(h) + '</option>'; }).join('');
     $('stat-count').textContent = rows.length.toLocaleString('en-US') + ' perfumes from ' + Object.keys(houses).length.toLocaleString('en-US') + ' houses';
     var t; ['q', 'gender', 'house', 'sort'].forEach(function (id) {
       $(id).addEventListener('input', function () { clearTimeout(t); t = setTimeout(applyFilters, id === 'q' ? 180 : 0); });
