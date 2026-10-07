@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Fragrance houses — ParfAI">
 <meta name="twitter:description" content="Browse every fragrance house on ParfAI, from iconic designer names to niche and independent perfumers.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610061400">
+<link rel="stylesheet" href="parfai.css?v=202610071900">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -63,44 +63,74 @@
     <div class="rule"></div>
     <div class="k">Designer, niche, and everything between</div>
     <h1 style="font-size:52px">Every house, A–Z</h1>
-    <div class="sub">Click into a house to see their full catalog on ParfAI.</div>
+    <div class="sub">Click into a house to see all of its perfumes on ParfAI.</div>
   </div>
 
-  <div class="tabs" id="tabs">
+  <div class="filterbar" style="margin-bottom:14px">
+    <div class="searchbox">🔍<input id="q" type="search" placeholder="Search houses (e.g. dior, lattafa, tom ford)" autocomplete="off"></div>
+  </div>
+  <div class="tabs" id="tabs" style="margin-bottom:14px">
     <span class="tab" data-tier="">All</span>
     <span class="tab" data-tier="Designer">Designer</span>
     <span class="tab" data-tier="Niche">Niche</span>
     <span class="tab" data-tier="Affordable">Affordable</span>
   </div>
+  <div class="tabs" id="letters" style="gap:6px;margin-bottom:26px"></div>
 
-  <div class="hgrid" id="hgrid"></div>
+  <div class="resultcount" id="count"></div>
+  <div class="grid" id="hgrid"></div>
+  <button class="btn ghost" id="more" type="button" hidden style="display:block;margin:34px auto 10px">Show more</button>
 </div>
 
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610061400"></script>
+<script src="catalog-lib.js?v=202610071900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script>
-  let activeTier = qs('tier') || '';
+  var all = [], list = [], shown = 0, PAGE = 48;
+  var activeTier = qs('tier') || '', letter = '', q = '';
+  var grid = document.getElementById('hgrid');
 
-  function count(id){ return PERFUMES.filter(p=>p.houseId===id).length; }
-
-  function render(){
-    document.querySelectorAll('#tabs .tab').forEach(t=>t.classList.toggle('on', t.dataset.tier===activeTier));
-    const list = HOUSES.filter(h=>!activeTier || h.tier===activeTier).sort((a,b)=>a.name.localeCompare(b.name));
-    document.getElementById('hgrid').innerHTML = list.map(h=>`
-      <a class="hcard" href="house.html?id=${h.id}">
-        <div class="tier">${h.tier.toUpperCase()}</div>
-        <div class="hn">${h.name}</div>
-        <div class="hd">${h.blurb}</div>
-        <div class="hc">${count(h.id)} fragrance${count(h.id)===1?'':'s'} on ParfAI</div>
-      </a>`).join('');
+  function filtered() {
+    var t = q.toLowerCase();
+    return all.filter(function (h) {
+      if (activeTier && h.tier !== activeTier) return false;
+      if (letter && h.name.charAt(0).toUpperCase() !== letter && !(letter === '#' && !/[A-Z]/i.test(h.name.charAt(0)))) return false;
+      if (t && h.name.toLowerCase().indexOf(t) === -1) return false;
+      return true;
+    });
   }
+  function showMore() {
+    var slice = list.slice(shown, shown + PAGE);
+    grid.insertAdjacentHTML('beforeend', slice.map(PFC.houseCardHTML).join(''));
+    shown += slice.length;
+    document.getElementById('more').hidden = shown >= list.length;
+  }
+  function render() {
+    document.querySelectorAll('#tabs .tab').forEach(function (t) { t.classList.toggle('on', t.dataset.tier === activeTier); });
+    document.querySelectorAll('#letters .tab').forEach(function (t) { t.classList.toggle('on', t.dataset.l === letter); });
+    list = filtered(); shown = 0; grid.innerHTML = '';
+    document.getElementById('count').textContent = list.length.toLocaleString('en-US') + (list.length === 1 ? ' house' : ' houses');
+    if (!list.length) grid.innerHTML = '<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">No houses match that yet. Try fewer letters.</div>';
+    showMore();
+  }
+  document.querySelectorAll('#tabs .tab').forEach(function (t) { t.addEventListener('click', function () { activeTier = t.dataset.tier; render(); }); });
+  document.getElementById('q').addEventListener('input', function (e) { q = e.target.value.trim(); render(); });
+  document.getElementById('more').addEventListener('click', showMore);
 
-  document.querySelectorAll('#tabs .tab').forEach(t=>t.addEventListener('click', ()=>{ activeTier = t.dataset.tier; render(); }));
-  render();
+  PFC.load().then(function (cat) {
+    all = PFC.houses(cat.rows);
+    var ls = '<span class="tab" data-l="" style="padding:7px 13px">All letters</span>';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function (c) { if (all.some(function (h) { return h.name.charAt(0).toUpperCase() === c; })) ls += '<span class="tab" data-l="' + c + '" style="padding:7px 12px;min-width:36px;text-align:center">' + c + '</span>'; });
+    var lw = document.getElementById('letters'); lw.innerHTML = ls;
+    lw.querySelectorAll('.tab').forEach(function (t) { t.addEventListener('click', function () { letter = t.dataset.l; render(); }); });
+    render();
+  }).catch(function () {
+    grid.innerHTML = '<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">The house list could not load. Please refresh the page.</div>';
+  });
 </script>
 <script src="cookie-notice.js"></script>
 </body>

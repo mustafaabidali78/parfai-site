@@ -18,7 +18,7 @@
 <meta id="twitter-title" name="twitter:title" content="House — ParfAI">
 <meta id="twitter-desc" name="twitter:description" content="Browse fragrances from this house on ParfAI, with notes, ratings, and where to buy.">
 <meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610061400">
+<link rel="stylesheet" href="parfai.css?v=202610071900">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -63,45 +63,53 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610061400"></script>
+<script src="catalog-lib.js?v=202610071900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script>
-  const h = HOUSES.find(x=>x.id===qs('id'));
-  const content = document.getElementById('content');
+  var content = document.getElementById('content');
+  var curated = HOUSES.find(function (x) { return x.id === qs('id'); });
+  var wanted = qs('h') || (curated ? (PFC.HOUSE_ALIAS[curated.id] || curated.name) : '');
 
-  if (!h){
-    content.innerHTML = `<div class="doc"><h1>House not found</h1><a class="btn" href="houses.html">← Back to Houses</a></div>`;
-  } else {
-    updateSocialTags({
-      title: `${h.name} — ParfAI`,
-      desc: `${h.name}: ${h.blurb} Browse every ${h.name} fragrance on ParfAI, with notes, ratings, and where to buy.`,
-      url: `https://parfai.org/house.html?id=${encodeURIComponent(h.id)}`,
-    });
-    const breadcrumbSchema = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Houses", "item": "https://parfai.org/houses.html" },
-        { "@type": "ListItem", "position": 2, "name": h.name, "item": `https://parfai.org/house.html?id=${encodeURIComponent(h.id)}` }
-      ]
-    };
-    const bs = document.createElement('script');
-    bs.type = 'application/ld+json';
-    bs.textContent = JSON.stringify(breadcrumbSchema);
-    document.head.appendChild(bs);
-    const perfumes = PERFUMES.filter(p=>p.houseId===h.id);
-    content.innerHTML = `
-      <div class="crumb"><a href="houses.html">Houses</a> / ${h.name}</div>
-      <div class="hero" style="padding:20px 0 40px;text-align:left">
-        <div class="rule"></div>
-        <div class="k">${h.tier.toUpperCase()} HOUSE</div>
-        <h1 style="font-size:56px;margin:0">${h.name}</h1>
-        <div class="sub" style="margin:18px 0 0;max-width:600px">${h.blurb}</div>
-      </div>
-      <div class="shead"><h2>${perfumes.length} fragrance${perfumes.length===1?'':'s'} on ParfAI</h2></div>
-      <div class="grid">${perfumes.map((p,i)=>pcardHTML(p,i)).join('') || '<div style="color:var(--muted)">No fragrances catalogued for this house yet.</div>'}</div>
-    `;
+  function notFound() {
+    content.innerHTML = '<div class="doc"><h1>House not found</h1><a class="btn" href="houses.html">← Back to Houses</a></div>';
+  }
+  if (!wanted) { notFound(); } else {
+    content.innerHTML = '<div class="crumb"><a href="houses.html">Houses</a> / ' + PFC.esc(curated ? curated.name : wanted) + '</div><div style="padding:60px 0;color:var(--muted)">Loading…</div>';
+    PFC.load().then(function (cat) {
+      var hs = PFC.houses(cat.rows), n = PFC.normName(wanted);
+      var h = hs.filter(function (x) { return PFC.normName(x.name) === n; })[0];
+      if (!h && !curated) return notFound();
+      var name = h ? h.name : curated.name, tier = h ? h.tier : curated.tier, blurb = (h && h.blurb) || (curated && curated.blurb) || '';
+      var rows = h ? h.rows : [], notes = h ? h.notes.slice(0, 5).map(PFC.cap) : [];
+      if (!blurb && rows.length) blurb = rows.length + ' perfume' + (rows.length === 1 ? '' : 's') + ' from ' + name + (notes.length ? ', most often built around ' + notes.slice(0, 3).join(', ').toLowerCase() + '.' : '.');
+      var url = 'https://parfai.org/house.html?' + (h && h.id ? 'id=' + encodeURIComponent(h.id) : (curated ? 'id=' + encodeURIComponent(curated.id) : 'h=' + encodeURIComponent(name)));
+      document.title = name + ' perfumes — ParfAI';
+      updateSocialTags({ title: name + ' — ParfAI', desc: name + ': ' + blurb + ' Browse every ' + name + ' fragrance on ParfAI, with notes and where to buy.', url: url });
+      var bs = document.createElement('script'); bs.type = 'application/ld+json';
+      bs.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Houses', item: 'https://parfai.org/houses.html' },
+        { '@type': 'ListItem', position: 2, name: name, item: url }] });
+      document.head.appendChild(bs);
+      var E = PFC.esc, shownN = 0, PAGE = 48;
+      content.innerHTML = '<div class="crumb"><a href="houses.html">Houses</a> / ' + E(name) + '</div>' +
+        '<div class="hero" style="padding:20px 0 40px;text-align:left"><div class="rule"></div>' +
+        '<div class="k">' + (tier ? E(tier.toUpperCase()) + ' HOUSE' : 'FRAGRANCE HOUSE') + '</div>' +
+        '<h1 style="font-size:56px;margin:0">' + E(name) + '</h1>' +
+        '<div class="sub" style="margin:18px 0 0;max-width:600px">' + E(blurb) + '</div>' +
+        (notes.length ? '<div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">' + h.notes.slice(0, 5).map(function (x) { var c = PFC.noteCol(x); return '<span style="font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:100px;background:' + c + ';color:' + PFC.noteTxt(c) + '">' + E(PFC.cap(x)) + '</span>'; }).join('') + '</div>' : '') + '</div>' +
+        '<div class="shead"><h2>' + rows.length + ' fragrance' + (rows.length === 1 ? '' : 's') + ' on ParfAI</h2></div>' +
+        '<div class="grid" id="hp">' + (rows.length ? '' : '<div style="color:var(--muted)">No fragrances catalogued for this house yet. Try the <a href="dupe-finder.html" style="text-decoration:underline">Dupe Finder</a> or <a href="explore.html" style="text-decoration:underline">Explore</a>.</div>') + '</div>' +
+        '<button class="btn ghost" id="hmore" type="button" hidden style="display:block;margin:34px auto 10px">Show more</button>' +
+        '<p style="font-size:13px;color:var(--ink2);max-width:760px;margin:26px 0 0">Every perfume comes from FragranceNet\'s catalogue. We do not show prices because they change often. ParfAI may earn a commission if you buy through a link. <a href="affiliate-disclosure.html" style="text-decoration:underline">Affiliate disclosure</a></p>';
+      function more() {
+        var s = rows.slice(shownN, shownN + PAGE);
+        document.getElementById('hp').insertAdjacentHTML('beforeend', s.map(PFC.cardHTML).join(''));
+        shownN += s.length; document.getElementById('hmore').hidden = shownN >= rows.length;
+      }
+      document.getElementById('hmore').addEventListener('click', more); more();
+    }).catch(function () { content.innerHTML = '<div class="doc"><h1>Could not load this house</h1><a class="btn" href="houses.html">← Back to Houses</a></div>'; });
   }
 </script>
 <script src="cookie-notice.js"></script>

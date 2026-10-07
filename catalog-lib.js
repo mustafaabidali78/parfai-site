@@ -111,6 +111,37 @@
   }
   function tint(r) { return alpha(noteCol(r.notes[0] || 'musk'), .35); }
 
+
+  // ---------- Houses ----------
+  // Builds the house list from the catalogue. Types (Designer, Niche, Affordable) and short descriptions come from the
+  // hand-written list in data.js when a house is on it; the dupe houses are always Affordable.
+  var HOUSE_ALIAS = { dior: 'Christian Dior', versace: 'Gianni Versace', mugler: 'Thierry Mugler', initio: 'Initio Parfums Prives', rojaparfums: 'Roja Dove' };
+  function normName(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g, ''); }
+  function houses(rows) {
+    var by = {}, cur = {}, list = [];
+    rows.forEach(function (r) { if (r.ok) (by[r.house] = by[r.house] || []).push(r); });
+    if (typeof HOUSES !== 'undefined') HOUSES.forEach(function (h) { cur[normName(HOUSE_ALIAS[h.id] || h.name)] = h; });
+    Object.keys(by).forEach(function (name) {
+      var rs = by[name].slice().sort(function (a, b) { return (b.sizes - a.sizes) || a.name.localeCompare(b.name); });
+      var h = cur[normName(name)], freq = {};
+      rs.forEach(function (r) { var seen = {}; r.notes.forEach(function (n) { if (!seen[n]) { seen[n] = 1; freq[n] = (freq[n] || 0) + 1; } }); });
+      var top = Object.keys(freq).sort(function (a, b) { return freq[b] - freq[a] || a.localeCompare(b); }).slice(0, 6);
+      list.push({ name: name, id: h ? h.id : '', tier: h ? h.tier : (dupeSet[name.toLowerCase()] ? 'Affordable' : ''), blurb: h ? h.blurb : '', rows: rs, rep: rs[0], notes: top });
+    });
+    list.sort(function (a, b) { return a.name.localeCompare(b.name); });
+    return list;
+  }
+  // A house tile in the pedestal style. The bottle is the house's best-known perfume, coloured by the house's most common notes.
+  function houseCardHTML(h) {
+    var href = 'house.html?' + (h.id ? 'id=' + encodeURIComponent(h.id) : 'h=' + encodeURIComponent(h.name));
+    var row = { slug: h.rep.slug, name: h.rep.name, notes: h.notes, pid: h.rep.pid };
+    var about = h.blurb || ('Includes ' + h.rows.slice(0, 2).map(function (r) { return r.name; }).join(' and ') + '.');
+    return '<a class="pd" style="--c1:' + tint(row) + ';text-decoration:none;color:inherit" href="' + href + '">' +
+      '<div class="pd-tg">' + (h.tier ? '<span class="gt">' + esc(h.tier) + '</span>' : '') + '</div>' + stage(row, 150) +
+      '<div class="pd-nm">' + esc(h.name) + '</div><div class="pd-nt">' + esc(about) + '</div>' +
+      '<div class="pd-sz">' + h.rows.length + ' fragrance' + (h.rows.length === 1 ? '' : 's') + ' on ParfAI</div></a>';
+  }
+
   // A card in the pedestal style. The picture and name open the catalogue page; the button is the affiliate link.
   function cardHTML(r) {
     var href = 'catalog.html?id=' + encodeURIComponent(r.slug);
@@ -121,5 +152,5 @@
       '<div class="pd-act">' + buy + '</div></div>';
   }
 
-  window.PFC = { load: load, cardHTML: cardHTML, stage: stage, art: art, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
+  window.PFC = { load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
 })();
