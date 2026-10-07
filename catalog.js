@@ -89,6 +89,7 @@
       return '<div class="vrow"><span>' + esc(label) + '</span><a class="btn sm" href="' + esc(linkFor(v)) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a></div>';
     }).join('');
     var uae = '<div class="vrow uae"><span>In the UAE? Search this perfume on Amazon.ae</span><a class="btn sm" href="' + esc(amazonAE(shortTitle(r) + ' ' + r.house)) + '" target="_blank" rel="sponsored nofollow noopener">Shop in the UAE ↗</a></div>';
+    var noon = '<div class="vrow uae"><span>Or shop at Noon UAE. Use code <b>' + esc(NOON_CODE) + '</b> at checkout for cashback (terms apply)</span><a class="btn sm" href="' + esc(noonAE(shortTitle(r) + ' ' + r.house)) + '" target="_blank" rel="sponsored nofollow noopener">Shop at Noon ↗</a></div>';
     var more = rows.filter(function (x) { return x.house === r.house && x.slug !== r.slug; }).slice(0, 8);
     $('detail-view').innerHTML = '<div class="dwrap">' +
       '<div class="crumbs"><a href="catalog.html">Catalogue</a> / <a href="catalog.html?house=' + encodeURIComponent(r.house) + '">' + esc(r.house) + '</a></div>' +
@@ -97,7 +98,7 @@
       '<div style="color:var(--ink2);font-size:14px">' + esc(facts.join('  ·  ')) + '</div>' +
       '<div class="chips">' + r.notes.slice(0, 12).map(function (n) { return '<a class="chip" href="catalog.html?q=' + encodeURIComponent(n) + '">' + esc(cap(n)) + '</a>'; }).join('') + '</div></div></div>' +
       '<div class="dsec"><h2>About this fragrance</h2><p>' + intro + '</p></div>' +
-      '<div class="dsec"><h2>Sizes and where to buy</h2>' + variants + uae +
+      '<div class="dsec"><h2>Sizes and where to buy</h2>' + variants + uae + noon +
       '<div class="cat-note" style="margin-top:14px">ParfAI earns a commission when you buy through these links, at no extra cost to you. Prices change often, so check the current price on the retailer page. As an Amazon Associate I earn from qualifying purchases. <a href="affiliate-disclosure.html">Affiliate disclosure</a></div></div>' +
       (more.length ? '<div class="dsec"><h2>More from ' + esc(r.house) + '</h2><div class="grid">' + more.map(cardHTML).join('') + '</div></div>' : '') +
       '</div>';

@@ -1357,6 +1357,8 @@ function navMega(label, m){
 
 // Amazon.ae (UAE) affiliate link. Store ID from Amazon Associates.
 var AMZ_TAG='parfai-21';
+var NOON_CODE='NDY353';
+function noonAE(q){ return 'https://www.noon.com/uae-en/search/?q='+encodeURIComponent(q); }
 function amazonAE(q){ return 'https://www.amazon.ae/s?k='+encodeURIComponent(q)+'&tag='+AMZ_TAG; }
 
 /* ---------- nav + footer chrome ---------- */
