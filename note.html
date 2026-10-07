@@ -18,7 +18,7 @@
 <meta id="twitter-title" name="twitter:title" content="Note — ParfAI">
 <meta id="twitter-desc" name="twitter:description" content="Browse fragrances featuring this note on ParfAI.">
 <meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610061400">
+<link rel="stylesheet" href="parfai.css?v=202610071900">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -53,74 +53,83 @@
   ]
 }
 </script>
+<style>.showmore{display:block;margin:26px auto 0;border:1.5px solid var(--border);background:var(--panel);border-radius:100px;padding:12px 26px;font-family:var(--body);font-weight:700;font-size:14px;cursor:pointer}.showmore:hover{border-color:var(--violet)}</style>
 </head>
 <body>
 
 <nav id="nav-slot" data-active="explore"></nav>
 
-<div class="wrap" id="content"></div>
+<div class="wrap" id="content"><div style="padding:60px 0;color:var(--muted)">Loading…</div></div>
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610061400"></script>
+<script src="data.js?v=202610071900"></script>
+<script src="catalog-lib.js?v=202610071900"></script>
+<script src="note-families.js?v=202610071900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script>
-  const n = qs('n');
-  const content = document.getElementById('content');
-  const img = (typeof NOTE_IMAGE==='object' && n) ? NOTE_IMAGE[n] : null;
-  const desc = (typeof noteDescription==='function' && n) ? noteDescription(n) : '';
-  const exists = n && PERFUMES.some(p => perfumeAllNotes(p).includes(n));
+(function(){
+  var PAGE = 48, shown = PAGE;
+  var content = document.getElementById('content');
+  var esc = PFC.esc, cap = PFC.cap;
+  var raw = (qs('n') || '').trim().toLowerCase();
 
-  if (!exists){
-    content.innerHTML = `<div class="doc"><h1>Note not found</h1><p>We don't have that one catalogued yet.</p><a class="btn" href="notes.html">← Back to Browse by note</a></div>`;
-  } else {
-    updateSocialTags({
-      title: `${n} — ParfAI`,
-      desc: `Fragrances featuring ${n}: browse every ParfAI fragrance with ${n} in its notes, with ratings and where to buy.`,
-      url: `https://parfai.org/note.html?n=${encodeURIComponent(n)}`,
-      image: (img && img.url) ? img.url : null,
-    });
-    const breadcrumbSchema = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Browse by note", "item": "https://parfai.org/notes.html" },
-        { "@type": "ListItem", "position": 2, "name": n, "item": `https://parfai.org/note.html?n=${encodeURIComponent(n)}` }
-      ]
-    };
-    const bs = document.createElement('script');
-    bs.type = 'application/ld+json';
-    bs.textContent = JSON.stringify(breadcrumbSchema);
-    document.head.appendChild(bs);
-    const category = noteCategory(n);
-    const catIndex = NOTE_CATEGORY_ORDER.indexOf(category);
-    const bgGrad = gr(catIndex >= 0 ? catIndex : 0);
-    const perfumes = PERFUMES.filter(p => perfumeAllNotes(p).includes(n)).sort((a,b) => b.rating - a.rating);
+  // a hand-written photo and description exist for some notes (small list in data.js); match them ignoring capitals
+  function findKey(obj){ if (!obj || typeof obj !== 'object') return null; var k = Object.keys(obj); for (var i = 0; i < k.length; i++) if (k[i].toLowerCase() === raw) return k[i]; return null; }
+  var imgKey = findKey(typeof NOTE_IMAGE === 'object' ? NOTE_IMAGE : null);
+  var img = imgKey ? NOTE_IMAGE[imgKey] : null;
+  var desc = (imgKey && typeof noteDescription === 'function') ? noteDescription(imgKey) : '';
 
-    content.innerHTML = `
-      <div class="crumb"><a href="notes.html">Browse by note</a> / ${n}</div>
-
-      <div class="pdhero" style="background:${bgGrad}">
-        <div class="pdimg">
-          ${img ? `<img class="notephoto" src="${wikiThumb(img.url, 440)}" alt="${n}" loading="lazy" onerror="this.remove()">` : `<div class="bottle" style="width:120px;height:120px;border-radius:50%"></div>`}
-        </div>
-        <div>
-          <div class="pdhouse">${category.toUpperCase()}</div>
-          <h1 class="pdname">${n}</h1>
-          <div class="pdmeta"><span><b>${perfumes.length}</b> fragrance${perfumes.length===1?'':'s'} on ParfAI</span></div>
-          <div class="pddesc">${desc || `A ${category.toLowerCase()} note used across the catalog — a full description is on the way.`}</div>
-          ${img ? `<div class="disclose">Photo: ${img.author ? `${img.author} · ` : ''}${img.license} · <a href="${img.page}" target="_blank" rel="noopener" style="color:inherit">Wikimedia Commons ↗</a></div>` : ''}
-        </div>
-      </div>
-
-      <section style="margin-top:40px">
-        <div class="shead"><h2>Fragrances with ${n}</h2><a href="notes.html?n=${encodeURIComponent(n)}">Filter by ${n} →</a></div>
-        <div class="grid">${perfumes.length ? perfumes.map((p,i)=>pcardHTML(p,i)).join('') : `<div style="grid-column:1/-1;color:var(--muted);padding:20px 0">No fragrances in the catalog carry this note yet.</div>`}</div>
-      </section>
-    `;
+  function notFound(){
+    content.innerHTML = '<div class="doc"><h1>Note not found</h1><p>We do not have that one catalogued yet.</p><a class="btn" href="notes.html">← Back to Browse by note</a></div>';
   }
+  if (!raw){ notFound(); return; }
+
+  PFC.load().then(function(d){
+    var list = d.rows.filter(function(r){ return r.ok && r.notes.indexOf(raw) >= 0; }).sort(function(a, b){ return (b.sizes - a.sizes) || a.hay.localeCompare(b.hay); });
+    if (!list.length){ notFound(); return; }
+    var n = cap(raw), category = PFC.family(raw) || 'Fragrance note';
+    updateSocialTags({
+      title: n + ' — ParfAI',
+      desc: 'Fragrances featuring ' + n + ': browse every ParfAI fragrance with ' + n + ' in its notes, with links to where to buy.',
+      url: 'https://parfai.org/note.html?n=' + encodeURIComponent(raw),
+      image: (img && img.url) ? img.url : null
+    });
+    var bs = document.createElement('script');
+    bs.type = 'application/ld+json';
+    bs.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Browse by note', item: 'https://parfai.org/notes.html' },
+      { '@type': 'ListItem', position: 2, name: n, item: 'https://parfai.org/note.html?n=' + encodeURIComponent(raw) } ] });
+    document.head.appendChild(bs);
+    var ci = NOTE_CATEGORY_ORDER.indexOf(category);
+    var bg = (typeof gr === 'function') ? gr(ci >= 0 ? ci : 0) : 'linear-gradient(135deg,#8B7CFF,#C86BFF)';
+    var col = PFC.noteCol(raw);
+
+    content.innerHTML =
+      '<div class="crumb"><a href="notes.html">Browse by note</a> / ' + esc(n) + '</div>' +
+      '<div class="pdhero" style="background:' + bg + '"><div class="pdimg">' +
+      (img ? '<img class="notephoto" src="' + wikiThumb(img.url, 440) + '" alt="' + esc(n) + '" loading="lazy" onerror="this.remove()">' : '<div style="width:140px;height:140px;border-radius:50%;background:' + col + ';box-shadow:inset 0 10px 18px rgba(255,255,255,.45),0 18px 30px -14px rgba(0,0,0,.5)"></div>') +
+      '</div><div><div class="pdhouse">' + esc(category.toUpperCase()) + '</div><h1 class="pdname">' + esc(n) + '</h1>' +
+      '<div class="pdmeta"><span><b>' + list.length.toLocaleString('en-US') + '</b> fragrance' + (list.length === 1 ? '' : 's') + ' on ParfAI</span></div>' +
+      '<div class="pddesc">' + (desc ? esc(desc) : 'A ' + esc(category.toLowerCase()) + ' note used across the catalogue. A full description is on the way.') + '</div>' +
+      (img ? '<div class="disclose">Photo: ' + (img.author ? esc(img.author) + ' · ' : '') + esc(img.license) + ' · <a href="' + esc(img.page) + '" target="_blank" rel="noopener" style="color:inherit">Wikimedia Commons ↗</a></div>' : '') +
+      '</div></div>' +
+      '<section style="margin-top:40px"><div class="shead"><h2>Fragrances with ' + esc(n) + '</h2><a href="notes.html?n=' + encodeURIComponent(raw) + '">Mix with other notes →</a></div>' +
+      '<div class="grid" id="grid"></div><button class="showmore" id="more" style="display:none"></button>' +
+      '<p style="text-align:center;margin-top:18px;color:var(--muted);font-size:13px">Each button opens the store\'s own page. We may earn a commission if you buy, at no cost to you. We do not show prices because they change often.</p></section>';
+
+    function draw(){
+      document.getElementById('grid').innerHTML = list.slice(0, shown).map(PFC.cardHTML).join('');
+      var m = document.getElementById('more');
+      m.style.display = list.length > shown ? '' : 'none';
+      m.textContent = 'Show ' + Math.min(PAGE, list.length - shown) + ' more (' + (list.length - shown).toLocaleString('en-US') + ' left)';
+    }
+    document.getElementById('more').addEventListener('click', function(){ shown += PAGE; draw(); });
+    draw();
+  }).catch(function(){ content.innerHTML = '<div class="doc"><h1>Could not load</h1><p>Please refresh the page.</p></div>'; });
+})();
 </script>
 <script src="cookie-notice.js"></script>
 </body>

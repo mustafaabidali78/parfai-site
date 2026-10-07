@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Browse by note — ParfAI">
 <meta name="twitter:description" content="Explore fragrances by individual scent note, from rose and oud to vanilla and amber, on ParfAI.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610061400">
+<link rel="stylesheet" href="parfai.css?v=202610071900">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -53,6 +53,40 @@
   ]
 }
 </script>
+<style>
+/* Bubble garden: one card per scent family, bubbles sized by how many perfumes use the note */
+.gs{background:var(--panel);border:1px solid var(--border);border-radius:26px;padding:22px 24px 24px;margin-bottom:16px}
+.gs .gh{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.gs .gh i{width:14px;height:14px;border-radius:50%;flex:none}
+.gs .gh b{font-family:var(--display,'Cormorant Garamond',Georgia,serif);font-size:26px;font-weight:600;line-height:1}
+.gs .gh span{font-size:12.5px;color:var(--muted)}
+.bb{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.bub{border:0;font-family:var(--body);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;line-height:1.1;padding:6px;cursor:pointer;
+  transition:transform .35s cubic-bezier(.2,.9,.3,1.3),box-shadow .3s;position:relative;box-shadow:inset 0 6px 10px rgba(255,255,255,.4),0 10px 18px -12px rgba(0,0,0,.45)}
+.bub:hover,.bub:focus-visible{transform:scale(1.12) translateY(-4px);z-index:2;box-shadow:inset 0 6px 10px rgba(255,255,255,.4),0 18px 26px -12px rgba(0,0,0,.5);outline:none}
+.bub em{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translate(-50%,6px);background:#141414;color:#fff;font-style:normal;font-size:11px;font-weight:600;padding:4px 9px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:.25s}
+.bub:hover em,.bub:focus-visible em{opacity:1;transform:translate(-50%,0)}
+.bub.on{outline:3px solid #141414;outline-offset:3px}
+.bub.on::after{content:"\2713";position:absolute;top:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:#141414;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+.more{border:1.5px dashed var(--border);background:none;border-radius:100px;padding:10px 16px;font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+.more:hover{border-color:var(--violet);color:var(--ink)}
+.rest{display:none;flex-wrap:wrap;gap:7px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.rest.on{display:flex}
+.rch{border:0;font-family:var(--body);font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:100px;cursor:pointer;transition:transform .2s}
+.rch:hover{transform:translateY(-2px)}
+.rch.on{outline:2.5px solid #141414;outline-offset:2px}
+.rch small{opacity:.65;font-weight:500;margin-left:4px}
+.rest .tail{font-size:12.5px;color:var(--muted);align-self:center}
+.gmatch .bb{gap:8px}
+.gnote{color:var(--muted);font-size:13px;margin:6px 0 18px}
+.selectedbar.has{position:sticky;top:84px;z-index:30;box-shadow:0 14px 30px -18px rgba(0,0,0,.35)}
+.selectedbar .seebtn{margin-left:auto;border:0;background:#141414;color:#fff;font-family:var(--body);font-weight:700;font-size:12.5px;padding:8px 16px;border-radius:100px;cursor:pointer}
+.selectedbar .clearbtn{margin-left:4px}
+.showmore{display:block;margin:26px auto 0;border:1.5px solid var(--border);background:var(--panel);border-radius:100px;padding:12px 26px;font-family:var(--body);font-weight:700;font-size:14px;cursor:pointer}
+.showmore:hover{border-color:var(--violet)}
+@media(max-width:600px){.gs{padding:18px 16px 20px;border-radius:22px}.gs .gh b{font-size:23px}.bb{gap:8px}}
+@media(prefers-reduced-motion:reduce){.bub,.rch{transition:none}}
+</style>
 </head>
 <body>
 
@@ -63,169 +97,188 @@
     <div class="rule"></div>
     <div class="k">Browse by note</div>
     <h1 style="font-size:52px">Pick the notes<br>you love</h1>
-    <div class="sub">Select any notes below — top, heart, or base — and we'll surface every fragrance in the database that features them. Add a gender filter to narrow it further.</div>
+    <div class="sub">Tap any bubble to choose a note. The bigger the bubble, the more perfumes use it. Pick one note or several and we will show every fragrance that has them all.</div>
   </div>
 
-  <section class="notelib">
-    <div class="shead"><h2>Know your notes</h2><span style="font-size:13px;color:var(--muted)" id="libcount"></span></div>
-    <div class="libgrid" id="libgrid"></div>
-  </section>
-
   <div class="filterbar notesearch">
-    <div class="searchbox">🔍<input id="notesearch" type="text" placeholder="Search notes (e.g. oud, rose, vanilla)"></div>
-    <select id="gender" class="chip-select">
+    <div class="searchbox">🔍<input id="notesearch" type="text" placeholder="Search all notes (e.g. oud, rose, vanilla)" autocomplete="off"></div>
+    <select id="gender" class="chip-select" aria-label="Filter by gender">
       <option value="">All genders</option>
-      <option>Men</option>
-      <option>Women</option>
-      <option>Unisex</option>
+      <option value="0">For men</option>
+      <option value="1">For women</option>
+      <option value="2">Unisex</option>
     </select>
   </div>
 
   <div class="selectedbar" id="selectedbar"></div>
 
-  <div class="notecats" id="notecats"></div>
+  <div id="garden"><div class="gnote">Loading the notes…</div></div>
 
-  <section style="margin-top:40px;scroll-margin-top:96px" id="results">
+  <section style="margin-top:40px;scroll-margin-top:96px;display:none" id="results">
     <div class="resultcount" id="count"></div>
     <div class="grid" id="grid"></div>
+    <button class="showmore" id="more" style="display:none">Show more</button>
+    <p class="gnote" style="text-align:center;margin-top:18px">Each button opens the store's own page. We may earn a commission if you buy, at no cost to you. We do not show prices because they change often.</p>
+  </section>
+
+  <section class="notelib" id="lib" style="margin-top:50px;display:none">
+    <div class="shead"><h2>Know your notes</h2><span style="font-size:13px;color:var(--muted)" id="libcount"></span></div>
+    <div class="libgrid" id="libgrid"></div>
   </section>
 </div>
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610061400"></script>
+<script src="data.js?v=202610071900"></script>
+<script src="catalog-lib.js?v=202610071900"></script>
+<script src="note-families.js?v=202610071900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script>
-  // every note actually present in the current database, with how many fragrances carry it
-  const noteCounts = {};
-  PERFUMES.forEach(p => perfumeAllNotes(p).forEach(n => { noteCounts[n] = (noteCounts[n]||0) + 1; }));
-  const allNotes = Object.keys(noteCounts).sort();
+(function(){
+  var CC = {'Citrus':'#F2C94C','Floral':'#F08CB0','Fruity':'#F2705A','Green & Aromatic':'#7FBF6A','Spicy':'#E0742B','Woody':'#A67B5B','Amber & Resin':'#D9A441','Gourmand & Sweet':'#C98B6B','Musk & Animalic':'#B9AFCB','Leather & Tobacco':'#7A5A4A','Marine & Mineral':'#6FB7D8','Earthy':'#7A8C5A'};
+  var PAGE = 48, shown = PAGE;
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = PFC.esc, cap = PFC.cap;
+  function fmt(n){ return n.toLocaleString('en-US'); }
 
-  const grouped = {};
-  allNotes.forEach(n => { const c = noteCategory(n); (grouped[c] = grouped[c] || []).push(n); });
-  // fall back gracefully if a visitor's cached data.js predates this helper
-  const safeNoteIcon = typeof noteIcon==='function' ? noteIcon : () => '';
-
-  // "Know your notes" — a browsable knowledge section (photo + short
-  // description), separate from the filter chips below it. Scoped to
-  // notes that actually have a photo, in the current database, sorted by
-  // how often they appear so the most useful ones surface first.
-  (function renderNoteLibrary(){
-    const grid = document.getElementById('libgrid');
-    const countEl = document.getElementById('libcount');
-    if (typeof NOTE_IMAGE !== 'object' || typeof wikiThumb !== 'function'){
-      grid.closest('.notelib').style.display = 'none';
-      return;
-    }
-    const libNotes = allNotes.filter(n => NOTE_IMAGE[n]).sort((a,b) => noteCounts[b]-noteCounts[a]);
-    if (!libNotes.length){ grid.closest('.notelib').style.display = 'none'; return; }
-    countEl.textContent = `${libNotes.length} notes photographed so far — more to come, stay tuned`;
-    grid.innerHTML = libNotes.map(n => `
-      <a class="libcard" href="note.html?n=${encodeURIComponent(n)}">
-        <img src="${wikiThumb(NOTE_IMAGE[n].url, 240)}" alt="${n}" loading="lazy" onerror="this.closest('.libcard').remove()">
-        <div class="libname">${n}</div>
-        <div class="libcat">${noteCategory(n)}</div>
-      </a>`).join('');
+  // ---- "Know your notes" photo section (unchanged idea, built from the small hand-written list in data.js) ----
+  (function(){
+    try{
+      if (typeof NOTE_IMAGE !== 'object' || typeof wikiThumb !== 'function' || typeof PERFUMES === 'undefined') return;
+      var cnt = {}; PERFUMES.forEach(function(p){ perfumeAllNotes(p).forEach(function(n){ cnt[n] = (cnt[n]||0)+1; }); });
+      var notes = Object.keys(cnt).filter(function(n){ return NOTE_IMAGE[n]; }).sort(function(a,b){ return cnt[b]-cnt[a]; });
+      if (!notes.length) return;
+      $('lib').style.display = '';
+      $('libcount').textContent = notes.length + ' notes photographed so far — more to come, stay tuned';
+      $('libgrid').innerHTML = notes.map(function(n){
+        return '<a class="libcard" href="note.html?n=' + encodeURIComponent(n) + '"><img src="' + wikiThumb(NOTE_IMAGE[n].url, 240) + '" alt="' + esc(n) + '" loading="lazy" onerror="this.closest(\'.libcard\').remove()"><div class="libname">' + esc(n) + '</div><div class="libcat">' + noteCategory(n) + '</div></a>';
+      }).join('');
+    }catch(e){}
   })();
 
-  // state, seeded from the URL so this page is shareable/linkable (?n=Rose,Oud&gender=Women)
-  const initial = qs('n');
-  const selected = new Set(initial ? initial.split(',').map(s=>s.trim()).filter(Boolean) : []);
-  const genderSel = document.getElementById('gender');
-  const initGender = qs('gender');
-  if (initGender) genderSel.value = initGender;
+  var GN = {men:'0', women:'1', unisex:'2'};
+  var initial = qs('n'), initG = qs('gender');
+  var selected = [];
+  if (initial) initial.split(',').forEach(function(s){ s = s.trim().toLowerCase(); if (s && selected.indexOf(s) < 0) selected.push(s); });
+  var gsel = $('gender');
+  if (initG) gsel.value = (GN[String(initG).toLowerCase()] || (/^[012]$/.test(initG) ? initG : ''));
+
+  var rows = [], fam = null, query = '', byNote = {};
 
   function updateURL(){
-    const params = new URLSearchParams();
-    if (selected.size) params.set('n', [...selected].join(','));
-    if (genderSel.value) params.set('gender', genderSel.value);
-    const qstr = params.toString();
-    history.replaceState(null, '', qstr ? `notes.html?${qstr}` : 'notes.html');
+    var p = new URLSearchParams();
+    if (selected.length) p.set('n', selected.join(','));
+    if (gsel.value !== '') p.set('gender', gsel.value);
+    var s = p.toString();
+    history.replaceState(null, '', s ? 'notes.html?' + s : 'notes.html');
+  }
+  function isOn(n){ return selected.indexOf(n) >= 0; }
+
+  function bubble(t, mx){
+    var d = Math.round(64 + 58 * Math.sqrt(t[1] / mx)), c = PFC.noteCol(t[0]);
+    return '<button type="button" class="bub' + (isOn(t[0]) ? ' on' : '') + '" data-n="' + esc(t[0]) + '" style="width:' + d + 'px;height:' + d + 'px;background:' + c + ';color:' + PFC.noteTxt(c) + ';font-size:' + (d > 100 ? 13 : 11.5) + 'px" aria-pressed="' + isOn(t[0]) + '">' + esc(cap(t[0])) + '<em>' + fmt(t[1]) + ' perfumes</em></button>';
+  }
+  function chip(t){
+    var c = PFC.noteCol(t[0]);
+    return '<button type="button" class="rch' + (isOn(t[0]) ? ' on' : '') + '" data-n="' + esc(t[0]) + '" style="background:' + c + ';color:' + PFC.noteTxt(c) + '" aria-pressed="' + isOn(t[0]) + '">' + esc(cap(t[0])) + '<small>' + fmt(t[1]) + '</small></button>';
   }
 
-  function renderChips(filterText){
-    const f = (filterText||'').trim().toLowerCase();
-    document.getElementById('notecats').innerHTML = NOTE_CATEGORY_ORDER
-      .filter(cat => grouped[cat] && grouped[cat].length)
-      .map(cat => {
-        const notes = grouped[cat].filter(n => !f || n.toLowerCase().includes(f));
-        if (!notes.length) return '';
-        return `<div class="notecat"><div class="nch">${cat}</div><div class="notecatwrap">${
-          notes.map(n => `<span class="pickchip${selected.has(n)?' active':''}" data-note="${n}">${safeNoteIcon(n)}${n} <span style="opacity:.6">${noteCounts[n]}</span></span>`).join('')
-        }</div></div>`;
-      }).join('') || `<div style="color:var(--muted);padding:20px 0">No notes match "${filterText}".</div>`;
+  function renderGarden(){
+    var g = $('garden');
+    if (query){
+      var q = query, all = [];
+      Object.keys(fam.count).forEach(function(n){ if (n.indexOf(q) >= 0) all.push([n, fam.count[n]]); });
+      all.sort(function(a, b){ return (a[0].indexOf(q) === 0 ? 0 : 1) - (b[0].indexOf(q) === 0 ? 0 : 1) || b[1] - a[1]; });
+      if (!all.length){ g.innerHTML = '<div class="gnote" style="padding:30px 0;text-align:center">No notes match "' + esc(query) + '". Try a shorter word.</div>'; return; }
+      var mx = all[0][1];
+      g.innerHTML = '<section class="gs gmatch"><div class="gh"><i style="background:#141414"></i><b>Matching notes</b><span>' + fmt(all.length) + ' found</span></div><div class="bb">' +
+        all.slice(0, 40).map(function(t){ return bubble(t, mx); }).join('') + '</div>' +
+        (all.length > 40 ? '<div class="rest on">' + all.slice(40, 140).map(chip).join('') + (all.length > 140 ? '<span class="tail">&hellip;and ' + fmt(all.length - 140) + ' more. Type a longer word to narrow it down.</span>' : '') + '</div>' : '') + '</section>';
+      return;
+    }
+    g.innerHTML = fam.families.map(function(f, ci){
+      if (!f.notes.length) return '';
+      var mx = f.notes[0][1], top = f.notes.slice(0, 9), rest = f.notes.slice(9, 48);
+      var open = rest.some(function(t){ return isOn(t[0]); });
+      return '<section class="gs"><div class="gh"><i style="background:' + CC[f.name] + '"></i><b>' + esc(f.name) + '</b><span>' + fmt(f.notes.length) + ' notes</span></div>' +
+        '<div class="bb">' + top.map(function(t){ return bubble(t, mx); }).join('') +
+        (f.notes.length > 9 ? '<button type="button" class="more" data-i="' + ci + '">' + (open ? 'Show fewer' : '+ ' + fmt(f.notes.length - 9) + ' more') + '</button>' : '') + '</div>' +
+        '<div class="rest' + (open ? ' on' : '') + '" id="r' + ci + '">' + rest.map(chip).join('') +
+        (f.notes.length > 48 ? '<span class="tail">&hellip;and ' + fmt(f.notes.length - 48) + ' rarer notes. Use the search box to find them.</span>' : '') + '</div></section>';
+    }).join('');
   }
 
   function renderSelected(){
-    const bar = document.getElementById('selectedbar');
-    if (!selected.size){
-      bar.innerHTML = `<span class="hint">No notes selected yet — click any note below to start narrowing down fragrances.</span>`;
-      return;
-    }
-    bar.innerHTML = [...selected].map(n =>
-      `<span class="selchip">${n}<button data-remove="${n}" aria-label="Remove ${n}">✕</button></span>`
-    ).join('') + `<span class="clearbtn" id="clearall">Clear all</span>`;
+    var bar = $('selectedbar');
+    bar.classList.toggle('has', selected.length > 0);
+    if (!selected.length){ bar.innerHTML = '<span class="hint">No notes chosen yet. Tap a bubble below to start.</span>'; return; }
+    bar.innerHTML = selected.map(function(n){ return '<span class="selchip">' + esc(cap(n)) + '<button data-remove="' + esc(n) + '" aria-label="Remove ' + esc(n) + '">✕</button></span>'; }).join('') + '<button type="button" class="seebtn" id="seebtn">See ' + fmt(list.length) + ' perfume' + (list.length === 1 ? '' : 's') + ' ↓</button><span class="clearbtn" id="clearall">Clear all</span>';
   }
 
+  function matches(){
+    var g = gsel.value;
+    return rows.filter(function(r){
+      if (!r.ok) return false;
+      if (g !== '' && String(r.gender) !== g) return false;
+      for (var i = 0; i < selected.length; i++) if (r.notes.indexOf(selected[i]) < 0) return false;
+      return true;
+    }).sort(function(a, b){ return (b.sizes - a.sizes) || a.hay.localeCompare(b.hay); });
+  }
+  var list = [];
   function renderResults(){
-    const gender = genderSel.value;
-    const list = PERFUMES.filter(p => {
-      if (gender && p.gender !== gender) return false;
-      if (!selected.size) return true;
-      const pn = perfumeAllNotes(p);
-      return [...selected].every(n => pn.includes(n));
-    }).sort((a,b) => b.rating - a.rating);
-
-    document.getElementById('count').textContent = selected.size
-      ? `${list.length} fragrance${list.length===1?'':'s'} with ${[...selected].join(' + ')}${gender?` · ${gender}`:''}`
-      : `${list.length} fragrance${list.length===1?'':'s'}${gender?` · ${gender}`:''}`;
-
-    document.getElementById('grid').innerHTML = list.length
-      ? list.map((p,i)=>pcardHTML(p,i)).join('')
-      : `<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">No fragrances match that combination yet — try removing a note.</div>`;
+    var sec = $('results');
+    if (!selected.length){ sec.style.display = 'none'; list = []; return; }
+    sec.style.display = '';
+    list = matches();
+    var gl = gsel.value !== '' ? ' · ' + PFC.GENDER[+gsel.value].toLowerCase() : '';
+    $('count').textContent = fmt(list.length) + ' fragrance' + (list.length === 1 ? '' : 's') + ' with ' + selected.map(cap).join(' + ') + gl;
+    $('grid').innerHTML = list.length ? list.slice(0, shown).map(PFC.cardHTML).join('') : '<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">No fragrances match that mix yet. Try taking one note away.</div>';
+    $('more').style.display = list.length > shown ? '' : 'none';
+    $('more').textContent = 'Show ' + Math.min(PAGE, list.length - shown) + ' more (' + fmt(list.length - shown) + ' left)';
+  }
+  function goResults(){
+    var h = document.documentElement, prev = h.style.scrollBehavior; h.style.scrollBehavior = 'auto';
+    $('results').scrollIntoView({ block: 'start' }); h.style.scrollBehavior = prev;
   }
 
-  function renderAll(filterText){
-    renderChips(filterText);
-    renderSelected();
-    renderResults();
-    updateURL();
+  function all(){ renderGarden(); renderResults(); renderSelected(); updateURL(); }
+  function toggle(n){
+    var i = selected.indexOf(n);
+    if (i >= 0) selected.splice(i, 1); else selected.push(n);
+    shown = PAGE;
+    // update in place so the page does not jump
+    document.querySelectorAll('[data-n]').forEach(function(b){ var on = isOn(b.dataset.n); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    renderResults(); renderSelected(); updateURL();
   }
 
-  document.getElementById('notecats').addEventListener('click', e => {
-    const chip = e.target.closest('.pickchip');
-    if (!chip) return;
-    const n = chip.dataset.note;
-    const wasSelected = selected.has(n);
-    wasSelected ? selected.delete(n) : selected.add(n);
-    renderAll(document.getElementById('notesearch').value);
-    // picking a note should surface its matches right away, not require a manual scroll.
-    // NOTE: the page sets html{scroll-behavior:smooth} globally, and in some browsers that
-    // silently swallows a scrollIntoView() call fired from inside a click handler (the CSS
-    // smooth-scroll animation never runs, so nothing moves at all) — even passing
-    // behavior:'auto' explicitly doesn't override it. Toggling the CSS property off for the
-    // instant of the call sidesteps that entirely.
-    if (!wasSelected){
-      const results = document.getElementById('results');
-      const prevBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
-      results.scrollIntoView({ block: 'start' });
-      document.documentElement.style.scrollBehavior = prevBehavior;
-    }
+  $('garden').addEventListener('click', function(e){
+    var m = e.target.closest('.more');
+    if (m){ var r = $('r' + m.dataset.i), on = r.classList.toggle('on'); m.textContent = on ? 'Show fewer' : '+ ' + fmt(fam.families[m.dataset.i].notes.length - 9) + ' more'; return; }
+    var b = e.target.closest('[data-n]'); if (b) toggle(b.dataset.n);
   });
-
-  document.getElementById('selectedbar').addEventListener('click', e => {
-    if (e.target.id === 'clearall'){ selected.clear(); renderAll(document.getElementById('notesearch').value); return; }
-    const rm = e.target.closest('[data-remove]');
-    if (rm){ selected.delete(rm.dataset.remove); renderAll(document.getElementById('notesearch').value); }
+  $('selectedbar').addEventListener('click', function(e){
+    if (e.target.id === 'seebtn'){ goResults(); return; }
+    if (e.target.id === 'clearall'){ selected = []; shown = PAGE; all(); return; }
+    var rm = e.target.closest('[data-remove]'); if (rm){ toggle(rm.dataset.remove); }
   });
+  $('notesearch').addEventListener('input', function(e){ query = e.target.value.trim().toLowerCase(); renderGarden(); });
+  gsel.addEventListener('change', function(){ shown = PAGE; renderResults(); updateURL(); });
+  $('more').addEventListener('click', function(){ shown += PAGE; renderResults(); });
 
-  document.getElementById('notesearch').addEventListener('input', e => renderChips(e.target.value));
-  genderSel.addEventListener('change', () => { renderResults(); updateURL(); });
-
-  renderAll('');
+  PFC.load().then(function(d){
+    rows = d.rows; fam = PFC.noteFamilies(rows);
+    // notes used by only one perfume are mostly typos, so they stay out of the garden and the search
+    fam.families.forEach(function(f){ f.notes = f.notes.filter(function(t){ return t[1] >= 2 && !/[^\x20-\x7e]|"/.test(t[0]); }); });
+    var c2 = {}; Object.keys(fam.count).forEach(function(n){ if (fam.count[n] >= 2 && !/[^\x20-\x7e]|"/.test(n)) c2[n] = fam.count[n]; }); fam.count = c2;
+    // keep any note from a shared link, even a rare one
+    all();
+    if (selected.length && initial){ /* a shared link lands on the garden; the pill leads to the results */ }
+  }).catch(function(){
+    $('garden').innerHTML = '<div class="gnote" style="padding:30px 0;text-align:center">The notes could not load. Please refresh the page.</div>';
+  });
+})();
 </script>
 <script src="cookie-notice.js"></script>
 </body>
