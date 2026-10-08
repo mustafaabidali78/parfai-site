@@ -1437,9 +1437,9 @@ function renderNav(active){
       })}
       ${navMega('Community', {
         f:'f4', feat:['Join in','Write a review','Rate any fragrance in a minute. Help others find their scent.','Write a review','community.html?do=review'],
-        head:'Join in', chips:[['Scent of the Day','community.html?do=today'],['Start a discussion','community.html?do=discuss'],['Ask &amp; recommend','community.html?cat=Recommendations#discussions']],
+        head:'Join in', chips:[['Celebrity perfumes','celebrities.html'],['Scent of the Day','community.html?do=today'],['Start a discussion','community.html?do=discuss'],['Ask &amp; recommend','community.html?cat=Recommendations#discussions']],
         cols:[['Discuss',[['General perfume talk','Everything fragrance','community.html?cat=General%20talk#discussions'],['New to fragrance','Beginner friendly','community.html?cat=Beginners#discussions'],['Deals &amp; where to buy','Stores, offers and drops','community.html?cat=Deals#discussions'],['Decants &amp; swaps','Share and trade samples','community.html?cat=Swaps#discussions']]],
-              ['Highlights',[['Latest reviews','Fresh from the community','community.html#reviews'],['Trending discussions','Most replies first','community.html?sort=hot#discussions'],['Most active reviewers',"This month's top names",'community.html#reviewers'],["This week's prompts",'New ideas every Monday','community.html#prompts']]]]
+              ['Highlights',[['Celebrity perfumes','What the stars say they wear','celebrities.html'],['Latest reviews','Fresh from the community','community.html#reviews'],['Trending discussions','Most replies first','community.html?sort=hot#discussions'],['Most active reviewers',"This month's top names",'community.html#reviewers'],["This week's prompts",'New ideas every Monday','community.html#prompts']]]]
       })}
       ${(()=>{
         const ps = BLOG_POSTS.slice().sort((x,y)=>new Date(y.date)-new Date(x.date));
@@ -1471,7 +1471,7 @@ function renderFooter(){
     <div class="fcols">
       <div><b>ParfAI</b><span>The world's first AI perfumer</span></div>
       <div><b>Explore</b><a href="explore.html">Discover</a><a href="dupe-finder.html">Dupe Finder</a><a href="notes.html">Browse by note</a><a href="houses.html">Houses</a><a href="blog.html">Blog</a></div>
-      <div><b>Community</b><a href="community.html#reviews">Reviews</a><a href="community.html#today">Scent of the Day</a><a href="community.html#discussions">Discussions</a></div>
+      <div><b>Community</b><a href="community.html#reviews">Reviews</a><a href="community.html#today">Scent of the Day</a><a href="community.html#discussions">Discussions</a><a href="celebrities.html">Celebrity perfumes</a></div>
       <div><b>Company</b><a href="about.html">About</a><a href="affiliate-disclosure.html">Affiliate disclosure</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="credits.html">Photo credits</a><a href="contact.html">Contact</a></div>
     </div>
     <div style="margin-top:24px">© 2026 ParfAI · Some links are affiliate links. As an Amazon Associate I earn from qualifying purchases.</div>
