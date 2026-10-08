@@ -26,5 +26,20 @@ window.STARS = [
 {n:"Olivia Rodrigo",g:"Music",p:"Baccarat Rouge 540",h:"Maison Francis Kurkdjian",w:"British Vogue, 2021",s:"https://www.marieclaire.co.uk/beauty/fragrance/celebrity-perfumes"},
 {n:"Doja Cat",g:"Music",p:"Black Saffron",h:"Byredo",w:"Harper's Bazaar, 2021",s:"https://www.marieclaire.co.uk/beauty/fragrance/celebrity-perfumes"},
 {n:"Taylor Swift",g:"Music",p:"Santal Blush",h:"Tom Ford",w:"Her answer at the MTV VMAs",s:"https://www.harpersbazaar.in/beauty/story/these-are-the-fragrances-loved-by-the-stars-from-sienna-miller-to-beyonce-1105123-2024-10-11"},
-{n:"Rita Ora",g:"Music",p:"Atelier des Fleurs Magnolia Alba",h:"Chloé",w:"Harper's Bazaar video",s:"https://www.harpersbazaar.com.sg/beauty/perfumes-a-listers-actually-wear"}
+{n:"Rita Ora",g:"Music",p:"Atelier des Fleurs Magnolia Alba",h:"Chloé",w:"Harper's Bazaar video",s:"https://www.harpersbazaar.com.sg/beauty/perfumes-a-listers-actually-wear"},
+{n:"Awkwafina",g:"Screen",p:"Santal 33",h:"Le Labo",w:"Into The Gloss, 2017",s:"https://intothegloss.com/2017/04/awkwafina-beauty/"},
+{n:"Cynthia Erivo",g:"Screen",p:"Lys 41 layered with Witchy Woo",h:"Le Labo and Vyrao",w:"USA Today interview, 2025",s:"https://www.aol.com/articles/cynthia-erivo-had-witchy-way-160424558.html"},
+{n:"Julianne Moore",g:"Screen",p:"Original Musk",h:"Kiehl's",w:"Marie Claire interview, 2023",s:"https://www.marieclaire.com/beauty/julianne-moore-beauty-health-wellness-secrets/"},
+{n:"Priyanka Chopra",g:"Screen",p:"La Panthère",h:"Cartier",w:"Who What Wear interview, 2023",s:"https://whowhatwear.com/priyanka-chopra-beauty-secrets"},
+{n:"Sienna Miller",g:"Screen",p:"Thé Noir 29",h:"Le Labo",w:"Harper's Bazaar \"Inside My Beauty Bag\", 2025",s:"https://www.womanandhome.com/beauty/sienna-miller-le-labo-perfume/"},
+{n:"Helen Mirren",g:"Screen",p:"Blackberry & Bay Cologne",h:"Jo Malone London",w:"Harper's Bazaar beauty bag video, 2025",s:"https://womanandhome.com/beauty/beauty-news/helen-mirren-favorite-perfume"},
+{n:"Gillian Anderson",g:"Screen",p:"Orphéon solid perfume",h:"Diptyque",w:"Harper's Bazaar beauty bag video, 2025",s:"https://womanandhome.com/beauty/gillian-anderson-diptyque-perfume"},
+{n:"Kate Winslet",g:"Screen",p:"L'Eau d'Issey",h:"Issey Miyake",w:"Vogue UK interview, 2021",s:"https://www.womanandhome.com/beauty/kate-winslet-perfume/"},
+{n:"Emma Stone",g:"Screen",p:"A La Nuit",h:"Serge Lutens",w:"ET Online, 2013 (she had just bought it)",s:"https://www.etonline.com/node/36913"},
+{n:"Kristen Bell",g:"Screen",p:"White Musk",h:"Jovan",w:"Marie Claire, 2010 (worn since she was 16)",s:"https://marieclaire.com/celebrity/a4259/kristen-bell-interview"},
+{n:"Lady Gaga",g:"Music",p:"Womanity",h:"Mugler",w:"The Graham Norton Show, 2011",s:"https://www.escentual.com/blog/2011/05/19/lady-gaga-reveals-her-favourite-fragrance-and-theres-no-blood-note-in-sight/"},
+{n:"Scarlett Johansson",g:"Screen",p:"Terre d'Hermès",h:"Hermès",w:"Who What Wear interview",s:"https://hollywoodlife.com/shop/scarlett-johanssons-signature-scent-on-sale-feminine-perfume-5259521"},
+{n:"Jennifer Aniston",g:"Screen",p:"Anaïs Anaïs",h:"Cacharel",w:"E! interview, 2015 (her teen favourite)",s:"https://www.womanandhome.com/beauty/jennifer-aniston-perfume/"},
+{n:"Lenny Kravitz",g:"Music",p:"Polo",h:"Ralph Lauren",w:"The Gentleman's Journal, 2025 (his first cologne)",s:"https://www.thegentlemansjournal.com/article/lenny-kravitz-interview-2025/"},
+{n:"Nicole Kidman",g:"Screen",p:"Dave",h:"Henry Rose",w:"Her own Instagram Story, Met Gala 2025",s:"https://www.purewow.com/beauty/nicole-kidman-henry-rose-perfume"}
 ];
