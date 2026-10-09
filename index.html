@@ -38,7 +38,7 @@
 @media(max-width:920px){.mx-grid{grid-template-columns:1fr;gap:22px}.mx-field,.mx-flask,.mx-res{grid-column:1;grid-row:auto}}
 .mx-field{position:relative;display:block}
 .mx-grp{margin-bottom:12px}
-.mx-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:8px}
+.mx-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:12px;padding-bottom:4px}
 .mx-grp h3{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:2px 0 0}
 .mx-bub{text-shadow:0 1px 3px rgba(0,0,0,.4);font:700 13px var(--body);border:0;border-radius:100px;padding:9px 15px;color:var(--t,#fff);cursor:pointer;animation:mxdrift 5s ease-in-out infinite;animation-delay:var(--d);box-shadow:0 10px 22px -10px var(--c);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.55),var(--c) 58%);transition:transform .2s,opacity .2s}
 .mx-bub[style*="#1B1405"]{text-shadow:none}
@@ -47,7 +47,7 @@
 .mx-bub:focus-visible,.mx-clear:focus-visible,.mx-shuf:focus-visible,#mixer a:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
 @keyframes mxdrift{50%{transform:translateY(-9px)}}
 @media(prefers-reduced-motion:reduce){.mx-bub{animation:none}.mr{animation:none!important}}
-@media(prefers-reduced-motion:reduce){.mx-flask{width:100%;max-width:300px;margin-inline:auto;text-align:center;display:flex;flex-direction:column;align-items:center}
+.mx-flask{width:100%;max-width:300px;margin-inline:auto;text-align:center;display:flex;flex-direction:column;align-items:center}
 .mx-flask svg{width:120px;height:auto;overflow:visible}
 .mx-cnt{font:700 13px var(--body);margin-top:8px;color:var(--ink2);min-height:20px}
 .mx-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
