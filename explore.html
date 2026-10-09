@@ -55,6 +55,10 @@
 </script>
 <style>
   /* Tidy dropdowns: same neat arrow on every filter, and the house list is not stretched by its longest name */
+  .viewpills{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px}
+  .viewpills a{font:600 13px var(--body);padding:9px 16px;border-radius:100px;background:#fff;border:1.5px solid var(--border);color:var(--ink);text-decoration:none}
+  .viewpills a:hover{border-color:var(--ink)}
+  .viewpills a.on{background:#141414;border-color:#141414;color:#fff}
   .filterbar select.chip-select{-webkit-appearance:none;appearance:none;padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231a1a1a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;background-size:12px 8px}
   .filterbar select#house{width:230px;max-width:100%;text-overflow:ellipsis}
 </style>
@@ -67,8 +71,9 @@
   <div class="hero" style="padding:50px 0 30px">
     <div class="rule"></div>
     <div class="k" id="stat-count"></div>
-    <h1 style="font-size:52px">Explore every scent</h1>
-    <div class="sub">Search by name, house, note or accord. Filter down to exactly what you're after. Or <a href="notes.html" style="color:var(--rust);font-weight:600;text-decoration:underline">browse by note →</a></div>
+    <h1 style="font-size:52px" id="pg-h1">Explore every scent</h1>
+    <div class="sub" id="pg-sub">Search by name, house, note or accord. Filter down to exactly what you're after. Or <a href="notes.html" style="color:var(--rust);font-weight:600;text-decoration:underline">browse by note →</a></div>
+    <div class="viewpills" id="viewpills"><a href="explore.html" data-v="">Every scent</a><a href="explore.html?view=new" data-v="new">New releases</a><a href="explore.html?view=trending" data-v="trending">Trending</a><a href="explore.html?view=value" data-v="value">Best value</a></div>
   </div>
 
   <div class="filterbar">
@@ -99,7 +104,12 @@
 <script src="catalog-lib.js?v=202610090030"></script>
 <script>
 (function () {
-  var PAGE = 48, rows = [], filtered = [], shown = 0;
+  var PAGE = 48, rows = [], filtered = [], shown = 0, base = [], view = '';
+  var VIEWS = {
+    new: { h1: 'New releases', k: 'Just dropped', sub: 'Perfumes released in 2025 and 2026, newest first. Narrow them down by family, house or gender.', title: 'New releases', unit: ' new release' },
+    trending: { h1: 'Trending now', k: 'Hot right now', sub: 'A fresh mix every day: well-known perfumes that many people look for, plus popular affordable alternatives. We do not have live sales data, so this is a daily pick, not a sales ranking.', title: 'Trending perfumes', unit: ' fragrance' },
+    value: { h1: 'Best value', k: 'Big scent, small price', sub: 'Perfumes from affordable houses such as Lattafa, Armaf and Rasasi. Many are made to smell like famous, expensive scents. Similar, not identical.', title: 'Best value perfumes', unit: ' fragrance' }
+  };
   function $(id) { return document.getElementById(id); }
   function param(n) { return new URLSearchParams(location.search).get(n) || ''; }
   function norm(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); }
@@ -122,7 +132,7 @@
   function render() {
     var q = $('q').value.trim().toLowerCase(), fam = $('family').value, house = $('house').value, g = $('gender').value,
         tier = $('tier').value, sort = $('sort').value, tokens = q ? q.split(/\s+/) : [];
-    filtered = rows.filter(function (r) {
+    filtered = base.filter(function (r) {
       if (house && r.house !== house) return false;
       if (g !== '' && String(r.gender) !== g) return false;
       if (tier && !r.dupe) return false;
@@ -132,14 +142,15 @@
     });
     if (sort === 'az') filtered.sort(function (a, b) { return a.title.localeCompare(b.title); });
     else if (sort === 'new') filtered.sort(function (a, b) { return (b.year - a.year) || a.title.localeCompare(b.title); });
+    else if (sort === 'mix') filtered.sort(function (a, b) { return a.mixPos - b.mixPos; });
     else filtered.sort(function (a, b) { return (b.sizes - a.sizes) || a.title.localeCompare(b.title); });
     shown = 0; $('grid').innerHTML = '';
-    $('count').textContent = filtered.length.toLocaleString('en-US') + (filtered.length === 1 ? ' fragrance' : ' fragrances');
+    $('count').textContent = filtered.length.toLocaleString('en-US') + (VIEWS[view] ? VIEWS[view].unit + (filtered.length === 1 ? '' : 's') : (filtered.length === 1 ? ' fragrance' : ' fragrances'));
     if (!filtered.length) $('grid').innerHTML = '<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">No fragrances match those filters yet. Try widening your search.</div>';
     more();
     var u = new URLSearchParams();
     if (q) u.set('q', q); if (fam) u.set('family', fam); if (house) u.set('house', house); if (g !== '') u.set('gender', g);
-    if (tier) u.set('tier', tier); if (sort !== 'popular') u.set('sort', sort);
+    if (tier) u.set('tier', tier); if (view) u.set('view', view); if (sort !== (view === 'new' ? 'new' : view === 'trending' ? 'mix' : 'popular')) u.set('sort', sort);
     history.replaceState(null, '', u.toString() ? '?' + u.toString() : location.pathname);
   }
   function more() {
@@ -154,15 +165,40 @@
     var houses = {}; rows.forEach(function (r) { houses[r.house] = 1; });
     var names = Object.keys(houses).sort(function (a, b) { return a.localeCompare(b); });
     $('house').innerHTML = '<option value="">All houses</option>' + names.map(function (h) { return '<option value="' + PFC.esc(h) + '">' + PFC.esc(h) + '</option>'; }).join('');
-    $('stat-count').textContent = (Math.floor(rows.length / 1000) * 1000).toLocaleString('en-US') + '+ fragrances from ' + names.length.toLocaleString('en-US') + ' houses';
+    var statTxt = (Math.floor(rows.length / 1000) * 1000).toLocaleString('en-US') + '+ fragrances from ' + names.length.toLocaleString('en-US') + ' houses';
+    $('stat-count').textContent = statTxt;
+
+    // Special views from the Explore menu: New releases, Trending now, Best value
+    var vp = param('view'); view = VIEWS[vp] ? vp : '';
+    base = rows;
+    if (view === 'new') base = rows.filter(function (r) { return r.year >= 2025; });
+    else if (view === 'value') base = rows.filter(function (r) { return r.dupe; });
+    else if (view === 'trending') {
+      var okr = rows.filter(function (r) { return r.ok; });
+      var fam0 = okr.filter(function (r) { return !r.dupe && r.sizes >= 5; });
+      var bud0 = okr.filter(function (r) { return r.dupe && r.sizes >= 2 && r.notes.length >= 4; });
+      var pk = PFC.draw(fam0, 36, 'ex-trend-famous'); var seen = {}; pk.forEach(function (r) { seen[r.slug] = 1; });
+      pk = pk.concat(PFC.draw(bud0, 12, 'ex-trend-dupe', seen));
+      pk = PFC.draw(pk, pk.length, 'ex-trend-order');
+      pk.forEach(function (r, i) { r.mixPos = i; });
+      base = pk;
+      var so = document.createElement('option'); so.value = 'mix'; so.textContent = "Sort: Today's mix"; $('sort').insertBefore(so, $('sort').firstChild);
+    }
+    if (view) {
+      var V = VIEWS[view];
+      $('pg-h1').textContent = V.h1; $('pg-sub').textContent = V.sub; $('stat-count').textContent = V.k;
+      document.title = V.title + ' \u2014 ParfAI';
+    }
+    [].forEach.call(document.querySelectorAll('#viewpills a'), function (a) { a.classList.toggle('on', a.getAttribute('data-v') === view); });
 
     // Pre-fill from the web address (older links pass ?sort=, ?tier=, ?house=, ?family=, ?gender=, ?q=)
     $('q').value = param('q');
     var f = param('family'); if (f && FAMILY[f]) $('family').value = f;
     var hp = norm(param('house')); if (hp) { names.forEach(function (n) { if (norm(n) === hp) $('house').value = n; }); }
     var gp = param('gender'); if (gp) { var gi = { men: '0', women: '1', unisex: '2', '0': '0', '1': '1', '2': '2' }[gp.toLowerCase()]; if (gi) $('gender').value = gi; }
-    if (param('tier') === 'Affordable') $('tier').value = 'Affordable';
-    var sp = param('sort'); $('sort').value = (sp === 'new' || sp === 'az') ? sp : 'popular';
+    if (param('tier') === 'Affordable' || view === 'value') $('tier').value = 'Affordable';
+    var sp = param('sort'); var dsort = view === 'new' ? 'new' : view === 'trending' ? 'mix' : 'popular';
+    $('sort').value = (sp === 'new' || sp === 'az' || sp === 'popular' || (sp === 'mix' && view === 'trending')) ? sp : dsort;
 
     var t; ['q', 'family', 'house', 'gender', 'tier', 'sort'].forEach(function (id) {
       $(id).addEventListener('input', function () { clearTimeout(t); t = setTimeout(render, id === 'q' ? 180 : 0); });
