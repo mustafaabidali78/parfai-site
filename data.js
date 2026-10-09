@@ -1596,6 +1596,32 @@ function bindMobileNav(navSlot){
   });
 }
 
+// Back and back-to-top buttons: appear after scrolling on every page except the home page.
+function startBackButtons(){
+  var path=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  if(path===''||path==='index.html'||path==='index-classic.html') return;
+  var fall={'perfume.html':'explore.html','house.html':'houses.html','note.html':'notes.html','discussion.html':'community.html'};
+  var home=fall[path]||(path.indexOf('blog-')===0?'blog.html':'index.html');
+  var st=document.createElement('style');
+  st.textContent='.bk-back,.bk-top{position:fixed;bottom:18px;z-index:60;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .25s,transform .25s,visibility .25s}'+
+    '.bk-back{left:16px;background:#141414;color:#fff;border:0;font:700 13px/1 Inter,Helvetica,Arial,sans-serif;padding:13px 18px;border-radius:100px;box-shadow:0 8px 24px rgba(0,0,0,.25)}'+
+    '.bk-top{right:16px;width:46px;height:46px;border-radius:50%;background:#fff;color:#141414;border:1px solid rgba(20,20,20,.12);font-size:20px;box-shadow:0 8px 24px rgba(0,0,0,.18)}'+
+    '.bk-on .bk-back,.bk-on .bk-top{opacity:1;visibility:visible;transform:none}'+
+    '.bk-back:focus-visible,.bk-top:focus-visible{outline:2px solid #8B7CFF;outline-offset:3px}'+
+    '@media(prefers-reduced-motion:reduce){.bk-back,.bk-top{transition:none}}';
+  document.head.appendChild(st);
+  var b=document.createElement('button');b.type='button';b.className='bk-back';b.setAttribute('aria-label','Go back');b.innerHTML='&larr; Back';
+  var t=document.createElement('button');t.type='button';t.className='bk-top';t.setAttribute('aria-label','Back to top');t.innerHTML='&uarr;';
+  b.addEventListener('click',function(){
+    var same=false;try{same=document.referrer&&new URL(document.referrer).origin===location.origin;}catch(e){}
+    if(same&&history.length>1) history.back(); else location.href=home;
+  });
+  t.addEventListener('click',function(){var r=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;window.scrollTo({top:0,behavior:r?'auto':'smooth'});});
+  document.body.appendChild(b);document.body.appendChild(t);
+  function sc(){document.body.classList.toggle('bk-on',window.scrollY>400);}
+  window.addEventListener('scroll',sc,{passive:true});sc();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const navSlot = document.getElementById('nav-slot');
   const footSlot = document.getElementById('footer-slot');
@@ -1606,4 +1632,5 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (footSlot) footSlot.innerHTML = renderFooter();
   startSigSystem();
+  startBackButtons();
 });
