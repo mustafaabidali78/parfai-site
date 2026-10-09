@@ -90,10 +90,10 @@
 
 
   // ---------- Bottle pictures ----------
-  // Until FragranceNet confirms in writing that we may host copies, every perfume shows a drawn bottle
-  // coloured from its own notes. When photos are allowed: set PHOTOS = true and put the files in
-  // catalog-img/<product id>.jpg. A perfume without a photo keeps its drawing.
-  var PHOTOS = false;
+  // Every perfume has a drawn bottle coloured from its own notes. Where a FragranceNet picture exists
+  // (catalog-img/<product id>.jpg, saved from their Rakuten feed by the "Fetch perfume pictures" job)
+  // it is shown on top. A perfume without a picture keeps its drawing. To switch pictures off: PHOTOS = false.
+  var PHOTOS = true;
   var NC = {lemon:'#F4D03F',pineapple:'#F2B84B',bergamot:'#B6D36B','black currant':'#5B3A6B',apple:'#8FCB6A',birch:'#CDBB9E',cedar:'#A67B5B','cacao pod':'#6B4130',iris:'#A99BE8',patchouli:'#6F7C4C',sandalwood:'#D2A679',jasmine:'#F4EDB5',mint:'#7ED8B5','green sap':'#8CC152',kumquat:'#FFA726',caramel:'#D9904A','tonka bean':'#B57C4D',vetiver:'#7A8C5A','clary sage':'#A7B89A',strawberry:'#F0627A','violet leaf':'#6FAF8C','blood grapefruit':'#F0705A',violet:'#9B7FD4',gardenia:'#F3E7DA',lavender:'#B9A2E6','bitter almond':'#E8C9A0',vanilla:'#F3DFA2',amber:'#E0A040',amberwood:'#C47F3B',ambergris:'#B7B1A6',saffron:'#E0742B','fir resin':'#4F7A5A',rose:'#EE7C9B',musk:'#D9CFC4',oud:'#6B4A3A',orange:'#FFA64D',pepper:'#C94B4B',cardamom:'#C9B27A',sandal:'#D2A679',coconut:'#F2EDE4'};
   function noteCol(n) { if (NC[n]) return NC[n]; var h = (n.length * 47 + n.charCodeAt(0) * 13) % 360; return 'hsl(' + h + ' 55% 70%)'; }
   function noteTxt(c) { var m = c.match(/^#(..)(..)(..)$/); if (!m) return '#141414'; var l = (.299 * parseInt(m[1], 16) + .587 * parseInt(m[2], 16) + .114 * parseInt(m[3], 16)) / 255; return l > .58 ? '#141414' : '#fff'; }

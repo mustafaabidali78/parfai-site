@@ -1,8 +1,7 @@
 /* ---------- ParfAI full catalogue ----------
    Reads catalog/fragrancenet.json (built by scripts/build-catalog.py from the Rakuten feed).
-   No prices are stored or shown. Bottle photos stay hidden until FragranceNet
-   confirms in writing that we may host copies: then set PHOTOS = true in catalog-lib.js and
-   put the files in catalog-img/<product id>.jpg.
+   No prices are stored or shown. Bottle pictures come from FragranceNet's Rakuten feed
+   and are saved as catalog-img/<product id>.jpg. The photo switch (PHOTOS) is in catalog-lib.js.
 */
 (function () {
   var PAGE = 48;
