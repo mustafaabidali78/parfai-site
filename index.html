@@ -33,28 +33,46 @@
 #mixer h2{font-family:var(--disp);font-weight:500;font-size:48px;line-height:1.02;letter-spacing:-.02em;margin:0 0 10px;color:var(--ink)}
 #mixer h2 em{font-style:italic}
 #mixer .mx-sub{color:var(--ink2);max-width:50ch;font-size:16px;line-height:1.6}
-.mx-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px 38px;align-items:start}
-.mx-field{grid-column:1;grid-row:1}
-.mx-flask{grid-column:2;grid-row:1}
-.mx-res{grid-column:1/3;grid-row:2;margin-top:6px}
-@media(max-width:920px){.mx-grid{grid-template-columns:1fr;gap:22px}.mx-field,.mx-flask,.mx-res{grid-column:1;grid-row:auto}}
-.mx-field{position:relative;display:block}
-.mx-grp{margin-bottom:12px}
-.mx-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:12px;padding-bottom:4px}
-.mx-grp h3{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:2px 0 0}
-.mx-bub{text-shadow:0 1px 3px rgba(0,0,0,.4);font:700 13px var(--body);border:0;border-radius:100px;padding:9px 15px;color:var(--t,#fff);cursor:pointer;animation:mxdrift 5s ease-in-out infinite;animation-delay:var(--d);box-shadow:0 10px 22px -10px var(--c);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.55),var(--c) 58%);transition:transform .2s,opacity .2s}
-.mx-bub[style*="#1B1405"]{text-shadow:none}
-.mx-bub:hover{transform:scale(1.1)}
-.mx-bub[aria-pressed="true"]{opacity:.35;transform:scale(.92)}
-.mx-bub:focus-visible,.mx-clear:focus-visible,.mx-shuf:focus-visible,#mixer a:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
-@keyframes mxdrift{50%{transform:translateY(-9px)}}
-@media(prefers-reduced-motion:reduce){.mx-bub{animation:none}.mr{animation:none!important}}
-.mx-flask{width:100%;max-width:300px;margin-inline:auto;text-align:center;display:flex;flex-direction:column;align-items:center}
-.mx-flask svg{width:120px;height:auto;overflow:visible}
-.mx-cnt{font:700 13px var(--body);margin-top:8px;color:var(--ink2);min-height:20px}
-.mx-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+@media(prefers-reduced-motion:reduce){.mr{animation:none!important}}
 .mx-clear,.mx-shuf{font:700 12px var(--body);background:var(--panel);border:1.5px solid var(--border);color:var(--ink);border-radius:100px;padding:7px 14px;cursor:pointer}
 .mx-clear:hover,.mx-shuf:hover{border-color:var(--ink)}
+.mx-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px 44px;align-items:start}
+.mx-field{grid-column:1;grid-row:1;min-width:0}
+.mx-side{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+.mx-res{grid-column:1/3;grid-row:2;margin-top:10px;min-width:0}
+@media(max-width:920px){.mx-grid{grid-template-columns:minmax(0,1fr);gap:18px}.mx-side{grid-column:1;grid-row:1}.mx-field{grid-column:1;grid-row:2}.mx-res{grid-column:1;grid-row:3}}
+.mx-flask{display:grid;grid-template-columns:64px minmax(0,1fr);gap:0 14px;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:12px 16px}
+.mx-flask svg{width:64px;height:auto;overflow:visible}
+.mx-flt{font:700 14px var(--body);margin-bottom:7px;color:var(--ink)}
+.mx-flt small{font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
+.mx-cnt{display:flex;gap:6px;flex-wrap:wrap;min-height:26px;align-items:center;font:500 13px var(--body);color:var(--muted)}
+.mx-sel{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;border:0;border-radius:100px;padding:6px 8px 6px 12px;font:600 12.5px var(--body);cursor:pointer}
+.mx-sel u{text-decoration:none;opacity:.6;font-size:14px;line-height:1;padding-right:2px}
+.mx-sel:hover u{opacity:1}
+.mx-btns{margin-top:8px}
+.mx-clear{font:700 12px var(--body);background:transparent;border:0;color:var(--muted);padding:2px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.mx-clear:hover{color:var(--ink)}
+.mx-clear:focus-visible,.mx-sel:focus-visible,.mx-chip:focus-visible,.mx-tab:focus-visible,#mixer a:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
+.mx-ai{border-radius:18px;padding:1.5px;background:linear-gradient(110deg,#FF5C93,#FF9A3C)}
+.mx-ai>div{background:#fff;border-radius:16.5px;padding:13px 16px;font-size:14px;line-height:1.55;color:var(--ink2)}
+.mx-ai small{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rust);margin-bottom:5px}
+.mx-ai strong{color:var(--ink)}
+.mx-ai svg{width:14px;height:14px;flex:0 0 14px}
+.mx-tabs{display:flex;gap:7px;margin-bottom:14px}
+.mx-tab{flex:1 1 0;min-width:0;border:1px solid var(--border);background:#fff;border-radius:14px;padding:10px 2px 9px;font:600 13px var(--body);color:var(--ink2);text-align:center;cursor:pointer;position:relative;transition:border-color .15s}
+.mx-tab em{display:block;font:500 11px var(--body);font-style:normal;color:var(--muted);margin-top:2px}
+.mx-tab:hover{border-color:var(--ink)}
+.mx-tab[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.mx-tab[aria-selected="true"] em{color:rgba(255,255,255,.65)}
+.mx-tab b{position:absolute;top:-6px;right:-3px;min-width:18px;height:18px;border-radius:9px;background:linear-gradient(110deg,#FF5C93,#FF9A3C);color:#fff;font:700 11px/18px var(--body);padding:0 5px;box-sizing:border-box}
+.mx-notes,.mx-sugs{display:flex;flex-wrap:wrap;gap:9px}
+.mx-chip{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--border);background:#fff;border-radius:100px;padding:10px 16px 10px 12px;font:600 14px var(--body);color:var(--ink);cursor:pointer;transition:border-color .15s,transform .15s}
+.mx-chip i{width:13px;height:13px;border-radius:50%;background:var(--c);flex:0 0 13px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.mx-chip:hover{border-color:var(--ink)}
+.mx-chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.mx-chip.sug{border:1.5px dashed #FF8A5B;background:#FFF6F0}
+.mx-chip.sug:hover{background:#FFEBDD}
+.mx-hint{font-size:12.5px;color:var(--muted);margin:18px 0 9px;min-height:16px}
 .mx-res h2{font:500 38px var(--disp);letter-spacing:-.02em;line-height:1.05;margin:0 0 6px;color:var(--ink)}
 .mx-count{font-size:12.5px;color:var(--muted);margin:0 0 12px;min-height:18px}
 .mx-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -105,21 +123,20 @@
 @media(prefers-reduced-motion:reduce){.lyh-card{transition:none}.lyh-card:hover{transform:none}}
 @media(max-width:760px){
 .mx-grid{grid-template-columns:minmax(0,1fr)}
-.mx-field,.mx-grp,.mx-res,.mx-flask{min-width:0}
 #mixer .mx-top{margin-bottom:16px}
 .hero{padding:26px 0 30px}
 #mixer h2{font-size:36px}
 #mixer .mx-sub{font-size:14.5px;line-height:1.5}
 .mx-grid{gap:14px}
-.mx-flask{order:-1;max-width:none;width:100%;margin:0;display:grid;grid-template-columns:64px 1fr;column-gap:14px;row-gap:2px;align-items:center;text-align:left;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:10px 14px}
-.mx-flask svg{grid-row:1/3;width:64px}
-.mx-cnt{margin-top:0;font-size:13px;min-height:0}
-.mx-btns{justify-content:flex-start;margin-top:4px}
+.mx-flask{padding:10px 14px}
+.mx-flask svg{width:54px}
+.mx-flask{grid-template-columns:54px minmax(0,1fr)}
+.mx-tabs{gap:5px}
+.mx-tab{font-size:12px;border-radius:12px;padding:9px 0 8px}
+.mx-tab em{font-size:10.5px}
+.mx-chip{font-size:13.5px;padding:9px 14px 9px 11px}
+.mx-notes,.mx-sugs{gap:8px}
 .mx-clear{padding:5px 12px;font-size:11.5px}
-.mx-grp{margin-bottom:6px}
-.mx-row{flex-wrap:nowrap;overflow-x:auto;gap:8px;margin:6px -16px 0;padding:6px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
-.mx-row::-webkit-scrollbar{display:none}
-.mx-bub{flex:0 0 auto;font-size:12.5px;padding:8px 14px;animation:none}
 .mx-res h2{font-size:30px}
 .mr{padding:10px 12px}
 .mr b{font-size:16px}
@@ -266,15 +283,21 @@
       <div>
         <div class="pk-k"><i></i><span>Tap. Pour. Find your match.</span></div>
         <h2 id="mx-h">Mix your own <em>scent</em></h2>
-        <p class="mx-sub">Tap floating notes to pour them into the flask. ParfAI finds real perfumes that contain them, from a catalogue of <span id="mx-total">12,000+</span> fragrances.</p>
+        <p class="mx-sub">Pick up to four notes from five smell families. ParfAI finds real perfumes that contain them, from a catalogue of <span id="mx-total">12,000+</span> fragrances.</p>
       </div>
     </div>
     <div class="mx-grid">
-      <div class="mx-field" id="mx-field" role="group" aria-label="Fragrance notes"></div>
-      <div class="mx-flask">
-        <svg viewBox="0 0 170 230" id="mx-svg" aria-hidden="true"></svg>
-        <div class="mx-cnt" id="mx-cnt"></div>
-        <div class="mx-btns"><button class="mx-clear" type="button" id="mx-clear">Empty the flask</button></div>
+      <div class="mx-field" id="mx-field"></div>
+      <div class="mx-side">
+        <div class="mx-flask">
+          <svg viewBox="0 0 170 230" id="mx-svg" aria-hidden="true"></svg>
+          <div>
+            <div class="mx-flt" id="mx-flt">Your flask</div>
+            <div class="mx-cnt" id="mx-cnt"></div>
+            <div class="mx-btns"><button class="mx-clear" type="button" id="mx-clear">Empty the flask</button></div>
+          </div>
+        </div>
+        <div class="mx-ai" id="mx-ai" aria-live="polite"></div>
       </div>
       <div class="mx-res">
         <h2>Your mix, in real bottles</h2>
@@ -522,14 +545,53 @@
     }
     function esc(s) { return PFC.esc(s); }
 
+    var TAB = ['Sweet', 'Woods', 'Flowers', 'Fresh', 'Spicy'], fam = 0;
+    var FSIDE = ['sweet', 'woody', 'floral', 'fresh', 'spicy'];
+    var FDESC = ['sweet and creamy', 'woody and smoky', 'floral', 'fresh and fruity', 'warm and spicy'];
+    var FMOOD = [['cosy', 'lovely on evenings and in cooler weather'], ['deep, grounded', 'great for evenings and cooler weather'], ['soft, romantic', 'easy from day into night'], ['bright, clean', 'made for hot days and the office'], ['warm, glowing', 'good for evenings and cooler weather']];
+    function famOf(n) { for (var i = 0; i < FAM.length; i++) if (FAM[i][1].indexOf(n) >= 0) return i; return 0; }
+    function chipHTML(n, cls) {
+      return '<button class="mx-chip' + (cls ? ' ' + cls : '') + '" type="button" aria-pressed="' + (mix.indexOf(n) >= 0) + '" data-n="' + esc(n) + '"><i style="--c:' + colorOf(n) + '"></i>' + esc(PFC.cap(n)) + '</button>';
+    }
+    function suggest() {
+      if (!rows || !mix.length || mix.length >= 4) return [];
+      var best = 0, hits = [];
+      rows.forEach(function (r) {
+        var h = 0; mix.forEach(function (m) { if (r.notes.indexOf(m) >= 0) h++; });
+        if (!h) return;
+        if (h > best) { best = h; hits = []; }
+        if (h === best) hits.push(r);
+      });
+      var all = {}; FAM.forEach(function (g) { g[1].forEach(function (n) { all[n] = 1; }); });
+      var tally = {};
+      hits.forEach(function (r) { r.notes.forEach(function (n) { if (all[n] && mix.indexOf(n) < 0) tally[n] = (tally[n] || 0) + 1; }); });
+      return Object.keys(tally).sort(function (x, y) { return tally[y] - tally[x]; }).slice(0, 3);
+    }
     function drawField() {
-      var k = 0;
-      $('mx-field').innerHTML = FAM.map(function (g) {
-        return '<div class="mx-grp"><h3>' + esc(g[0]) + '</h3><div class="mx-row">' + g[1].map(function (n) {
-          var c = colorOf(n);
-          return '<button class="mx-bub" type="button" aria-pressed="' + (mix.indexOf(n) >= 0) + '" data-n="' + esc(n) + '" style="--c:' + c + ';--t:' + textOn(c) + ';--d:' + (-((k++) % 12) * 0.45).toFixed(2) + 's">' + esc(PFC.cap(n)) + '</button>';
-        }).join('') + '</div></div>';
-      }).join('');
+      var tabs = '<div class="mx-tabs" role="tablist" aria-label="Smell families">' + FAM.map(function (g, i) {
+        var picked = g[1].filter(function (n) { return mix.indexOf(n) >= 0; }).length;
+        return '<button class="mx-tab" type="button" role="tab" id="mx-tab' + i + '" aria-selected="' + (i === fam) + '" aria-controls="mx-panel" data-tab="' + i + '">' + TAB[i] + '<em>' + g[1].length + ' notes</em>' + (picked ? '<b aria-label="' + picked + ' picked">' + picked + '</b>' : '') + '</button>';
+      }).join('') + '</div>';
+      var notes = '<div class="mx-notes" id="mx-panel" role="tabpanel" aria-labelledby="mx-tab' + fam + '">' + FAM[fam][1].map(function (n) { return chipHTML(n); }).join('') + '</div>';
+      var sg = suggest(), sug = '';
+      if (mix.length >= 4) sug = '<div class="mx-hint">Your flask is full. Tap a note in the flask to take it out.</div>';
+      else if (sg.length) sug = '<div class="mx-hint">ParfAI suggests adding</div><div class="mx-sugs">' + sg.map(function (n) { return chipHTML(n, 'sug'); }).join('') + '</div>';
+      else sug = '<div class="mx-hint">' + (mix.length ? '' : 'Start with any note. ParfAI will suggest what goes well with it.') + '</div>';
+      $('mx-field').innerHTML = tabs + notes + sug;
+    }
+
+    function drawAI() {
+      var spark = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.3L21 10l-6.8 1.7L12 18l-2.2-6.3L3 10l6.8-1.7z" fill="#FF8A5B"/></svg>';
+      var body;
+      if (!mix.length) body = 'Tap a note and ParfAI will tell you what your mix smells like.';
+      else {
+        var cnt = [0, 0, 0, 0, 0]; mix.forEach(function (n) { cnt[famOf(n)]++; });
+        var ord = [0, 1, 2, 3, 4].filter(function (i) { return cnt[i]; }).sort(function (x, y) { return cnt[y] - cnt[x]; });
+        var top = ord[0], phrase = FDESC[top] + (ord.length > 1 ? ', with a ' + FSIDE[ord[1]] + ' side' : '');
+        phrase = phrase.charAt(0).toUpperCase() + phrase.slice(1);
+        body = mix.length === 1 ? phrase + ' on its own. Add one more note to see how they blend.' : phrase + '. A <strong>' + FMOOD[top][0] + '</strong> scent, ' + FMOOD[top][1] + '.';
+      }
+      $('mx-ai').innerHTML = '<div><small>' + spark + 'ParfAI reads your mix</small>' + body + '</div>';
     }
 
     function drawFlask() {
@@ -540,7 +602,9 @@
         '<g clip-path="url(#mxcp)"><rect x="0" y="' + y + '" width="170" height="230" fill="url(#mxlg)" style="transition:all .5s"/><ellipse cx="85" cy="' + y + '" rx="90" ry="5" fill="rgba(255,255,255,.4)"/></g>' +
         '<path d="' + shape + '" fill="rgba(255,255,255,.7)" stroke="#4A4A46" stroke-width="3"/>' +
         '<rect x="64" y="2" width="42" height="18" rx="4" fill="#F3D58D" stroke="rgba(0,0,0,.2)"/>';
-      $('mx-cnt').textContent = mix.length ? mix.map(PFC.cap).join(' + ') : 'Flask is empty';
+      $('mx-flt').innerHTML = 'Your flask <small>' + mix.length + ' of 4</small>';
+      $('mx-cnt').innerHTML = mix.length ? mix.map(function (n) { return '<button class="mx-sel" type="button" data-rm="' + esc(n) + '" aria-label="Remove ' + esc(PFC.cap(n)) + '">' + esc(PFC.cap(n)) + ' <u>×</u></button>'; }).join('') : 'Empty for now';
+      $('mx-clear').style.display = mix.length ? '' : 'none';
     }
 
     function matches() {
@@ -591,15 +655,26 @@
       }).join('');
     }
 
-    function redraw() { drawField(); drawFlask(); drawResults(); }
+    function redraw() {
+      var a = document.activeElement, key = null;
+      if (a && a.closest && a.closest('#mixer')) key = a.getAttribute('data-tab') ? '[data-tab="' + a.getAttribute('data-tab') + '"]' : a.getAttribute('data-n') ? '.mx-notes [data-n="' + a.getAttribute('data-n') + '"]' : null;
+      drawField(); drawFlask(); drawAI(); drawResults();
+      if (key) { var e = document.querySelector('#mixer ' + key); if (e) e.focus(); }
+    }
 
     $('mx-field').addEventListener('click', function (e) {
-      var b = e.target.closest('.mx-bub'); if (!b) return;
+      var t = e.target.closest('.mx-tab');
+      if (t) { fam = +t.getAttribute('data-tab'); redraw(); return; }
+      var b = e.target.closest('.mx-chip'); if (!b) return;
       var n = b.getAttribute('data-n');
       if (mix.indexOf(n) >= 0) mix = mix.filter(function (x) { return x !== n; });
       else if (mix.length < 4) mix.push(n);
       else mix = mix.slice(1).concat(n);
       redraw();
+    });
+    $('mx-cnt').addEventListener('click', function (e) {
+      var b = e.target.closest('.mx-sel'); if (!b) return;
+      var n = b.getAttribute('data-rm'); mix = mix.filter(function (x) { return x !== n; }); redraw();
     });
     $('mx-clear').addEventListener('click', function () { mix = []; redraw(); });
 
