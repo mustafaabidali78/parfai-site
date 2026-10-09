@@ -369,7 +369,7 @@ function renderWeatherResult(el, result){
     return;
   }
 
-  el.innerHTML = `
+  const normalHTML = `
     <div class="wpxlive">
       <div class="wpxnow">
         <div class="wpxloc">${result.label}</div>
@@ -396,6 +396,35 @@ function renderWeatherResult(el, result){
       <button class="wpxchange" type="button" data-action="manual">Not your location?</button>
     </div>
   `;
+
+  // Home page layout: one big bottle picture next to today's pick (no "also good" list)
+  const heroPhoto = top.pid ? `<img src="catalog-img/${top.pid}.jpg" alt="${wxEsc(top.name)} bottle" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">` : '';
+  const heroG = WEATHER_GENDER_GRAD[top.gender] || WEATHER_GENDER_GRAD[2];
+  const heroHTML = `
+    <div class="wxh">
+      <div class="wxh-l">
+        <span class="lp-badge live">&bull; Live</span>
+        <h3>Weather-Aware Pick of the Day</h3>
+        <div class="wpxloc">${result.label}</div>
+        <div class="wpxtemp">${icon} ${fmtTemp(result.tempC, unit)}</div>
+        <div class="wpxcond">${cond}</div>
+        <div class="wcpicklabel wxh-lab">Today's pick for you</div>
+        <a class="wpxname" href="catalog.html?id=${encodeURIComponent(top.slug)}">${wxEsc(top.name)}</a>
+        <div class="wcfam">${wxEsc(top.house)} · ${wxEsc(top.notes.slice(0, 3).map(wxCap).join(', '))}</div>
+        <div class="wcwhy">${wxEsc(top.why)}</div>
+        ${top.link ? `<a class="wpxbuy" href="${wxEsc(top.link)}" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>` : ''}
+        <div class="wpxcredit">
+          Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Price links are affiliate links.
+          <button class="wpxchange" type="button" data-action="precise">Use precise location</button>
+          <button class="wpxchange" type="button" data-action="manual">Not your location?</button>
+        </div>
+        <a class="lp-cta" href="weather-pick.html">How this works →</a>
+      </div>
+      <a class="wxh-r" href="catalog.html?id=${encodeURIComponent(top.slug)}" aria-label="${wxEsc(top.name)}">
+        <div class="wxh-tile" style="background:linear-gradient(150deg,${heroG[0]},${heroG[1]})"><div class="bottle"></div>${heroPhoto}</div>
+      </a>
+    </div>`;
+  el.innerHTML = el.dataset.hero === '1' ? heroHTML : normalHTML;
 
   const preciseBtn = el.querySelector('[data-action="precise"]');
   if (preciseBtn) preciseBtn.addEventListener('click', async () => {
