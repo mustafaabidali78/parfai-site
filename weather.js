@@ -424,7 +424,40 @@ function renderWeatherResult(el, result){
         <div class="wxh-tile" style="background:linear-gradient(150deg,${heroG[0]},${heroG[1]})"><div class="bottle"></div>${heroPhoto}</div>
       </a>
     </div>`;
-  el.innerHTML = el.dataset.hero === '1' ? heroHTML : normalHTML;
+  // Home page, compact layout: weather line on top, then three picks to choose from.
+  const TRIO_TAG = { hot: 'Best for the heat', mild: 'Best for today', rainy: 'Best for the rain', cold: 'Best for the cold', snowy: 'Best for the snow' };
+  const trioCard = (p, i) => {
+    const g = WEATHER_GENDER_GRAD[p.gender] || WEATHER_GENDER_GRAD[2];
+    const pic = p.pid ? `<img src="catalog-img/${p.pid}.jpg" alt="${wxEsc(p.name)} bottle" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">` : '';
+    const tag = i === 0 ? (TRIO_TAG[result.bucket] || 'Best for today') : 'Also good today';
+    const line = i === 0 ? p.why : p.notes.slice(0, 3).map(wxCap).join(', ') + '.';
+    return `<div class="wxt-card${i === 0 ? ' top' : ''}">
+      <a class="wxt-th" href="catalog.html?id=${encodeURIComponent(p.slug)}" aria-label="${wxEsc(p.name)}" style="background:linear-gradient(150deg,${g[0]},${g[1]})"><div class="bottle"></div>${pic}</a>
+      <div class="wxt-tx">
+        <div class="wxt-tag">${tag}</div>
+        <a class="wxt-nm" href="catalog.html?id=${encodeURIComponent(p.slug)}">${wxEsc(p.name)}</a>
+        <div class="wxt-hs">${wxEsc(p.house)}</div>
+        <p>${wxEsc(line)}</p>
+        ${p.link ? `<a class="wxt-buy" href="${wxEsc(p.link)}" target="_blank" rel="sponsored nofollow noopener">Check price ↗</a>` : ''}
+      </div>
+    </div>`;
+  };
+  const trioHTML = `
+    <div class="wxt">
+      <div class="wxt-head">
+        <span class="wxt-live">&bull; Live</span>
+        <span class="wxt-t">${icon} ${fmtTemp(result.tempC, unit)} in ${wxEsc(String(result.label).split(',')[0])}</span>
+        <span class="wxt-s">${cond}</span>
+        <span class="wxt-links">
+          <button class="wxt-link" type="button" data-action="manual">Not your location?</button>
+          <button class="wxt-link" type="button" data-action="precise">Use precise location</button>
+          <a class="wxt-link" href="weather-pick.html">How this works</a>
+        </span>
+      </div>
+      <div class="wxt-row">${result.picks.slice(0, 3).map(trioCard).join('')}</div>
+      <div class="wxt-credit">Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Price links are affiliate links.</div>
+    </div>`;
+  el.innerHTML = el.dataset.hero === '3' ? trioHTML : (el.dataset.hero === '1' ? heroHTML : normalHTML);
 
   const preciseBtn = el.querySelector('[data-action="precise"]');
   if (preciseBtn) preciseBtn.addEventListener('click', async () => {
