@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="ParfAI — Find your scent, not just a bottle">
 <meta name="twitter:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610091400">
+<link rel="stylesheet" href="parfai.css?v=202610091500">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -31,33 +31,38 @@
 #mixer h1{font-family:var(--disp);font-weight:500;font-size:clamp(42px,6vw,76px);line-height:1;letter-spacing:-.01em;margin:0 0 12px;color:var(--ink)}
 #mixer h1 em{background:linear-gradient(110deg,var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
 #mixer .mx-sub{color:var(--ink2);max-width:50ch;font-size:16px;line-height:1.6}
-.mx-grid{display:grid;grid-template-columns:minmax(0,1.15fr) 190px minmax(0,1.1fr);gap:26px;align-items:center}
-@media(max-width:920px){.mx-grid{grid-template-columns:1fr;gap:18px}}
-.mx-field{position:relative;min-height:300px;display:flex;flex-wrap:wrap;gap:11px;align-content:center;justify-content:center}
-@media(max-width:920px){.mx-field{min-height:0;padding:6px 0}}
-.mx-bub{font:700 14px var(--body);border:0;border-radius:100px;padding:11px 18px;color:var(--t,#fff);cursor:pointer;animation:mxdrift 5s ease-in-out infinite;animation-delay:var(--d);box-shadow:0 10px 22px -10px var(--c);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.55),var(--c) 58%);transition:transform .2s,opacity .2s}
+.mx-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px 38px;align-items:start}
+.mx-field{grid-column:1;grid-row:1}
+.mx-flask{grid-column:2;grid-row:1}
+.mx-res{grid-column:1/3;grid-row:2;margin-top:6px}
+@media(max-width:920px){.mx-grid{grid-template-columns:1fr;gap:22px}.mx-field,.mx-flask,.mx-res{grid-column:1;grid-row:auto}}
+.mx-field{position:relative;display:block}
+.mx-grp{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:12px}
+.mx-grp h3{flex:0 0 100%;font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:2px 0 0}
+.mx-bub{text-shadow:0 1px 3px rgba(0,0,0,.4);font:700 13px var(--body);border:0;border-radius:100px;padding:9px 15px;color:var(--t,#fff);cursor:pointer;animation:mxdrift 5s ease-in-out infinite;animation-delay:var(--d);box-shadow:0 10px 22px -10px var(--c);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.55),var(--c) 58%);transition:transform .2s,opacity .2s}
+.mx-bub[style*="#1B1405"]{text-shadow:none}
 .mx-bub:hover{transform:scale(1.1)}
 .mx-bub[aria-pressed="true"]{opacity:.35;transform:scale(.92)}
 .mx-bub:focus-visible,.mx-clear:focus-visible,.mx-shuf:focus-visible,#mixer a:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
 @keyframes mxdrift{50%{transform:translateY(-9px)}}
 @media(prefers-reduced-motion:reduce){.mx-bub{animation:none}.mr{animation:none!important}}
-.mx-go{display:grid;gap:12px;margin-top:20px}
+.mx-go{display:grid;gap:12px;order:-1;width:100%;margin:0 0 28px}
 .mx-go a{display:block;text-align:center;border-radius:100px;padding:15px 12px;font:800 14px var(--body);color:#fff;text-decoration:none;text-shadow:0 1px 2px rgba(0,0,0,.2);box-shadow:0 10px 20px -8px var(--g),inset 0 2px 5px rgba(255,255,255,.55),inset 0 -5px 10px rgba(0,0,0,.12);transition:transform .18s}
 .mx-go a:hover{transform:translateY(-3px) scale(1.03)}
 .mx-go a:focus-visible{outline:3px solid var(--rust);outline-offset:3px}
 .mx-go1{--g:rgba(255,77,157,.55);background:radial-gradient(circle at 28% 22%,#FFB3D4 0%,#FF4D9D 42%,#FF6A5C 100%)}
 .mx-go2{--g:rgba(0,184,212,.5);background:radial-gradient(circle at 28% 22%,#CFC7FF 0%,#8B7CFF 45%,#19C0DC 100%)}
 @media(prefers-reduced-motion:reduce){.mx-go a{transition:none}.mx-go a:hover{transform:none}}
-.mx-flask{width:170px;margin-inline:auto;text-align:center}
-.mx-flask svg{width:100%;height:auto;overflow:visible}
-@media(max-width:920px){.mx-flask{width:130px}.mx-go{width:min(260px,86vw);margin-left:50%;transform:translateX(-50%)}.mx-go a:hover{transform:translateY(-3px)}}
+.mx-flask{width:100%;max-width:300px;margin-inline:auto;text-align:center;display:flex;flex-direction:column;align-items:center}
+.mx-flask svg{width:120px;height:auto;overflow:visible}
 .mx-cnt{font:700 13px var(--body);margin-top:8px;color:var(--ink2);min-height:20px}
 .mx-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .mx-clear,.mx-shuf{font:700 12px var(--body);background:var(--panel);border:1.5px solid var(--border);color:var(--ink);border-radius:100px;padding:7px 14px;cursor:pointer}
 .mx-clear:hover,.mx-shuf:hover{border-color:var(--ink)}
 .mx-res h2{font:600 26px var(--disp);margin:0 0 4px;color:var(--ink)}
 .mx-count{font-size:12.5px;color:var(--muted);margin:0 0 12px;min-height:18px}
-.mx-list{display:grid;gap:10px}
+.mx-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.mx-list{grid-template-columns:1fr}}
 .mr{padding:12px 14px;border-radius:16px;background:var(--panel);border:1px solid var(--border);box-shadow:0 14px 26px -22px rgba(20,20,20,.35);animation:mxpop .35s both;position:relative}
 @keyframes mxpop{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
 .mr a.mn{color:var(--ink);text-decoration:none;display:block}
@@ -212,7 +217,7 @@
       <div class="mx-flask">
         <svg viewBox="0 0 170 230" id="mx-svg" aria-hidden="true"></svg>
         <div class="mx-cnt" id="mx-cnt"></div>
-        <div class="mx-btns"><button class="mx-clear" type="button" id="mx-clear">Empty the flask</button><button class="mx-shuf" type="button" id="mx-shuf">More notes</button></div>
+        <div class="mx-btns"><button class="mx-clear" type="button" id="mx-clear">Empty the flask</button></div>
         <div class="mx-go"><a class="mx-go1" href="dupe-finder.html">Try the Dupe Finder</a><a class="mx-go2" href="explore.html">Find my scent</a></div>
       </div>
       <div class="mx-res">
@@ -292,7 +297,7 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610090010"></script>
-<script src="weather.js?v=202610091400"></script>
+<script src="weather.js?v=202610091500"></script>
 <script src="catalog-lib.js?v=202610090030"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
@@ -439,23 +444,30 @@
       ['apple','#8FD14F'],['black pepper','#8C8C99'],['tuberose','#F4D6E8'],['neroli','#F7B94D'],['ginger','#D9A441'],['grapefruit','#FF7F6B'],
       ['raspberry','#D6336C'],['vetiver','#5E8C61'],['cedar','#8F6B4A'],['coconut','#E8DCC4'],['tobacco','#9C6B3D'],['pear','#B8D84A']
     ];
-    var PER = 14, page = 0, mix = ['vanilla', 'oud'], rows = null, failed = false;
+    var FAM = [
+      ['Sweet and creamy', ['vanilla','caramel','tonka bean','coconut','raspberry']],
+      ['Woods and smoke', ['oud','sandalwood','patchouli','vetiver','cedar','leather','tobacco','incense']],
+      ['Flowers', ['rose','jasmine','lavender','iris','violet','peony','tuberose','orange blossom','neroli']],
+      ['Fresh and fruity', ['bergamot','pineapple','lemon','mint','apple','peach','pear','grapefruit']],
+      ['Warm and spicy', ['saffron','cardamom','pink pepper','black pepper','cinnamon','ginger','amber','musk']]
+    ];
+    var mix = ['vanilla', 'oud'], rows = null, failed = false;
     var $ = function (id) { return document.getElementById(id); };
     function colorOf(n) { for (var i = 0; i < POOL.length; i++) if (POOL[i][0] === n) return POOL[i][1]; return '#C4BFEF'; }
     // dark text on light bubbles so every note stays readable
     function textOn(hex) {
       var r = parseInt(hex.substr(1, 2), 16), g = parseInt(hex.substr(3, 2), 16), b = parseInt(hex.substr(5, 2), 16);
-      return (0.299 * r + 0.587 * g + 0.114 * b) > 165 ? '#1B1405' : '#fff';
+      return (0.299 * r + 0.587 * g + 0.114 * b) > 140 ? '#1B1405' : '#fff';
     }
     function esc(s) { return PFC.esc(s); }
 
     function drawField() {
-      var shown = [];
-      for (var i = 0; i < PER; i++) shown.push(POOL[(page * PER + i) % POOL.length][0]);
-      mix.forEach(function (m) { if (shown.indexOf(m) < 0) shown.push(m); }); // chosen notes never disappear
-      $('mx-field').innerHTML = shown.map(function (n, i) {
-        var c = colorOf(n);
-        return '<button class="mx-bub" type="button" aria-pressed="' + (mix.indexOf(n) >= 0) + '" data-n="' + esc(n) + '" style="--c:' + c + ';--t:' + textOn(c) + ';--d:' + (-i * 0.45).toFixed(2) + 's">' + esc(PFC.cap(n)) + '</button>';
+      var k = 0;
+      $('mx-field').innerHTML = FAM.map(function (g) {
+        return '<div class="mx-grp"><h3>' + esc(g[0]) + '</h3>' + g[1].map(function (n) {
+          var c = colorOf(n);
+          return '<button class="mx-bub" type="button" aria-pressed="' + (mix.indexOf(n) >= 0) + '" data-n="' + esc(n) + '" style="--c:' + c + ';--t:' + textOn(c) + ';--d:' + (-((k++) % 12) * 0.45).toFixed(2) + 's">' + esc(PFC.cap(n)) + '</button>';
+        }).join('') + '</div>';
       }).join('');
     }
 
@@ -529,7 +541,6 @@
       redraw();
     });
     $('mx-clear').addEventListener('click', function () { mix = []; redraw(); });
-    $('mx-shuf').addEventListener('click', function () { page = (page + 1) % Math.ceil(POOL.length / PER); redraw(); });
 
     redraw();
     if (window.PFC) PFC.load().then(function (cat) {
