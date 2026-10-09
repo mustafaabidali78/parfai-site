@@ -25,11 +25,13 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 /* Note Mixer home page. Styles live here so the rest of the site is untouched. Uses the normal ParfAI colours. */
-#mixer{margin:10px 0 0;color:var(--ink);padding:44px 0 30px;position:relative}
+#mixer{margin:0;color:var(--ink);padding:0 0 30px;position:relative}
 #mixer .mx-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
-#mixer .mx-k{font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--rust);margin-bottom:10px}
-#mixer h1{font-family:var(--disp);font-weight:500;font-size:clamp(42px,6vw,76px);line-height:1;letter-spacing:-.01em;margin:0 0 12px;color:var(--ink)}
-#mixer h1 em{background:linear-gradient(110deg,var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+.hero{text-align:center;padding:44px 0 52px}
+.hero h1{font-family:var(--disp);font-weight:500;font-size:clamp(46px,7.6vw,104px);line-height:1;letter-spacing:-.02em;margin:0 auto;max-width:15ch;color:var(--ink);text-wrap:balance}
+.hero h1 em{background:linear-gradient(110deg,var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;padding-right:.06em}
+#mixer h2{font-family:var(--disp);font-weight:500;font-size:48px;line-height:1.02;letter-spacing:-.02em;margin:0 0 10px;color:var(--ink)}
+#mixer h2 em{font-style:italic}
 #mixer .mx-sub{color:var(--ink2);max-width:50ch;font-size:16px;line-height:1.6}
 .mx-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px 38px;align-items:start}
 .mx-field{grid-column:1;grid-row:1}
@@ -105,6 +107,8 @@
 .mx-grid{grid-template-columns:minmax(0,1fr)}
 .mx-field,.mx-grp,.mx-res,.mx-flask{min-width:0}
 #mixer .mx-top{margin-bottom:16px}
+.hero{padding:26px 0 30px}
+#mixer h2{font-size:36px}
 #mixer .mx-sub{font-size:14.5px;line-height:1.5}
 .mx-grid{gap:14px}
 .mx-flask{order:-1;max-width:none;width:100%;margin:0;display:grid;grid-template-columns:64px 1fr;column-gap:14px;row-gap:2px;align-items:center;text-align:left;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:10px 14px}
@@ -253,11 +257,14 @@
 
 <div class="wrap" id="top">
 
+  <header class="hero">
+    <h1 id="hero-h">The world's first <em>AI perfumer</em></h1>
+  </header>
+
   <section id="mixer" aria-labelledby="mx-h">
     <div class="mx-top">
       <div>
-        <div class="mx-k">The world's first AI perfumer</div>
-        <h1 id="mx-h">Mix your own <em>scent</em></h1>
+        <h2 id="mx-h">Mix your own <em>scent</em></h2>
         <p class="mx-sub">Tap floating notes to pour them into the flask. ParfAI finds real perfumes that contain them, from a catalogue of <span id="mx-total">12,000+</span> fragrances.</p>
       </div>
     </div>
