@@ -70,8 +70,8 @@
     </form>
     <div class="divider">or</div>
     <div class="oauth">
-      <a class="btn ghost block" href="#">Continue with Apple</a>
-      <a class="btn ghost block" href="#">Continue with Google</a>
+      <a class="btn ghost block" href="#" role="button" data-oauth="apple">Continue with Apple</a>
+      <a class="btn ghost block" href="#" role="button" data-oauth="google">Continue with Google</a>
     </div>
     <div class="switchline">New to ParfAI? <a href="signup.html">Create an account</a></div>
   </div>
@@ -111,6 +111,17 @@
     msg.className = 'rvmsg ok';
     msg.textContent = 'Welcome back — redirecting…';
     setTimeout(() => { window.location.href = 'index.html'; }, 500);
+  });
+
+  document.querySelectorAll('[data-oauth]').forEach(function (a) {
+    a.addEventListener('click', async function (e) {
+      e.preventDefault();
+      var provider = a.getAttribute('data-oauth'), label = provider === 'apple' ? 'Apple' : 'Google';
+      var msg = document.getElementById('li-msg');
+      if (!_sb) { msg.className = 'rvmsg err'; msg.textContent = 'Sign-in service unavailable right now. Please try again later.'; return; }
+      var r = await _sb.auth.signInWithOAuth({ provider: provider, options: { redirectTo: window.location.origin + '/index.html' } });
+      if (r && r.error) { msg.className = 'rvmsg err'; msg.textContent = label + ' sign-in is not available yet. Please use your email for now.'; }
+    });
   });
 </script>
 <script src="cookie-notice.js"></script>
