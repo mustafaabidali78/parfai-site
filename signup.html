@@ -69,11 +69,6 @@
       <button class="btn" type="submit" id="cta">Create account</button>
       <div id="su-msg"></div>
     </form>
-    <div class="divider">or</div>
-    <div class="oauth">
-      <a class="btn ghost block" href="#" role="button" data-oauth="apple">Continue with Apple</a>
-      <a class="btn ghost block" href="#" role="button" data-oauth="google">Continue with Google</a>
-    </div>
     <div class="switchline">Already have an account? <a href="login.html">Log in</a></div>
   </div>
 </div>
@@ -129,16 +124,6 @@
     }
   });
 
-  document.querySelectorAll('[data-oauth]').forEach(function (a) {
-    a.addEventListener('click', async function (e) {
-      e.preventDefault();
-      var provider = a.getAttribute('data-oauth'), label = provider === 'apple' ? 'Apple' : 'Google';
-      var msg = document.getElementById('su-msg');
-      if (!_sb) { msg.className = 'rvmsg err'; msg.textContent = 'Sign-in service unavailable right now. Please try again later.'; return; }
-      var r = await _sb.auth.signInWithOAuth({ provider: provider, options: { redirectTo: window.location.origin + '/index.html' } });
-      if (r && r.error) { msg.className = 'rvmsg err'; msg.textContent = label + ' sign-in is not available yet. Please use your email for now.'; }
-    });
-  });
 </script>
 <script src="cookie-notice.js"></script>
 </body>
