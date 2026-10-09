@@ -221,7 +221,7 @@ const WEATHER_GENDER_TEXT = { 0: 'For men', 1: 'For women', 2: 'Unisex' };
 function bottleThumbHTML(p, cls){
   // A FragranceNet picture goes on top of the drawn bottle when we have one (large thumbnails only).
   const g = WEATHER_GENDER_GRAD[p.gender] || WEATHER_GENDER_GRAD[2];
-  const big = cls === 'wpxthumb' || cls === 'wcthumb';
+  const big = cls === 'wpxthumb' || cls === 'wcthumb' || cls === 'wpxaltthumb';
   const pic = big && p.pid ? `<img src="catalog-img/${p.pid}.jpg" alt="" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">` : '';
   return `<div class="${cls}" style="background:linear-gradient(150deg,${g[0]},${g[1]})"><div class="bottle"></div>${pic}</div>`;
 }
@@ -303,7 +303,7 @@ function readWeatherCache(){
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (!data.ts || Date.now() - data.ts > WEATHER_CACHE_MS) return null;
-    if (data.day !== wxDayKey() || !data.picks || !data.picks.length) return null; // new day or no picks saved: start fresh
+    if (data.day !== wxDayKey() || !data.picks || !data.picks.length || data.picks.some(p => p.pid === undefined)) return null; // new day or no picks saved: start fresh
     return data;
   } catch (e) { return null; }
 }

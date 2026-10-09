@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="ParfAI — Find your scent, not just a bottle">
 <meta name="twitter:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610090030">
+<link rel="stylesheet" href="parfai.css?v=202610090050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -96,6 +96,8 @@
 .pv-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch}
 .pv-side{border-radius:20px;padding:20px 24px}
 .pv-side.orig{background:#F3EFFF}.pv-side.dupe{background:#E4FAF2}
+.pv-ph{float:right;width:96px;height:96px;object-fit:contain;border-radius:12px;margin:0 0 8px 12px;background:#fff;box-shadow:0 8px 18px -10px rgba(0,0,0,.35)}
+.pv-side:after{content:"";display:block;clear:both}
 .pv-lab{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
 .pv-side.orig .pv-lab{color:#6a55e8}.pv-side.dupe .pv-lab{color:#00835d}
 .pv-h{font-size:13px;color:var(--ink2)}
@@ -291,7 +293,7 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610090010"></script>
-<script src="weather.js?v=202610090040"></script>
+<script src="weather.js?v=202610090050"></script>
 <script src="catalog-lib.js?v=202610090030"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
@@ -389,6 +391,7 @@
       var w = a.map(function (n) { var c = noteCol(n); return '<mark style="background:' + c + ';color:' + noteTxt(c) + '">' + E(n) + '</mark>'; });
       return w.length > 1 ? w.slice(0, -1).join(', ') + ' and ' + w[w.length - 1] : w[0];
     }
+    function pvPic(r){ var u = PFC.photo(r); return u ? '<img class="pv-ph" src="' + u + '" alt="" loading="lazy" onerror="this.remove()">' : ''; }
     document.getElementById('pk-pairs').innerHTML = chosen.map(function (c) {
       var tot = Math.max(c.fn.length, c.dn.length), pct = Math.round(c.sh.length / tot * 100);
       var chips = c.sh.map(function (n) { var col = noteCol(n); return '<span style="background:' + col + ';color:' + noteTxt(col) + '">' + E(C(n)) + '</span>'; }).join('');
@@ -397,9 +400,9 @@
         '<a class="buy alt" href="' + E(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE \u2197</a>' +
         '<a class="buy alt noonlink" href="' + E(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE \u2197</a>';
       return '<div class="pv"><div class="pv-top">' +
-        '<div class="pv-side orig"><div class="pv-lab">The famous one</div><div class="pv-h">' + E(c.f.house) + '</div><div class="pv-n">' + E(c.f.name) + '</div></div>' +
+        '<div class="pv-side orig">' + pvPic(c.f) + '<div class="pv-lab">The famous one</div><div class="pv-h">' + E(c.f.house) + '</div><div class="pv-n">' + E(c.f.name) + '</div></div>' +
         '<div class="pv-mid"><div class="pv-ring" style="--p:' + pct + '"><b><span>' + c.sh.length + '/' + tot + '<small>match</small></span></b></div></div>' +
-        '<div class="pv-side dupe"><div class="pv-lab">The affordable one</div><div class="pv-h">' + E(c.d.house) + '</div><div class="pv-n">' + E(c.d.name) + '</div></div></div>' +
+        '<div class="pv-side dupe">' + pvPic(c.d) + '<div class="pv-lab">The affordable one</div><div class="pv-h">' + E(c.d.house) + '</div><div class="pv-n">' + E(c.d.name) + '</div></div></div>' +
         '<div class="pv-cap"><div><b>They share these notes</b><div class="pv-chips">' + chips + '</div></div>' +
         '<div class="pv-act">' + buy + '<a class="gh" href="catalog.html?id=' + encodeURIComponent(c.f.slug) + '">See ' + E(c.f.name) + '</a></div></div></div>';
     }).join('') || '<p class="pk-sub">Try the Dupe Finder to match any perfume with an affordable alternative.</p>';

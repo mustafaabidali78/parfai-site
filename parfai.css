@@ -665,3 +665,6 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .wpxthumb img,.wcthumb img{mix-blend-mode:multiply}
 .wpxthumb.hasimg .bottle,.wcthumb.hasimg .bottle{display:none}
 .wpxthumb img:not([src]),.wcthumb img:not([src]){display:none}
+.wpxaltthumb{position:relative;width:32px;height:40px}
+.wpxaltthumb img{mix-blend-mode:multiply}
+.wpxaltthumb.hasimg .bottle{display:none}
