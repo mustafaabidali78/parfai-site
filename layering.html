@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Layering Recipe Builder — Coming soon — ParfAI</title>
-<meta name="description" content="ParfAI's Layering Recipe Builder helps you combine fragrances into your own signature scent combination. Coming soon."/>
+<title>Layering Recipe Builder — ParfAI</title>
+<meta name="description" content="Pick two or three real perfumes, choose your sprays, and see the blend you would get, with the notes they share and what each one adds."/>
 <link rel="canonical" href="https://parfai.org/layering.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ParfAI">
-<meta property="og:title" content="Layering Recipe Builder — Coming soon — ParfAI">
-<meta property="og:description" content="ParfAI's Layering Recipe Builder helps you combine fragrances into your own signature scent combination. Coming soon.">
+<meta property="og:title" content="Layering Recipe Builder — ParfAI">
+<meta property="og:description" content="Pick two or three real perfumes, choose your sprays, and see the blend you would get, with the notes they share and what each one adds.">
 <meta property="og:url" content="https://parfai.org/layering.html">
 <meta property="og:image" content="https://parfai.org/images/social/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Layering Recipe Builder — Coming soon — ParfAI">
-<meta name="twitter:description" content="ParfAI's Layering Recipe Builder helps you combine fragrances into your own signature scent combination. Coming soon.">
+<meta name="twitter:title" content="Layering Recipe Builder — ParfAI">
+<meta name="twitter:description" content="Pick two or three real perfumes, choose your sprays, and see the blend you would get, with the notes they share and what each one adds.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
 <link rel="stylesheet" href="parfai.css?v=202610090050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,6 +53,71 @@
   ]
 }
 </script>
+<style>
+.lyhero{padding:46px 0 10px}
+.lyhero .rule{width:44px;height:2px;background:var(--rust);margin:0 0 22px}
+.lyhero .k{font:600 12px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--rust);margin-bottom:14px}
+.lyhero h1{font-family:var(--disp);font-weight:500;font-size:52px;line-height:1.06;letter-spacing:-.01em;margin:0;max-width:700px}
+.lyhero h1 em{font-style:italic;color:var(--rust)}
+.lyhero .sub{font-size:16px;color:var(--ink2);margin:18px 0 0;max-width:560px;line-height:1.6}
+.lystart{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:26px 0 22px}
+.lystart span{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.lystart button,.lybtn{font:600 13px var(--body);padding:9px 16px;border-radius:100px;background:var(--panel);border:1px solid var(--border);color:var(--ink2);cursor:pointer}
+.lystart button:hover,.lybtn:hover{border-color:var(--ink);color:var(--ink)}
+.lyslots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.lys{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:20px;min-height:340px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 14px 30px -26px rgba(20,20,20,.4)}
+.lys+.lys:before{content:"+";position:absolute;left:-21px;top:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:grid;place-items:center;font:600 18px var(--body);color:var(--muted);z-index:2}
+.lys.empty{border-style:dashed;justify-content:center;box-shadow:none;background:transparent}
+.lys .lyk{font:600 11px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.lys .lyh{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+.lys .lyn{font:600 24px var(--disp);line-height:1.15;margin:2px 0 10px}
+.lys .lynotes{margin:0 0 12px}
+.lys .pd-bw{margin-bottom:6px}
+.lysp{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:auto;padding-top:8px}
+.lysp small{font:600 12px var(--body);color:var(--ink2);margin-right:4px}
+.lysp button{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg);font:700 13px var(--body);color:var(--ink2);cursor:pointer}
+.lysp button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lyx{font:600 12px var(--body);color:var(--muted);background:none;border:0;cursor:pointer;margin-top:10px;text-decoration:underline;text-underline-offset:3px}
+.lyx:hover{color:var(--ink)}
+.lysearch{position:relative;width:100%}
+.lysearch input{width:100%;font:500 14px var(--body);padding:13px 16px;border-radius:100px;border:1px solid var(--border);background:var(--panel);color:var(--ink);outline:none}
+.lysearch input:focus{border-color:var(--ink)}
+.lyemp{font:500 20px var(--disp);color:var(--ink2);margin:0 0 14px}
+.lyadd{font:600 14px var(--body);color:var(--ink2);background:none;border:0;cursor:pointer}
+.lysugg{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:0 24px 50px -24px rgba(20,20,20,.35);z-index:20;overflow:hidden;text-align:left}
+.lysugg button{display:block;width:100%;text-align:left;padding:10px 16px;background:none;border:0;border-bottom:1px solid var(--border);cursor:pointer;font:600 14px var(--body);color:var(--ink)}
+.lysugg button:last-child{border-bottom:0}.lysugg button:hover,.lysugg button.on{background:var(--bg)}
+.lysugg small{display:block;font:500 12px var(--body);color:var(--muted)}
+.lyres{margin-top:30px;background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:34px 36px;box-shadow:0 14px 30px -26px rgba(20,20,20,.4)}
+.lyres .lyk{font:600 12px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--rust);margin-bottom:8px}
+.lyres h2{font:500 34px var(--disp);letter-spacing:-.01em;margin:0 0 6px}
+.lyres .lyd{font-size:15.5px;color:var(--ink2);line-height:1.65;max-width:720px;margin:0 0 22px}
+.lybar{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--bg);border:1px solid var(--border)}
+.lybar span{display:block;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.lykey{display:flex;flex-wrap:wrap;gap:8px 22px;margin:12px 0 26px;font-size:13px;color:var(--ink2)}
+.lykey i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+.lycols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-bottom:26px}
+.lycols h4{font:700 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.lywear{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:16px 20px;font-size:14.5px;color:var(--ink2);line-height:1.6;margin-bottom:24px}
+.lywear b{color:var(--ink)}
+.lybuy{display:grid;gap:12px;margin-bottom:22px}
+.lybuy div.row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:12px}
+.lybuy .nm{font:600 20px var(--disp)}.lybuy .nm small{font:500 12px var(--body);color:var(--muted);margin-left:8px}
+.lybuy .lb{display:flex;flex-wrap:wrap;gap:6px}
+.lybuy a{font:700 11px var(--body);color:#fff;background:var(--ink);border-radius:100px;padding:7px 13px;text-decoration:none}
+.lybuy a:hover{background:var(--rust)}
+.lyacts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.lyacts .msg{font-size:13px;color:var(--muted)}
+.lynote{font-size:12.5px;color:var(--muted);margin:16px 0 0;max-width:720px;line-height:1.55}
+@media(max-width:860px){
+ .lyhero h1{font-size:38px}
+ .lyslots{grid-template-columns:1fr;gap:26px}
+ .lys{min-height:0}
+ .lys+.lys:before{left:50%;top:-23px}
+ .lyres{padding:24px 20px}
+ .lycols{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
@@ -62,99 +127,25 @@
 
   <div class="crumb"><a href="explore.html">Explore</a> / Layering Recipe Builder</div>
 
-  <div class="pdhero" style="background:linear-gradient(120deg,#C6963C 0%,#8F6A24 30%,#6B4B3A 68%,#402B20 100%)">
-    <div class="pdimg" style="gap:14px">
-      <div class="bottle" style="width:54px;height:96px"></div>
-      <div style="font-family:var(--disp);font-style:italic;font-size:26px;color:#fff;opacity:.85">+</div>
-      <div class="bottle" style="width:54px;height:96px"></div>
-    </div>
-    <div>
-      <div class="pdhouse">Coming soon</div>
-      <h1 class="pdname" style="font-size:44px">Layering Recipe Builder</h1>
-      <div class="pddesc">Combine two or three fragrances from the catalog into a saved recipe. See a predicted blend computed from each fragrance's real notes and accords, then find out how it actually wore from people who've tried the same combo.</div>
-    </div>
+  <div class="lyhero">
+    <div class="rule"></div>
+    <div class="k">Layering Recipe Builder</div>
+    <h1>Two perfumes. <em>One scent that is yours.</em></h1>
+    <p class="sub">Pick two or three perfumes you already know, choose how many sprays of each, and see the blend you would get, built from their real notes.</p>
   </div>
 
-  <section>
-    <div class="shead"><h2>How it'll work</h2></div>
-    <p style="color:var(--ink2);font-size:15px;max-width:700px;margin-bottom:28px;font-weight:400">Pick two or three fragrances you already know from the catalog. As each one is added, the predicted blend below updates automatically — pulled straight from the note pyramid and accords already on every product page, no new data needed. Save it, give it a name, and it becomes its own page: shareable, filterable, and open for other people to rate and leave wear notes on. This preview uses two real fragrances already on ParfAI — Baccarat Rouge 540 and Tobacco Vanille — a pairing enthusiasts already talk about, to show what the finished builder would produce.</p>
+  <div class="lystart" id="ly-start" aria-label="Quick starts"></div>
 
-    <div class="lpanel">
-      <div class="lslots">
-        <div class="lslot">
-          <div class="lbottle" style="background:radial-gradient(130% 100% at 50% 22%,#DBB466 0%,#C6963C 55%,#8F6A24 120%)"><div class="bt"></div></div>
-          <div class="lhouse">Maison Francis Kurkdjian</div>
-          <div class="lname">Baccarat Rouge 540</div>
-          <div class="lnotes"><b>Top</b> Saffron, Jasmine &nbsp;·&nbsp; <b>Heart</b> Amberwood, Ambergris &nbsp;·&nbsp; <b>Base</b> Fir Resin, Cedar, Musk</div>
-        </div>
-        <div class="lplus">+</div>
-        <div class="lslot">
-          <div class="lbottle" style="background:radial-gradient(130% 100% at 50% 22%,#8A6B54 0%,#6B4B3A 55%,#402B20 120%)"><div class="bt"></div></div>
-          <div class="lhouse">Tom Ford</div>
-          <div class="lname">Tobacco Vanille</div>
-          <div class="lnotes"><b>Top</b> Tobacco Leaf, Spices &nbsp;·&nbsp; <b>Heart</b> Tonka Bean, Tobacco Blossom, Vanilla &nbsp;·&nbsp; <b>Base</b> Cocoa, Dried Fruits, Woody Notes</div>
-        </div>
-        <div class="lplus">+</div>
-        <div class="lslot empty">
-          <div class="licon">+</div>
-          <div class="laddlabel">Add a third</div>
-          <div class="laddsub">Optional</div>
-        </div>
-      </div>
+  <div class="lyslots" id="ly-slots"></div>
 
-      <div class="lblend">
-        <h4>Predicted blend</h4>
-        <div class="lblendbar">
-          <span style="width:28%;background:#C6963C" title="Amber 28%"></span>
-          <span style="width:22%;background:#8F6A24" title="Woody 22%"></span>
-          <span style="width:24%;background:#6B4B3A" title="Vanilla / Gourmand 24%"></span>
-          <span style="width:16%;background:#402B20" title="Tobacco 16%"></span>
-          <span style="width:10%;background:#C08379" title="Floral / Spicy 10%"></span>
-        </div>
-        <div class="lblendkey">
-          <div class="bk"><span class="sw" style="background:#C6963C"></span>Amber 28%</div>
-          <div class="bk"><span class="sw" style="background:#8F6A24"></span>Woody 22%</div>
-          <div class="bk"><span class="sw" style="background:#6B4B3A"></span>Vanilla / Gourmand 24%</div>
-          <div class="bk"><span class="sw" style="background:#402B20"></span>Tobacco 16%</div>
-          <div class="bk"><span class="sw" style="background:#C08379"></span>Floral / Spicy 10%</div>
-        </div>
-        <div class="lblendtxt">A <b>warm, amber-forward gourmand</b> — Baccarat's saffron-and-ambergris shimmer on top, with Tobacco Vanille's cocoa and dried-fruit base filling it out underneath. Richer and cozier than either fragrance alone, with more longevity than Baccarat by itself. Best for cold weather; likely too heavy for daytime or warm climates.</div>
-      </div>
-    </div>
-  </section>
+  <div id="ly-out"></div>
 
-  <section>
-    <div class="shead"><h2>Rated by people who tried it</h2></div>
-    <p style="color:var(--ink2);font-size:14px;max-width:640px;margin-bottom:22px;font-weight:400">Sample of what a saved recipe's wear notes would look like — every recipe would carry its own ratings and comments, the same way reviews already work on ParfAI.</p>
-    <div class="lpanel" style="max-width:640px">
-      <div class="lwear">
-        <span class="av" style="background:#C6963C"></span>
-        <div class="lwbody">
-          <div class="lwtop"><b>ScentSofia</b><span class="lstars">★★★★★</span></div>
-          <p>Two sprays of Baccarat on the chest, one spray of Tobacco Vanille on top an hour later. Lasted from 4pm to past midnight — this is THE cold-weather combo.</p>
-        </div>
-      </div>
-      <div class="lwear">
-        <span class="av" style="background:#5E7A93"></span>
-        <div class="lwbody">
-          <div class="lwtop"><b>OudMike</b><span class="lstars">★★★★☆</span></div>
-          <p>Really good but genuinely heavy — wore it to an indoor dinner in July and regretted it. Saving this one for December.</p>
-        </div>
-      </div>
-      <div class="lwear">
-        <span class="av" style="background:#8B5169"></span>
-        <div class="lwbody">
-          <div class="lwtop"><b>Lena_P</b><span class="lstars">★★★☆☆</span></div>
-          <p>Both are strong on their own, so full-strength was a lot. Next time I'll spray Tobacco Vanille first as a base and go lighter on the Baccarat.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <p class="lynote">Blends are predicted from each perfume's listed notes. They are a guide, not a lab test, so try a small amount on your skin first. Matches come from FragranceNet's catalogue. The Amazon UAE and Noon UAE buttons search for the same perfume, so check it is the right one. We may earn a commission if you buy through a link.</p>
 
-  <section style="text-align:center">
+  <section style="text-align:center;margin-top:40px">
     <div class="band" style="background:linear-gradient(120deg,#402B20,#6B4B3A)">
-      <h2>Want early access?</h2>
-      <p>This is next on the roadmap. Follow along in the community for updates, or tell us what pairings you'd want to build first.</p>
+      <h2>Want to save and share your recipes?</h2>
+      <p>Saving recipes, rating them and sharing wear notes is next on the roadmap. Follow along in the community, or tell us which pairings you would build first.</p>
       <a class="btn" href="community.html">Join the community</a>
     </div>
   </section>
@@ -164,6 +155,169 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610090010"></script>
+<script src="catalog-lib.js?v=202610090030"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = PFC.esc, cap = PFC.cap;
+  var rows = [], bySlug = {};
+  var slots = [null, null, null], sprays = [1, 1, 1], open3 = false;
+  var F = [
+    { n: 'Sweet and creamy', c: '#D9A066', d: 'sweet', base: .8, re: /vanilla|caramel|tonka|coconut|cacao|cocoa|chocolate|honey|praline|almond|coffee|sugar|milk|cream|marshmallow|toffee|butter|custard|candy|cherry|berry|rum|date|fig|licorice|coumarin|benzoin|dried|nougat|sweet/ },
+    { n: 'Woods and smoke', c: '#8A6A4F', d: 'woody', base: 1, re: /oud|agarwood|wood|sandal|cedar|vetiver|patchouli|leather|tobacco|incense|birch|oak|moss|smok|guaiac|cypress|pine|fir |resin|myrrh|frankincense|olibanum|labdanum|suede|cashmeran|papyrus|elemi|juniper/ },
+    { n: 'Flowers', c: '#C9879C', d: 'floral', base: .3, re: /rose|jasmin|lavender|iris|orris|violet|peony|tuberose|blossom|neroli|ylang|lily|gardenia|magnolia|orchid|geranium|heliotrope|freesia|mimosa|osmanthus|carnation|petal|floral|lilac|hyacinth|honeysuckle|narcissus|champaca|cyclamen|plumeria|frangipani/ },
+    { n: 'Fresh and fruity', c: '#8DB36B', d: 'fresh', base: 0, re: /bergamot|lemon|orange|mandarin|grapefruit|lime|citrus|citron|yuzu|apple|pear|peach|pineapple|mint|melon|currant|marine|sea |water|aquatic|green|tea|cucumber|rhubarb|litchi|lychee|mango|kiwi|apricot|plum|grape|fruit|basil|rosemary|sage|thyme|herb|galbanum|ozone|aldehyde|petitgrain|tangerine|verbena|cassis|banana|papaya|passion|guava|pomegranate|lavandin/ },
+    { n: 'Warm and spicy', c: '#B5532E', d: 'spicy', base: .7, re: /saffron|cardamom|pepper|cinnamon|ginger|clove|nutmeg|amber|musk|spice|cumin|coriander|anise|curry|cassia|paprika|chili|turmeric|ambrette|ambroxan|salt|mineral|spicy/ }
+  ];
+  var STARTS = [
+    ['Cozy amber', ['maison-francis-kurkdjian-maison-francis-kurkdjian-baccarat-rouge-540-unisex', 'tom-ford-tom-ford-tobacco-vanille-unisex']],
+    ['Rose and vanilla', ['parfums-de-marly-parfums-de-marly-delina-women', 'carolina-herrera-ch-good-girl-women']],
+    ['Dark and sweet', ['tom-ford-tom-ford-oud-wood-men', 'yves-saint-laurent-black-opium-women']],
+    ['Fresh meets smoky', ['creed-creed-aventus-men', 'tom-ford-tom-ford-oud-wood-men']]
+  ];
+
+  function famOf(n) { for (var i = 0; i < F.length; i++) if (F[i].re.test(n)) return i; return -1; }
+  function profile(r) {
+    var t = [0, 0, 0, 0, 0], sum = 0;
+    r.notes.forEach(function (n, i) { var f = famOf(n); if (f < 0) return; var w = 1 / (1 + .12 * i); t[f] += w; sum += w; });
+    return sum ? t.map(function (x) { return x / sum; }) : t;
+  }
+  function chips(list, n) { return list.slice(0, n).map(function (x) { return '<span class="notechip">' + esc(cap(x)) + '</span>'; }).join(''); }
+
+  // ----- slots -----
+  function slotHTML(i) {
+    var r = slots[i];
+    if (!r) {
+      if (i === 2 && !open3) return '<div class="lys empty"><button class="lyadd" type="button" data-open3="1">+ Add a third perfume (optional)</button></div>';
+      return '<div class="lys empty"><div class="lyemp">' + (i === 2 ? 'A third perfume' : 'Perfume ' + (i + 1)) + '</div><div class="lysearch"><input type="text" data-q="' + i + '" placeholder="Search any perfume" autocomplete="off" aria-label="Search for perfume ' + (i + 1) + '"><div class="lysugg" data-s="' + i + '" hidden></div></div>' +
+        (i === 2 ? '<button class="lyx" type="button" data-close3="1">Not now</button>' : '') + '</div>';
+    }
+    var sp = [1, 2, 3].map(function (n) { return '<button type="button" data-sp="' + i + ':' + n + '" aria-pressed="' + (sprays[i] === n) + '" aria-label="' + n + ' spray' + (n > 1 ? 's' : '') + '">' + n + '</button>'; }).join('');
+    return '<div class="lys">' + PFC.art(r, 150) + '<div class="lyh">' + esc(r.house) + '</div><div class="lyn">' + esc(r.name) + '</div><div class="lynotes">' + chips(r.notes, 5) + '</div>' +
+      '<div class="lysp"><small>Sprays</small>' + sp + '</div><button class="lyx" type="button" data-clear="' + i + '">Change perfume</button></div>';
+  }
+  function drawSlots() { $('ly-slots').innerHTML = [0, 1, 2].map(slotHTML).join(''); drawResult(); sync(); }
+
+  // ----- result -----
+  function drawResult() {
+    var sel = []; slots.forEach(function (r, i) { if (r) sel.push({ r: r, n: sprays[i] }); });
+    var out = $('ly-out');
+    if (sel.length < 2) { out.innerHTML = ''; return; }
+    var tot = [0, 0, 0, 0, 0];
+    sel.forEach(function (x) { var p = profile(x.r); for (var i = 0; i < 5; i++) tot[i] += p[i] * x.n; });
+    var sum = tot.reduce(function (a, b) { return a + b; }, 0) || 1;
+    var pct = tot.map(function (v) { return Math.round(100 * v / sum); });
+    var order = [0, 1, 2, 3, 4].sort(function (a, b) { return pct[b] - pct[a]; });
+    var shown = order.filter(function (i) { return pct[i] >= 4; });
+    var bar = shown.map(function (i) { return '<span style="width:' + pct[i] + '%;background:' + F[i].c + '" title="' + F[i].n + ' ' + pct[i] + '%"></span>'; }).join('');
+    var key = shown.map(function (i) { return '<span><i style="background:' + F[i].c + '"></i>' + F[i].n + ' ' + pct[i] + '%</span>'; }).join('');
+    var d1 = F[order[0]].d, d2 = pct[order[1]] >= 20 ? F[order[1]].d : '';
+    // notes
+    var cnt = {}; sel.forEach(function (x) { x.r.notes.forEach(function (n) { cnt[n] = (cnt[n] || 0) + 1; }); });
+    var shared = Object.keys(cnt).filter(function (n) { return cnt[n] > 1; });
+    sel.forEach(function (x) { x.own = x.r.notes.filter(function (n) { return cnt[n] === 1; }); });
+    var lead = sel.slice().sort(function (a, b) { return b.n - a.n; })[0];
+    var adds = sel.map(function (x) { return '<b>' + esc(x.r.name) + '</b> brings ' + (x.own.length ? x.own.slice(0, 3).map(cap).join(', ') : 'its own twist') + '.'; }).join(' ');
+    var desc = 'A <b>' + d1 + (d2 ? ' and ' + d2 : '') + '</b> blend. ' + (sel[0].n !== sel[1].n || sel.length > 2 ? esc(lead.r.name) + ' leads with the most sprays. ' : 'Both play an equal part. ') + adds;
+    // wearing order: heaviest base first
+    var heavy = sel.map(function (x) { var p = profile(x.r), b = 0; for (var i = 0; i < 5; i++) b += p[i] * F[i].base; return { x: x, b: b }; }).sort(function (a, b) { return b.b - a.b; });
+    var wear = '<b>How to wear it:</b> spray <b>' + esc(heavy[0].x.r.name) + '</b> first (' + heavy[0].x.n + ' spray' + (heavy[0].x.n > 1 ? 's' : '') + '), it is the deeper, longer-lasting one. Then layer ' +
+      heavy.slice(1).map(function (h) { return '<b>' + esc(h.x.r.name) + '</b> (' + h.x.n + ' spray' + (h.x.n > 1 ? 's' : '') + ')'; }).join(' and ') + ' over it, a little higher on the body. Start light, you can always add more.';
+    var cols = '<div><h4>What they share</h4>' + (shared.length ? chips(shared, 8) : '<span style="font-size:13px;color:var(--muted)">No notes in common, so they contrast.</span>') + '</div>' +
+      sel.slice(0, 2).map(function (x) { return '<div><h4>' + esc(x.r.name) + ' adds</h4>' + (x.own.length ? chips(x.own, 6) : '<span style="font-size:13px;color:var(--muted)">Mostly the shared notes.</span>') + '</div>'; }).join('');
+    if (sel.length > 2) cols = cols.replace('<div><h4>What they share', '<div><h4>What they share') ;
+    var buy = sel.map(function (x) {
+      var q = PFC.shopQuery(x.r);
+      return '<div class="row"><div class="nm">' + esc(x.r.name) + '<small>' + esc(x.r.house) + '</small></div><div class="lb">' +
+        (x.r.link ? '<a href="' + esc(x.r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '') +
+        '<a href="' + esc(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE ↗</a>' +
+        '<a class="noonlink" href="' + esc(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE ↗</a></div></div>';
+    }).join('');
+    out.innerHTML = '<div class="lyres"><div class="lyk">Your blend</div><h2>' + sel.map(function (x) { return esc(x.r.name); }).join(' + ') + '</h2><p class="lyd">' + desc + '</p>' +
+      '<div class="lybar" role="img" aria-label="Blend breakdown">' + bar + '</div><div class="lykey">' + key + '</div>' +
+      '<div class="lycols">' + cols + '</div><div class="lywear">' + wear + '</div><div class="lybuy">' + buy + '</div>' +
+      '<div class="lyacts"><button class="btn sm" type="button" id="ly-share">Copy link to this blend</button><button class="btn ghost sm" type="button" id="ly-reset">Start over</button><span class="msg" id="ly-msg" aria-live="polite"></span></div></div>';
+  }
+
+  // ----- search -----
+  function search(q, skip) {
+    var t = q.toLowerCase().split(/\s+/).filter(Boolean); if (!t.length) return [];
+    var hits = rows.filter(function (r) { return r.ok && skip.indexOf(r.slug) < 0 && t.every(function (w) { return r.hay.indexOf(w) >= 0; }); });
+    hits.sort(function (a, b) { var sa = a.name.toLowerCase().indexOf(t[0]) === 0 ? 0 : 1, sb = b.name.toLowerCase().indexOf(t[0]) === 0 ? 0 : 1; return (sa - sb) || (b.sizes - a.sizes) || a.name.localeCompare(b.name); });
+    return hits.slice(0, 7);
+  }
+  function chosen() { return slots.filter(Boolean).map(function (r) { return r.slug; }); }
+  function pick(i, slug) { var r = bySlug[slug]; if (!r) return; slots[i] = r; if (i === 2) open3 = true; drawSlots(); }
+
+  var box = $('ly-slots');
+  box.addEventListener('input', function (e) {
+    var q = e.target.getAttribute('data-q'); if (q === null) return;
+    var s = box.querySelector('[data-s="' + q + '"]'), hits = search(e.target.value, chosen());
+    if (!hits.length) { s.hidden = true; s.innerHTML = ''; return; }
+    s.innerHTML = hits.map(function (r, k) { return '<button type="button" class="' + (k ? '' : 'on') + '" data-pick="' + q + ':' + esc(r.slug) + '">' + esc(r.name) + '<small>' + esc(r.house) + '</small></button>'; }).join('');
+    s.hidden = false;
+  });
+  box.addEventListener('keydown', function (e) {
+    var q = e.target.getAttribute && e.target.getAttribute('data-q'); if (q === null || q === undefined) return;
+    var s = box.querySelector('[data-s="' + q + '"]');
+    if (e.key === 'Enter') { var f = s.querySelector('button'); if (f) { e.preventDefault(); f.click(); } }
+    if (e.key === 'Escape') { s.hidden = true; }
+  });
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var v;
+    if ((v = b.getAttribute('data-pick'))) { var p = v.indexOf(':'); pick(+v.slice(0, p), v.slice(p + 1)); }
+    else if ((v = b.getAttribute('data-sp'))) { var a = v.split(':'); sprays[+a[0]] = +a[1]; drawSlots(); }
+    else if ((v = b.getAttribute('data-clear'))) { slots[+v] = null; sprays[+v] = 1; if (+v === 2) open3 = true; drawSlots(); var inp = box.querySelector('[data-q="' + v + '"]'); if (inp) inp.focus(); }
+    else if (b.getAttribute('data-open3')) { open3 = true; drawSlots(); var i3 = box.querySelector('[data-q="2"]'); if (i3) i3.focus(); }
+    else if (b.getAttribute('data-close3')) { open3 = false; drawSlots(); }
+  });
+  document.addEventListener('click', function (e) { if (!e.target.closest('.lysearch')) box.querySelectorAll('.lysugg').forEach(function (s) { s.hidden = true; }); });
+
+  $('ly-out').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'ly-reset') { slots = [null, null, null]; sprays = [1, 1, 1]; open3 = false; drawSlots(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    if (b.id === 'ly-share') {
+      var m = $('ly-msg'), done = function () { m.textContent = 'Link copied. Send it to a friend.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, function () { m.textContent = 'Copy the link from the address bar.'; });
+      else m.textContent = 'Copy the link from the address bar.';
+    }
+  });
+
+  // ----- quick starts and link state -----
+  function startPair(p) { slots = [bySlug[p[0]] || null, bySlug[p[1]] || null, null]; sprays = [1, 1, 1]; open3 = false; drawSlots(); }
+  function drawStarts() {
+    var ok = STARTS.filter(function (s) { return bySlug[s[1][0]] && bySlug[s[1][1]]; });
+    $('ly-start').innerHTML = '<span>Try a pair</span>' + ok.map(function (s, i) { return '<button type="button" data-st="' + i + '">' + s[0] + '</button>'; }).join('') + '<button type="button" data-st="rnd">Surprise me</button>';
+    $('ly-start').onclick = function (e) {
+      var b = e.target.closest('button'); if (!b) return; var v = b.getAttribute('data-st');
+      if (v === 'rnd') {
+        var pool = rows.filter(function (r) { return r.ok && r.sizes > 2; }), a = pool[Math.floor(Math.random() * pool.length)], c;
+        do { c = pool[Math.floor(Math.random() * pool.length)]; } while (c.house === a.house);
+        startPair([a.slug, c.slug]);
+      } else startPair(ok[+v][1]);
+    };
+  }
+  function sync() {
+    var parts = []; slots.forEach(function (r, i) { if (r) parts.push(r.slug + ':' + sprays[i]); });
+    try { history.replaceState(null, '', parts.length ? '?p=' + parts.join(',') : location.pathname); } catch (e) {}
+  }
+  function fromUrl() {
+    var m = /[?&]p=([^&]+)/.exec(location.search); if (!m) return false;
+    decodeURIComponent(m[1]).split(',').slice(0, 3).forEach(function (t, i) { var a = t.split(':'); if (bySlug[a[0]]) { slots[i] = bySlug[a[0]]; sprays[i] = Math.min(3, Math.max(1, +a[1] || 1)); } });
+    open3 = !!slots[2]; return slots[0] || slots[1];
+  }
+
+  $('ly-slots').innerHTML = '<p style="grid-column:1/-1;color:var(--muted)">Loading the catalogue…</p>';
+  PFC.load().then(function (d) {
+    rows = d.rows; rows.forEach(function (r) { bySlug[r.slug] = r; });
+    drawStarts();
+    if (!fromUrl()) { var s = STARTS[0][1]; if (bySlug[s[0]] && bySlug[s[1]]) { slots = [bySlug[s[0]], bySlug[s[1]], null]; } }
+    drawSlots();
+  }).catch(function () { $('ly-slots').innerHTML = '<p style="grid-column:1/-1;color:var(--muted)">Could not load the catalogue right now. Please refresh in a moment.</p>'; });
+})();
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>

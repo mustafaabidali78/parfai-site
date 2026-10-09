@@ -1427,7 +1427,7 @@ function renderNav(active){
         f:'f1', feat:['New','Full catalogue','12,000+ perfumes. Search by name, house or note.','Search now','catalog.html'],
         head:'Browse by', chips:[['Family','explore.html'],['Note','notes.html'],['House','houses.html'],['All fragrances','explore.html']],
         cols:[['Discover',[['New releases','Just dropped','explore.html?view=new'],['Trending','Hot right now','explore.html?view=trending'],['Best value','Big scent, small price','explore.html?view=value']]],
-              ['Smart tools',[['Dupe Finder','Affordable alternatives','dupe-finder.html'],['Find My Scent','Filter by family, note &amp; more','explore.html'],['Scent DNA',"Any fragrance's note fingerprint",'explore.html'],['Layering Recipe Builder','Combine fragrances into a recipe','layering.html','SOON'],['Weather-Aware Pick',"Today's pick, based on real weather",'weather-pick.html','LIVE']]]]
+              ['Smart tools',[['Dupe Finder','Affordable alternatives','dupe-finder.html'],['Find My Scent','Filter by family, note &amp; more','explore.html'],['Scent DNA',"Any fragrance's note fingerprint",'explore.html'],['Layering Recipe Builder','Combine perfumes into a blend','layering.html','NEW'],['Weather-Aware Pick',"Today's pick, based on real weather",'weather-pick.html','LIVE']]]]
       })}
       ${navMega('Houses', {
         f:'f2', feat:['Directory','Every house','From designer to niche, all in one A to Z directory.','See all houses','houses.html'],
