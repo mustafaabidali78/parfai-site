@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="ParfAI — Find your scent, not just a bottle">
 <meta name="twitter:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610092100">
+<link rel="stylesheet" href="parfai.css?v=202610092200">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -53,7 +53,7 @@
 .mx-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .mx-clear,.mx-shuf{font:700 12px var(--body);background:var(--panel);border:1.5px solid var(--border);color:var(--ink);border-radius:100px;padding:7px 14px;cursor:pointer}
 .mx-clear:hover,.mx-shuf:hover{border-color:var(--ink)}
-.mx-res h2{font:600 26px var(--disp);margin:0 0 4px;color:var(--ink)}
+.mx-res h2{font:500 38px var(--disp);letter-spacing:-.02em;line-height:1.05;margin:0 0 6px;color:var(--ink)}
 .mx-count{font-size:12.5px;color:var(--muted);margin:0 0 12px;min-height:18px}
 .mx-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:760px){.mx-list{grid-template-columns:1fr}}
@@ -74,7 +74,7 @@
 .mx-foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .mx-foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-weight:600}
 
-.lyh{margin-top:34px}
+.lyh{margin-top:0}
 .lyh .shead{margin-bottom:8px}
 .lyh-k{font:600 12px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--rust);margin-bottom:6px}
 .lyh-sub{color:var(--ink2);font-size:15px;line-height:1.6;max-width:640px;margin:0 0 20px}
@@ -116,7 +116,7 @@
 .mx-row{flex-wrap:nowrap;overflow-x:auto;gap:8px;margin:6px -16px 0;padding:6px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
 .mx-row::-webkit-scrollbar{display:none}
 .mx-bub{flex:0 0 auto;font-size:12.5px;padding:8px 14px;animation:none}
-.mx-res h2{font-size:22px}
+.mx-res h2{font-size:30px}
 .mr{padding:10px 12px}
 .mr b{font-size:16px}
 .mr-ph{width:52px;height:52px}
@@ -126,13 +126,17 @@
 }
 @media(max-width:560px){#mixer{padding-top:28px}}
 /* Today's picks and Great value dupes (editorial style) */
-.pk{margin:64px 0}
-.pk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
-.pk-k{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.pk{margin:96px 0 0;padding-top:96px;border-top:1px solid rgba(20,20,20,.1)}
+.pk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:32px}
+.pk-k{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .pk-k i{width:8px;height:8px;border-radius:50%;background:#00C48B;display:inline-block;animation:pkpulse 2s infinite}
-.pk h2{font-family:var(--disp);font-weight:500;font-size:34px;line-height:1.05;letter-spacing:-.01em}
+.pk h2{font-family:var(--disp);font-weight:500;font-size:48px;line-height:1.02;letter-spacing:-.02em}
 .pk h2 em{font-style:italic}
-.pk-sub{color:var(--ink2);font-size:14px;margin-top:8px;max-width:540px}
+.pk-sub{color:var(--ink2);font-size:17px;line-height:1.55;margin-top:10px;max-width:600px}
+@media(max-width:760px){#community .chead h2{font-size:38px!important}#community{padding:40px 22px!important;margin-top:64px!important}}
+.band{margin:96px 0 70px}
+.band h2{font-weight:500;letter-spacing:-.02em;font-size:52px;line-height:1.02}
+@media(max-width:760px){.band{margin-top:64px}.band h2{font-size:36px}}
 .pk-all{font-weight:700;font-size:13px;color:var(--ink);border-bottom:2px solid var(--ink);padding-bottom:2px}
 .pk-all:hover{color:var(--rust);border-color:var(--rust)}
 .pk-list{border-top:1px solid var(--ink)}
@@ -209,7 +213,7 @@
 @media(max-width:820px){.sf{grid-template-columns:1fr;padding:26px 20px}.sf-row{height:210px}.sf-b{padding:10px 2px 0}.sf-b small{max-width:60px;font-size:10px}.sf-bt{width:38px;height:62px}.sf-bt.hasimg{width:64px;height:86px}}
 @media(prefers-reduced-motion:reduce){.sf,.sf-b,.sf-nts span,.sf-fl{transition:none;animation:none}.sf-fl{display:none}}
 @keyframes pkpulse{0%,100%{opacity:1}50%{opacity:.35}}
-@media(max-width:760px){.pk h2{font-size:28px}.pk-row{grid-template-columns:1fr auto;gap:8px 14px}.pk-row .eh{grid-column:1/-1}.pk-row .eb{display:none}.pk-row:hover .en{transform:none}}
+@media(max-width:760px){.pk{margin-top:64px;padding-top:64px}.pk h2{font-size:36px}.pk-sub{font-size:15.5px}.pk-row{grid-template-columns:1fr auto;gap:8px 14px}.pk-row .eh{grid-column:1/-1}.pk-row .eb{display:none}.pk-row:hover .en{transform:none}}
 @media(prefers-reduced-motion:reduce){.pk-k i{animation:none}.pk-row,.pk-row .en{transition:none}}
 </style>
 <script type="application/ld+json">
@@ -298,19 +302,26 @@
     <p class="pk-disc">A dupe is a lower-priced perfume with similar listed notes to a famous one. Dupes are similar, not identical. We compare listed notes only. Prices change often, so check today's price on the retailer page. The Amazon UAE and Noon UAE buttons search for the same perfume, so check it is the right one. ParfAI may earn a commission if you buy through a link.</p>
   </section>
 
-  <section>
-    <div class="lyh" id="lyh" aria-labelledby="lyh-h">
-      <div class="shead"><div><div class="lyh-k">New &middot; Layering Recipe Builder</div><h2 id="lyh-h">Popular pairs to try today</h2></div><a href="layering.html">Build your own &rarr;</a></div>
-      <p class="lyh-sub">Can't choose between two perfumes? Wear both. Tap a pair to open it in the builder, then change the perfumes or sprays to make it yours.</p>
-      <div class="lyh-row" id="lyh-row"></div>
+  <section class="pk lyh" id="lyh">
+    <div class="pk-head">
+      <div>
+        <div class="pk-k">New &middot; Layering Recipe Builder</div>
+        <h2>Popular pairs to <em>try today</em></h2>
+        <p class="pk-sub">Can't choose between two perfumes? Wear both. Tap a pair to open it in the builder, then change the perfumes or sprays to make it yours.</p>
+      </div>
+      <a class="pk-all" href="layering.html">Build your own &rarr;</a>
     </div>
+    <div class="lyh-row" id="lyh-row"></div>
+  </section>
+
+  <section class="pk" id="weather">
     <div id="home-weather-widget" data-hero="3"></div>
   </section>
 
   <!-- COMMUNITY -->
-  <div class="cwrap" id="community" style="background:var(--panel);border:1px solid var(--border);border-radius:32px;padding:48px 40px;margin:70px 0">
+  <div class="cwrap" id="community" style="background:var(--panel);border:1px solid var(--border);border-radius:32px;padding:56px 40px;margin:96px 0 0">
     <div class="chead" style="text-align:center;margin-bottom:34px">
-      <h2 style="font-family:var(--disp);font-weight:900;font-size:52px;line-height:.95;letter-spacing:-.04em">Welcome to the<br><span class="g">ParfAI community</span></h2>
+      <h2 style="font-family:var(--disp);font-weight:500;font-size:56px;line-height:1.02;letter-spacing:-.02em">Welcome to the<br><span class="g">ParfAI community</span></h2>
       <p style="font-size:18px;color:var(--ink2);max-width:520px;margin:18px auto 22px">Review the scents you love, log what you wear today, and help others find their signature.</p>
       <div class="cta" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn" href="community.html?do=review">Write a review</a><a class="btn ghost" href="community.html?do=today">Log today's scent</a></div>
       <div style="display:flex;justify-content:center;gap:40px;margin:26px 0 6px;flex-wrap:wrap">
@@ -321,8 +332,8 @@
 
 
 <div class="csplit" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px">
-      <div class="card"><h3>Latest reviews</h3><div id="rev"></div><a href="community.html#reviews" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--violet)">See all reviews \u2192</a></div>
-      <div class="card"><h3>Scent of the Day</h3><div id="sotd"></div><a href="community.html#today" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--violet)">Log what you\u2019re wearing \u2192</a></div>
+      <div class="card"><h3>Latest reviews</h3><div id="rev"></div><a href="community.html#reviews" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--violet)">See all reviews →</a></div>
+      <div class="card"><h3>Scent of the Day</h3><div id="sotd"></div><a href="community.html#today" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--violet)">Log what you’re wearing →</a></div>
     </div>
   </div>
 
@@ -339,7 +350,7 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610090010"></script>
-<script src="weather.js?v=202610092100"></script>
+<script src="weather.js?v=202610092200"></script>
 <script src="catalog-lib.js?v=202610090030"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>

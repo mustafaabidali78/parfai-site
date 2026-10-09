@@ -444,8 +444,14 @@ function renderWeatherResult(el, result){
   };
   const trioHTML = `
     <div class="wxt">
+      <div class="pk-head">
+        <div>
+          <div class="pk-k"><i></i><span>Live where you are</span></div>
+          <h2>Best perfumes for <em>today's weather</em></h2>
+          <p class="pk-sub">Chosen from the full catalogue to suit the weather right where you are.</p>
+        </div>
+      </div>
       <div class="wxt-head">
-        <span class="wxt-live">&bull; Live</span>
         <span class="wxt-t">${icon} ${fmtTemp(result.tempC, unit)} in ${wxEsc(String(result.label).split(',')[0])}</span>
         <span class="wxt-s">${cond}</span>
         <span class="wxt-links">
