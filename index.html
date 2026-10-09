@@ -73,6 +73,34 @@
 .mr .mbuy:hover{background:var(--rust)}
 .mx-foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .mx-foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-weight:600}
+
+.lyh{margin-top:34px}
+.lyh .shead{margin-bottom:8px}
+.lyh-k{font:600 12px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--rust);margin-bottom:6px}
+.lyh-sub{color:var(--ink2);font-size:15px;line-height:1.6;max-width:640px;margin:0 0 20px}
+.lyh-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.lyh-card{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:0 14px 30px -26px rgba(20,20,20,.4);display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease}
+.lyh-card:hover{transform:translateY(-3px);box-shadow:0 22px 34px -24px rgba(20,20,20,.4)}
+.lyh-pics{display:flex;justify-content:center;align-items:flex-end;gap:6px;height:128px;background:linear-gradient(160deg,#FBF3EC,#F3E7DA);border-radius:16px;padding:10px 8px 6px;position:relative;overflow:hidden}
+.lyh-pics .pd-bw{margin:0;flex:1 1 0;min-width:0;display:flex;justify-content:center;align-items:flex-end;height:100%}
+.lyh-pics .pd-bw .pd-ph{max-height:106px!important}
+.lyh-pics .pd:hover .pd-bw{transform:none}
+.lyh-pics .lyh-plus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:grid;place-items:center;font:600 15px var(--body);color:var(--muted);z-index:2}
+.lyh-card h3{font:600 22px var(--disp);margin:14px 0 2px;letter-spacing:-.01em}
+.lyh-n{font:500 12px var(--body);color:var(--muted);margin-bottom:8px}
+.lyh-card p{font-size:13px;color:var(--ink2);line-height:1.55;margin:0 0 12px;flex:1}
+.lyh-bar{display:flex;height:9px;border-radius:99px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px}
+.lyh-bar span{display:block}
+.lyh-go{display:block;text-align:center;font:700 12.5px var(--body);background:var(--ink);color:#fff;border-radius:100px;padding:10px;text-decoration:none}
+.lyh-go:after{content:"";position:absolute;inset:0;border-radius:22px}
+.lyh-card:hover .lyh-go{background:var(--rust)}
+.lyh-go:focus-visible{outline:3px solid var(--rust);outline-offset:3px}
+@media(max-width:900px){
+ .lyh-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -16px;padding:4px 16px 14px;scrollbar-width:none}
+ .lyh-row::-webkit-scrollbar{display:none}
+ .lyh-card{flex:0 0 74%;scroll-snap-align:start}
+}
+@media(prefers-reduced-motion:reduce){.lyh-card{transition:none}.lyh-card:hover{transform:none}}
 @media(max-width:760px){
 .mx-grid{grid-template-columns:minmax(0,1fr)}
 .mx-field,.mx-grp,.mx-res,.mx-flask{min-width:0}
@@ -274,11 +302,11 @@
     <div class="laypromo wxhero" style="background:linear-gradient(120deg,#5E7A93 0%,#3D5266 55%,#2A3A47 100%)">
       <div id="home-weather-widget" data-hero="1"></div>
     </div>
-    <a class="lpribbon" href="layering.html">
-      <span class="lpr-badge">New</span>
-      <span class="lpr-txt"><b>Layering Recipe Builder</b> &middot; pick two or three perfumes and see the blend you would get.</span>
-      <span class="lp-cta">Try it →</span>
-    </a>
+    <div class="lyh" id="lyh" aria-labelledby="lyh-h">
+      <div class="shead"><div><div class="lyh-k">New &middot; Layering Recipe Builder</div><h2 id="lyh-h">Popular pairs to try today</h2></div><a href="layering.html">Build your own &rarr;</a></div>
+      <p class="lyh-sub">Can't choose between two perfumes? Wear both. Tap a pair to open it in the builder, then change the perfumes or sprays to make it yours.</p>
+      <div class="lyh-row" id="lyh-row"></div>
+    </div>
   </section>
 
   <!-- COMMUNITY -->
@@ -567,5 +595,45 @@
   })();
 </script>
 <script src="cookie-notice.js"></script>
+<script>
+(function () {
+  var row = document.getElementById('lyh-row'); if (!row || !window.PFC) return;
+  var F = [
+    { c: '#D9A066', d: 'sweet', re: /vanilla|caramel|tonka|coconut|cacao|cocoa|chocolate|honey|praline|almond|coffee|sugar|milk|cream|marshmallow|toffee|butter|custard|candy|cherry|berry|rum|date|fig|licorice|coumarin|benzoin|dried|nougat|sweet/ },
+    { c: '#8A6A4F', d: 'woody', re: /oud|agarwood|wood|sandal|cedar|vetiver|patchouli|leather|tobacco|incense|birch|oak|moss|smok|guaiac|cypress|pine|fir |resin|myrrh|frankincense|olibanum|labdanum|suede|cashmeran|papyrus|elemi|juniper/ },
+    { c: '#C9879C', d: 'floral', re: /rose|jasmin|lavender|iris|orris|violet|peony|tuberose|blossom|neroli|ylang|lily|gardenia|magnolia|orchid|geranium|heliotrope|freesia|mimosa|osmanthus|carnation|petal|floral|lilac|hyacinth|honeysuckle|narcissus|champaca|cyclamen|plumeria|frangipani/ },
+    { c: '#8DB36B', d: 'fresh', re: /bergamot|lemon|orange|mandarin|grapefruit|lime|citrus|citron|yuzu|apple|pear|peach|pineapple|mint|melon|currant|marine|sea |water|aquatic|green|tea|cucumber|rhubarb|litchi|lychee|mango|kiwi|apricot|plum|grape|fruit|basil|rosemary|sage|thyme|herb|galbanum|ozone|aldehyde|petitgrain|tangerine|verbena|cassis|banana|papaya|passion|guava|pomegranate|lavandin/ },
+    { c: '#B5532E', d: 'spicy', re: /saffron|cardamom|pepper|cinnamon|ginger|clove|nutmeg|amber|musk|spice|cumin|coriander|anise|curry|cassia|paprika|chili|turmeric|ambrette|ambroxan|salt|mineral|spicy/ }
+  ];
+  var PAIRS = [
+    ['Cozy amber', 'maison-francis-kurkdjian-maison-francis-kurkdjian-baccarat-rouge-540-unisex', 'tom-ford-tom-ford-tobacco-vanille-unisex', 'Saffron and amberwood over tobacco leaf, vanilla and cacao.'],
+    ['Rose and vanilla', 'parfums-de-marly-parfums-de-marly-delina-women', 'carolina-herrera-ch-good-girl-women', 'Turkish rose meets tuberose, cacao and tonka bean.'],
+    ['Dark and sweet', 'tom-ford-tom-ford-oud-wood-men', 'yves-saint-laurent-black-opium-women', 'Smoky oud wrapped in coffee, vanilla and orange blossom.'],
+    ['Fresh meets smoky', 'creed-creed-aventus-men', 'tom-ford-tom-ford-oud-wood-men', 'Pineapple and bergamot lifting deep oud and sandalwood.']
+  ];
+  function famOf(n) { for (var i = 0; i < F.length; i++) if (F[i].re.test(n)) return i; return -1; }
+  function prof(r) {
+    var t = [0, 0, 0, 0, 0], sum = 0;
+    r.notes.forEach(function (n, i) { var f = famOf(n); if (f < 0) return; var w = 1 / (1 + .12 * i); t[f] += w; sum += w; });
+    return sum ? t.map(function (x) { return x / sum; }) : t;
+  }
+  function esc(s) { return PFC.esc(s); }
+  PFC.load().then(function (d) {
+    var by = {}; d.rows.forEach(function (r) { by[r.slug] = r; });
+    var out = PAIRS.filter(function (p) { return by[p[1]] && by[p[2]]; }).map(function (p) {
+      var a = by[p[1]], b = by[p[2]], pa = prof(a), pb = prof(b), tot = [0, 0, 0, 0, 0], sum = 0, i;
+      for (i = 0; i < 5; i++) { tot[i] = pa[i] + pb[i]; sum += tot[i]; }
+      var order = [0, 1, 2, 3, 4].sort(function (x, y) { return tot[y] - tot[x]; });
+      var lead = F[order[0]].d.charAt(0).toUpperCase() + F[order[0]].d.slice(1) + ' and ' + F[order[1]].d + '. ';
+      var bar = order.filter(function (k) { return tot[k] / (sum || 1) >= .04; }).map(function (k) { return '<span style="width:' + (100 * tot[k] / (sum || 1)).toFixed(1) + '%;background:' + F[k].c + '"></span>'; }).join('');
+      var href = 'layering.html?p=' + encodeURIComponent(a.slug + ':1,' + b.slug + ':1');
+      return '<div class="lyh-card"><div class="lyh-pics">' + PFC.art(a, 106) + '<span class="lyh-plus">+</span>' + PFC.art(b, 106) + '</div>' +
+        '<h3>' + esc(p[0]) + '</h3><div class="lyh-n">' + esc(a.name) + ' + ' + esc(b.name) + '</div><p>' + lead + esc(p[3]) + '</p>' +
+        '<div class="lyh-bar" aria-hidden="true">' + bar + '</div><a class="lyh-go" href="' + esc(href) + '">Try this pair</a></div>';
+    }).join('');
+    if (out) row.innerHTML = out; else document.getElementById('lyh').hidden = true;
+  }).catch(function () { var h = document.getElementById('lyh'); if (h) h.hidden = true; });
+})();
+</script>
 </body>
 </html>
