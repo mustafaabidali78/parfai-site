@@ -1,0 +1,55 @@
+name: Fetch perfume pictures
+
+# Saves one small bottle picture for each perfume in the catalogue, taken from
+# FragranceNet's own Rakuten product feed (Rakuten allows publishers to show
+# them). Only new pictures are fetched, so after the first big run this takes
+# a minute. Needs the same two secrets as the weekly catalogue refresh.
+# You can run it by hand from the Actions tab.
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'   # Mondays, 04:00 UTC (an hour after the catalogue refresh)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-photos
+  cancel-in-progress: false
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install SFTP library
+        run: pip install paramiko
+
+      - name: Download the feed from Rakuten
+        env:
+          RAKUTEN_SFTP_USERNAME: ${{ secrets.RAKUTEN_SFTP_USERNAME }}
+          RAKUTEN_SFTP_PASSWORD: ${{ secrets.RAKUTEN_SFTP_PASSWORD }}
+        run: python scripts/refresh-feed.py "$RUNNER_TEMP/feed.xml"
+
+      - name: Fetch the pictures
+        run: python scripts/fetch-photos.py "$RUNNER_TEMP/feed.xml" catalog/fragrancenet.json catalog-img
+
+      - name: Commit the new pictures
+        run: |
+          git config user.name "parfai-catalog-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add catalog-img
+          if git diff --cached --quiet; then
+            echo "No new pictures."
+          else
+            git commit -m "Add perfume pictures: $(date -u +%Y-%m-%d)"
+            git pull --rebase
+            git push
+          fi
