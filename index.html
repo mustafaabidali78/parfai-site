@@ -28,7 +28,7 @@
 #mixer{margin:0;color:var(--ink);padding:0 0 30px;position:relative}
 #mixer .mx-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
 .hero{text-align:center;padding:44px 0 52px}
-.hero h1{font-family:var(--disp);font-weight:500;font-size:clamp(46px,7.6vw,104px);line-height:1;letter-spacing:-.02em;margin:0 auto;max-width:15ch;color:var(--ink);text-wrap:balance}
+.hero h1{font-family:var(--disp);font-weight:500;font-size:clamp(40px,6vw,80px);line-height:1.02;letter-spacing:-.02em;margin:0 auto;max-width:18ch;color:var(--ink);text-wrap:balance}
 .hero h1 em{background:linear-gradient(110deg,var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;padding-right:.06em}
 #mixer h2{font-family:var(--disp);font-weight:500;font-size:48px;line-height:1.02;letter-spacing:-.02em;margin:0 0 10px;color:var(--ink)}
 #mixer h2 em{font-style:italic}
@@ -137,9 +137,9 @@
 .pk h2{font-family:var(--disp);font-weight:500;font-size:48px;line-height:1.02;letter-spacing:-.02em}
 .pk h2 em{font-style:italic}
 .pk-sub{color:var(--ink2);font-size:17px;line-height:1.55;margin-top:10px;max-width:600px}
-@media(max-width:760px){#community .chead h2{font-size:38px!important}#community{padding:40px 22px!important;margin-top:64px!important}}
+@media(max-width:760px){#community .chead h2{font-size:36px!important}#community{padding:40px 22px!important;margin-top:64px!important}}
 .band{margin:96px 0 70px}
-.band h2{font-weight:500;letter-spacing:-.02em;font-size:52px;line-height:1.02}
+.band h2{font-weight:500;letter-spacing:-.02em;font-size:48px;line-height:1.02}
 @media(max-width:760px){.band{margin-top:64px}.band h2{font-size:36px}}
 .pk-all{font-weight:700;font-size:13px;color:var(--ink);border-bottom:2px solid var(--ink);padding-bottom:2px}
 .pk-all:hover{color:var(--rust);border-color:var(--rust)}
@@ -264,6 +264,7 @@
   <section id="mixer" aria-labelledby="mx-h">
     <div class="mx-top">
       <div>
+        <div class="pk-k"><i></i><span>Tap. Pour. Find your match.</span></div>
         <h2 id="mx-h">Mix your own <em>scent</em></h2>
         <p class="mx-sub">Tap floating notes to pour them into the flask. ParfAI finds real perfumes that contain them, from a catalogue of <span id="mx-total">12,000+</span> fragrances.</p>
       </div>
@@ -328,7 +329,7 @@
   <!-- COMMUNITY -->
   <div class="cwrap" id="community" style="background:var(--panel);border:1px solid var(--border);border-radius:32px;padding:56px 40px;margin:96px 0 0">
     <div class="chead" style="text-align:center;margin-bottom:34px">
-      <h2 style="font-family:var(--disp);font-weight:500;font-size:56px;line-height:1.02;letter-spacing:-.02em">Welcome to the<br><span class="g">ParfAI community</span></h2>
+      <h2 style="font-family:var(--disp);font-weight:500;font-size:48px;line-height:1.02;letter-spacing:-.02em">Welcome to the<br><span class="g">ParfAI community</span></h2>
       <p style="font-size:18px;color:var(--ink2);max-width:520px;margin:18px auto 22px">Review the scents you love, log what you wear today, and help others find their signature.</p>
       <div class="cta" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn" href="community.html?do=review">Write a review</a><a class="btn ghost" href="community.html?do=today">Log today's scent</a></div>
       <div style="display:flex;justify-content:center;gap:40px;margin:26px 0 6px;flex-wrap:wrap">
