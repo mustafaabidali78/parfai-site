@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="ParfAI — Find your scent, not just a bottle">
 <meta name="twitter:description" content="Discover your next signature scent with ParfAI. Browse a catalog of designer and niche perfumes, find affordable dupes, and match fragrances to your taste.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610091100">
+<link rel="stylesheet" href="parfai.css?v=202610091400">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -31,7 +31,6 @@
 #mixer h1{font-family:var(--disp);font-weight:500;font-size:clamp(42px,6vw,76px);line-height:1;letter-spacing:-.01em;margin:0 0 12px;color:var(--ink)}
 #mixer h1 em{background:linear-gradient(110deg,var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
 #mixer .mx-sub{color:var(--ink2);max-width:50ch;font-size:16px;line-height:1.6}
-#mixer .mx-cta{display:flex;gap:10px;flex-wrap:wrap}
 .mx-grid{display:grid;grid-template-columns:minmax(0,1.15fr) 190px minmax(0,1.1fr);gap:26px;align-items:center}
 @media(max-width:920px){.mx-grid{grid-template-columns:1fr;gap:18px}}
 .mx-field{position:relative;min-height:300px;display:flex;flex-wrap:wrap;gap:11px;align-content:center;justify-content:center}
@@ -42,9 +41,16 @@
 .mx-bub:focus-visible,.mx-clear:focus-visible,.mx-shuf:focus-visible,#mixer a:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
 @keyframes mxdrift{50%{transform:translateY(-9px)}}
 @media(prefers-reduced-motion:reduce){.mx-bub{animation:none}.mr{animation:none!important}}
+.mx-go{display:grid;gap:12px;margin-top:20px}
+.mx-go a{display:block;text-align:center;border-radius:100px;padding:15px 12px;font:800 14px var(--body);color:#fff;text-decoration:none;text-shadow:0 1px 2px rgba(0,0,0,.2);box-shadow:0 10px 20px -8px var(--g),inset 0 2px 5px rgba(255,255,255,.55),inset 0 -5px 10px rgba(0,0,0,.12);transition:transform .18s}
+.mx-go a:hover{transform:translateY(-3px) scale(1.03)}
+.mx-go a:focus-visible{outline:3px solid var(--rust);outline-offset:3px}
+.mx-go1{--g:rgba(255,77,157,.55);background:radial-gradient(circle at 28% 22%,#FFB3D4 0%,#FF4D9D 42%,#FF6A5C 100%)}
+.mx-go2{--g:rgba(0,184,212,.5);background:radial-gradient(circle at 28% 22%,#CFC7FF 0%,#8B7CFF 45%,#19C0DC 100%)}
+@media(prefers-reduced-motion:reduce){.mx-go a{transition:none}.mx-go a:hover{transform:none}}
 .mx-flask{width:170px;margin-inline:auto;text-align:center}
 .mx-flask svg{width:100%;height:auto;overflow:visible}
-@media(max-width:920px){.mx-flask{width:130px}}
+@media(max-width:920px){.mx-flask{width:130px}.mx-go{width:min(260px,86vw);margin-left:50%;transform:translateX(-50%)}.mx-go a:hover{transform:translateY(-3px)}}
 .mx-cnt{font:700 13px var(--body);margin-top:8px;color:var(--ink2);min-height:20px}
 .mx-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .mx-clear,.mx-shuf{font:700 12px var(--body);background:var(--panel);border:1.5px solid var(--border);color:var(--ink);border-radius:100px;padding:7px 14px;cursor:pointer}
@@ -200,7 +206,6 @@
         <h1 id="mx-h">Mix your own <em>scent</em></h1>
         <p class="mx-sub">Tap floating notes to pour them into the flask. ParfAI finds real perfumes that contain them, from a catalogue of <span id="mx-total">12,000+</span> fragrances.</p>
       </div>
-      <div class="mx-cta"><a class="btn" href="dupe-finder.html">Try the Dupe Finder</a><a class="btn ghost" href="explore.html">Find my scent</a></div>
     </div>
     <div class="mx-grid">
       <div class="mx-field" id="mx-field" role="group" aria-label="Fragrance notes"></div>
@@ -208,6 +213,7 @@
         <svg viewBox="0 0 170 230" id="mx-svg" aria-hidden="true"></svg>
         <div class="mx-cnt" id="mx-cnt"></div>
         <div class="mx-btns"><button class="mx-clear" type="button" id="mx-clear">Empty the flask</button><button class="mx-shuf" type="button" id="mx-shuf">More notes</button></div>
+        <div class="mx-go"><a class="mx-go1" href="dupe-finder.html">Try the Dupe Finder</a><a class="mx-go2" href="explore.html">Find my scent</a></div>
       </div>
       <div class="mx-res">
         <h2>Perfumes that match</h2>
@@ -286,7 +292,7 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610090010"></script>
-<script src="weather.js?v=202610091100"></script>
+<script src="weather.js?v=202610091400"></script>
 <script src="catalog-lib.js?v=202610090030"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
