@@ -13,7 +13,7 @@
    live weather for whichever city is chosen. No other script is needed.
    ------------------------------------------------------------- */
 
-const WEATHER_CACHE_KEY = 'parfai_weather_pick_v2';
+const WEATHER_CACHE_KEY = 'parfai_weather_pick_v3';
 const WEATHER_CACHE_MS = 3 * 60 * 60 * 1000; // 3 hours — weather doesn't change fast enough to refetch every load
 
 // Representative cities spanning distinct climates — used as the
