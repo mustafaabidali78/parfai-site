@@ -659,3 +659,9 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .ncode-go{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:6px 0 12px}
 .ncode-x{background:none;border:0;color:var(--ink2);text-decoration:underline;font:inherit;font-size:14px;cursor:pointer;padding:6px}
 .ncode-fine{font-size:12px!important;margin:0!important}
+
+/* FragranceNet pictures on the weather picks */
+.wpxthumb,.wcthumb{position:relative}
+.wpxthumb img,.wcthumb img{mix-blend-mode:multiply}
+.wpxthumb.hasimg .bottle,.wcthumb.hasimg .bottle{display:none}
+.wpxthumb img:not([src]),.wcthumb img:not([src]){display:none}

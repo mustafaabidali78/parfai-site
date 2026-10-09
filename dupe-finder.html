@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Dupe Finder — ParfAI">
 <meta name="twitter:description" content="Find affordable dupes for your favorite designer and niche perfumes, matched by shared notes and accords, with ParfAI's Dupe Finder.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610080010">
+<link rel="stylesheet" href="parfai.css?v=202610090030">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -29,7 +29,10 @@
   .dfrow .searchbox{flex:1;min-width:260px}
   .matchcard{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:16px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
   @media(max-width:640px){.matchcard{grid-template-columns:1fr}}
-  .matchcard .sw{width:56px;height:88px;border-radius:10px 10px 14px 14px;flex-shrink:0}
+  .matchcard .sw{width:56px;height:88px;border-radius:10px 10px 14px 14px;flex-shrink:0;overflow:hidden}
+  .matchcard .sw .swph{display:block;width:100%;height:100%;object-fit:contain;opacity:0;mix-blend-mode:multiply}
+  .matchcard .sw.has{width:96px;height:110px;background:none!important}
+  .matchcard .sw.has .swph{opacity:1}
   .matchcard .nm{font-family:var(--disp);font-weight:800;font-size:19px}
   .matchcard .bd{font-size:12px;color:var(--muted)}
   .matchcard .why{font-size:13px;color:var(--ink2);margin-top:8px}
@@ -104,7 +107,7 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610090010"></script>
-<script src="catalog-lib.js?v=202610090020"></script>
+<script src="catalog-lib.js?v=202610090030"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -179,7 +182,7 @@
       const why = shared.length ? `Shares ${shared.length > 1 ? shared.slice(0, -1).join(', ') + ' and ' + shared[shared.length - 1] : shared[0]} with ${esc(target.name)}.` : '';
       const tn = Object.keys(weights(target)).length;
       return `<div class="matchcard">
-        <div class="sw" style="background:linear-gradient(140deg,${g[0]},${g[1]})"></div>
+        <div class="sw" style="background:linear-gradient(140deg,${g[0]},${g[1]})">${PFC.photo(r) ? `<img class="swph" src="${PFC.photo(r)}" alt="" loading="lazy" onload="this.parentNode.classList.add('has')" onerror="this.remove()">` : ''}</div>
         <div>
           <a class="nm" href="catalog.html?id=${encodeURIComponent(r.slug)}">${esc(r.name)}</a>
           <div class="bd">${esc(r.house)} · ${esc(PFC.GENDER[r.gender])}${m.pick ? ' · <b>Community favourite</b>' : ''}</div>

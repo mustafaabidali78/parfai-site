@@ -172,6 +172,7 @@ function slimPick(item, data, bucket, scored){
   const variant = item[7].find(v => !/tester/i.test(v[1])) || item[7][0];
   return {
     slug: item[0],
+    pid: item[7][0] ? item[7][0][0] : '',
     house: item[1],
     name: wxShortTitle(item[1], item[2]),
     gender: item[3],
@@ -218,9 +219,11 @@ async function pickForWeather(bucket){
 const WEATHER_GENDER_GRAD = { 0: ['#6C7BFF', '#00B8D4'], 1: ['#FF4D9D', '#FF8C42'], 2: ['#8B7CFF', '#C86BFF'] };
 const WEATHER_GENDER_TEXT = { 0: 'For men', 1: 'For women', 2: 'Unisex' };
 function bottleThumbHTML(p, cls){
-  // Bottle photos stay hidden until FragranceNet confirms in writing that we may host them.
+  // A FragranceNet picture goes on top of the drawn bottle when we have one (large thumbnails only).
   const g = WEATHER_GENDER_GRAD[p.gender] || WEATHER_GENDER_GRAD[2];
-  return `<div class="${cls}" style="background:linear-gradient(150deg,${g[0]},${g[1]})"><div class="bottle"></div></div>`;
+  const big = cls === 'wpxthumb' || cls === 'wcthumb';
+  const pic = big && p.pid ? `<img src="catalog-img/${p.pid}.jpg" alt="" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">` : '';
+  return `<div class="${cls}" style="background:linear-gradient(150deg,${g[0]},${g[1]})"><div class="bottle"></div>${pic}</div>`;
 }
 
 function tempUnitForCountry(countryCode){

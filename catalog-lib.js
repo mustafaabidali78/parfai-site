@@ -116,6 +116,8 @@
     var ph = PHOTOS && r.pid ? '<img class="pd-ph" src="catalog-img/' + esc(r.pid) + '.jpg" alt="' + esc(r.name) + ' bottle" loading="lazy" style="max-height:' + h + 'px" onload="this.parentNode.classList.add(\'has\')" onerror="this.remove()">' : '';
     return '<div class="pd-bw">' + bottle(r, h) + ph + '</div>';
   }
+  // Address of the FragranceNet picture for a perfume, or '' when pictures are off or missing.
+  function photo(r) { return PHOTOS && r && r.pid ? 'catalog-img/' + r.pid + '.jpg' : ''; }
   // A card in the "pedestal" style, used by Explore and Catalogue. "inner" is the text under the bottle.
   function stage(r, h) {
     var n = r.notes, bubs = n.slice(0, 3).map(function (x) { var c = noteCol(x); return '<span class="pd-bub" style="background:' + c + ';color:' + noteTxt(c) + '">' + esc(cap(x.split(' ')[0])) + '</span>'; }).join('');
@@ -164,5 +166,5 @@
       '<div class="pd-act">' + buy + '</div></div>';
   }
 
-  window.PFC = { shopQuery: shopQuery, load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
+  window.PFC = { shopQuery: shopQuery, load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, photo: photo, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
 })();
