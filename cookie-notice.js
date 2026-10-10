@@ -17,7 +17,7 @@
 
   /* Visitor counter (Cloudflare Web Analytics). Only loads after the visitor accepts.
      Paste the site token between the quotes below to switch it on. */
-  var STATS_TOKEN = '';
+  var STATS_TOKEN = '2953899ee06b4194903b83396f49d59f';
   function loadStats() {
     if (!STATS_TOKEN || window.__parfaiStats || !window.parfaiConsent.allowed()) return;
     window.__parfaiStats = true;
