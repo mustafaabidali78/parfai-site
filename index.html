@@ -101,21 +101,24 @@
 .lyh-k{font:600 12px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--rust);margin-bottom:6px}
 .lyh-sub{color:var(--ink2);font-size:15px;line-height:1.6;max-width:640px;margin:0 0 20px}
 .lyh-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.lyh-card{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:0 14px 30px -26px rgba(20,20,20,.4);display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease}
+.lyh-card{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:16px 16px 18px;box-shadow:0 14px 30px -26px rgba(20,20,20,.4);display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease}
 .lyh-card:hover{transform:translateY(-3px);box-shadow:0 22px 34px -24px rgba(20,20,20,.4)}
-.lyh-pics{display:flex;justify-content:center;align-items:flex-end;gap:6px;height:128px;background:linear-gradient(160deg,#FBF3EC,#F3E7DA);border-radius:16px;padding:10px 8px 6px;position:relative;overflow:hidden}
-.lyh-pics .pd-bw{margin:0;flex:1 1 0;min-width:0;display:flex;justify-content:center;align-items:flex-end;height:100%}
-.lyh-pics .pd-bw .pd-ph{max-height:106px!important}
+.lyh-pics{display:flex;justify-content:center;align-items:center;height:150px;position:relative;margin-bottom:12px}
+.lyh-pics:before{content:"";position:absolute;left:50%;top:50%;width:150px;height:150px;border-radius:50%;transform:translate(-50%,-50%);background:var(--c)}
+.lyh-pics .pd-bw{margin:0;flex:1 1 0;min-width:0;display:flex;justify-content:center;align-items:center;height:100%;position:relative}
+.lyh-pics .pd-bw .pd-ph{max-height:92px!important;top:50%;bottom:auto;transform:translate(-50%,-50%)}
 .lyh-pics .pd:hover .pd-bw{transform:none}
-.lyh-pics .lyh-plus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:grid;place-items:center;font:600 15px var(--body);color:var(--muted);z-index:2}
-.lyh-card h3{font:600 22px var(--disp);margin:14px 0 2px;letter-spacing:-.01em}
-.lyh-n{font:500 12px var(--body);color:var(--muted);margin-bottom:8px}
-.lyh-card p{font-size:13px;color:var(--ink2);line-height:1.55;margin:0 0 12px;flex:1}
-.lyh-bar{display:flex;height:9px;border-radius:99px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px}
-.lyh-bar span{display:block}
-.lyh-go{display:block;text-align:center;font:700 12.5px var(--body);background:var(--ink);color:#fff;border-radius:100px;padding:10px;text-decoration:none}
-.lyh-go:after{content:"";position:absolute;inset:0;border-radius:22px}
-.lyh-card:hover .lyh-go{background:var(--rust)}
+.lyh-pics .lyh-plus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15);display:grid;place-items:center;font:700 20px/1 var(--body);color:var(--ink);z-index:3}
+.lyh-card h3{font:600 23px var(--disp);margin:6px 0 2px;letter-spacing:-.01em}
+.lyh-n{font:500 12px var(--body);color:var(--ink2);margin-bottom:10px}
+.lyh-card p{font-size:13px;color:var(--ink2);line-height:1.55;margin:0 0 14px;flex:1}
+.lyh-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lyh-fam{display:flex;flex-wrap:wrap;gap:6px}
+.lyh-fam span{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--body);background:var(--c);color:var(--ink);padding:4px 10px;border-radius:99px}
+.lyh-fam i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.lyh-go{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:600 18px/1 var(--body);background:var(--d);color:#fff;text-decoration:none}
+.lyh-go:after{content:"";position:absolute;inset:0;border-radius:24px}
+.lyh-card:hover .lyh-go{filter:brightness(.92)}
 .lyh-go:focus-visible{outline:3px solid var(--rust);outline-offset:3px}
 @media(max-width:900px){
  .lyh-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -16px;padding:4px 16px 14px;scrollbar-width:none}
@@ -551,7 +554,7 @@
     var FSIDE = ['sweet', 'woody', 'floral', 'fresh', 'spicy'];
     var FDESC = ['sweet and creamy', 'woody and smoky', 'floral', 'fresh and fruity', 'warm and spicy'];
     var FMOOD = [['cosy', 'lovely on evenings and in cooler weather'], ['deep, grounded', 'great for evenings and cooler weather'], ['soft, romantic', 'easy from day into night'], ['bright, clean', 'made for hot days and the office'], ['warm, glowing', 'good for evenings and cooler weather']];
-    function famOf(n) { for (var i = 0; i < FAM.length; i++) if (FAM[i][1].indexOf(n) >= 0) return i; return 0; }
+  function famOf(n) { for (var i = 0; i < FAM.length; i++) if (FAM[i][1].indexOf(n) >= 0) return i; return 0; }
     function chipHTML(n, cls) {
       return '<button class="mx-chip' + (cls ? ' ' + cls : '') + '" type="button" aria-pressed="' + (mix.indexOf(n) >= 0) + '" data-n="' + esc(n) + '"><i style="--c:' + colorOf(n) + '"></i>' + esc(PFC.cap(n)) + '</button>';
     }
@@ -705,6 +708,7 @@
     ['Dark and sweet', 'tom-ford-tom-ford-oud-wood-men', 'yves-saint-laurent-black-opium-women', 'Smoky oud wrapped in coffee, vanilla and orange blossom.'],
     ['Fresh meets smoky', 'creed-creed-aventus-men', 'tom-ford-tom-ford-oud-wood-men', 'Pineapple and bergamot lifting deep oud and sandalwood.']
   ];
+  var PAL = [['#FFD9C2', '#E9703A'], ['#FAD3E3', '#D6407F'], ['#DCD3FA', '#6C4BD8'], ['#CDEBD9', '#23935E']], idx = 0;
   function famOf(n) { for (var i = 0; i < F.length; i++) if (F[i].re.test(n)) return i; return -1; }
   function prof(r) {
     var t = [0, 0, 0, 0, 0], sum = 0;
@@ -721,9 +725,11 @@
       var lead = F[order[0]].d.charAt(0).toUpperCase() + F[order[0]].d.slice(1) + ' and ' + F[order[1]].d + '. ';
       var bar = order.filter(function (k) { return tot[k] / (sum || 1) >= .04; }).map(function (k) { return '<span style="width:' + (100 * tot[k] / (sum || 1)).toFixed(1) + '%;background:' + F[k].c + '"></span>'; }).join('');
       var href = 'layering.html?p=' + encodeURIComponent(a.slug + ':1,' + b.slug + ':1');
-      return '<div class="lyh-card"><div class="lyh-pics">' + PFC.art(a, 106) + '<span class="lyh-plus">+</span>' + PFC.art(b, 106) + '</div>' +
-        '<h3>' + esc(p[0]) + '</h3><div class="lyh-n">' + esc(a.name) + ' + ' + esc(b.name) + '</div><p>' + lead + esc(p[3]) + '</p>' +
-        '<div class="lyh-bar" aria-hidden="true">' + bar + '</div><a class="lyh-go" href="' + esc(href) + '">Try this pair</a></div>';
+      var fams = order.filter(function (k) { return tot[k] / (sum || 1) >= .1; }).slice(0, 3).map(function (k) { return '<span><i style="background:' + F[k].c + '"></i>' + F[k].d.charAt(0).toUpperCase() + F[k].d.slice(1) + '</span>'; }).join('');
+      var pal = PAL[idx++ % PAL.length];
+      return '<div class="lyh-card" style="--c:' + pal[0] + ';--d:' + pal[1] + '"><div class="lyh-pics">' + PFC.art(a, 106) + '<span class="lyh-plus">+</span>' + PFC.art(b, 106) + '</div>' +
+        '<h3>' + esc(p[0]) + '</h3><div class="lyh-n">' + esc(a.name) + ' + ' + esc(b.name) + '</div><p>' + esc(p[3]) + '</p>' +
+        '<div class="lyh-foot"><div class="lyh-fam">' + fams + '</div><a class="lyh-go" href="' + esc(href) + '" aria-label="Try this pair: ' + esc(p[0]) + '"><span aria-hidden="true">\u2192</span></a></div></div>';
     }).join('');
     if (out) row.innerHTML = out; else document.getElementById('lyh').hidden = true;
   }).catch(function () { var h = document.getElementById('lyh'); if (h) h.hidden = true; });
