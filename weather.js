@@ -307,7 +307,7 @@ async function reverseGeocode(lat, lon){
 async function weatherForCoords(lat, lon, label, countryCode){
   const w = await fetchWeatherFor(lat, lon);
   const bucket = weatherBucket(w.tempC, w.code);
-  const result = { lat, lon, label, countryCode, tempC: w.tempC, code: w.code, bucket, picks: [], ts: Date.now(), day: wxDayKey() };
+  const result = { lat, lon, label, countryCode, tempC: w.tempC, code: w.code, bucket, picks: [], ts: Date.now(), day: wxDayKey(), v: 2 };
   try { result.picks = await pickForWeather(bucket); } catch (e) { result.picks = []; result.catalogError = true; }
   writeWeatherCache(result);
   return result;
@@ -319,7 +319,7 @@ function readWeatherCache(){
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (!data.ts || Date.now() - data.ts > WEATHER_CACHE_MS) return null;
-    if (data.day !== wxDayKey() || !data.picks || !data.picks.length || data.picks.some(p => p.pid === undefined)) return null; // new day or no picks saved: start fresh
+    if (data.day !== wxDayKey() || !data.picks || !data.picks.length || data.picks.some(p => p.pid === undefined) || data.v !== 2) return null; // new day or no picks saved: start fresh
     return data;
   } catch (e) { return null; }
 }
@@ -443,11 +443,12 @@ function renderWeatherResult(el, result){
   // Home page layout: a bar coloured by the weather, then three equal photo tiles side by side.
   const TRIO_TAG = { hot: 'Best for the heat', mild: 'Best for today', rainy: 'Best for the rain', cold: 'Best for the cold', snowy: 'Best for the snow' };
   // The bar colour tells the weather at a glance: strong orange when hot, fresh green when mild, blue-grey for rain, ice blue for cold, pale for snow.
+  // Every colour pair below is checked to be at least 4.5 to 1 contrast (the readable standard) at both ends of the bar.
   const wxBarColors = (bucket, c) => {
-    if (bucket === 'hot') return c >= 38 ? ['#FF7A00', '#E8321A', '#fff'] : ['#FF9A1F', '#FF5A1F', '#fff'];
+    if (bucket === 'hot') return c >= 38 ? ['#FF8000', '#FF4D1A', '#240800'] : ['#FF9A1F', '#FF5A1F', '#2B1100'];
     if (bucket === 'mild') return ['#C6EBA9', '#7FCB8E', '#12351d'];
-    if (bucket === 'rainy') return ['#7C96B2', '#4F6A89', '#fff'];
-    if (bucket === 'cold') return ['#8CC6F2', '#4C9BE0', '#fff'];
+    if (bucket === 'rainy') return ['#A9BDD3', '#7E9AB8', '#0F2236'];
+    if (bucket === 'cold') return ['#9AD0F5', '#6AB3EA', '#071F38'];
     return ['#E9F3FB', '#C3DBEE', '#1d3550'];
   };
   const bar = wxBarColors(result.bucket, result.tempC);

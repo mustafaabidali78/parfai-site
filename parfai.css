@@ -712,11 +712,11 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .wxt-ic{font-size:28px;line-height:1}
 .wxt-t{font-family:var(--disp);font-weight:600;font-size:34px;letter-spacing:-.01em;line-height:1}
 .wxt-w{display:flex;flex-direction:column;line-height:1.25}
-.wxt-w b{font-size:15px;font-weight:700}
-.wxt-w span{font-size:13px;opacity:.92}
+.wxt-w b{font-size:15px;font-weight:800}
+.wxt-w span{font-size:13.5px;font-weight:500}
 .wxt-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px 16px}
-.wxt-link{font:600 12.5px var(--body);color:var(--wt);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;opacity:.95}
-.wxt-link:hover{opacity:1}
+.wxt-link{font:600 12.5px var(--body);color:var(--wt);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.wxt-link:hover{text-decoration-thickness:2px}
 .wxt-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .wxt-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:10px 10px 14px;display:flex;flex-direction:column;position:relative;min-width:0}
 .wxt-th{display:flex;align-items:center;justify-content:center;height:130px;border-radius:14px;background:#F7F5F1;margin-bottom:10px;overflow:hidden;text-decoration:none}
