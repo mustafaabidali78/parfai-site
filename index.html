@@ -175,32 +175,29 @@
 .pk-row:hover .ea{background:var(--ink);color:#fff}
 .pk-dp{display:inline-block;margin-left:8px;font-family:var(--body);font-size:10px;font-weight:800;letter-spacing:.08em;background:#00C48B;color:#06281d;padding:4px 9px;border-radius:100px;vertical-align:middle;font-style:normal}
 .pk .bub{border-radius:50%;display:flex;align-items:center;justify-content:center;width:50px;height:50px;font-size:9.5px;font-weight:600;text-align:center;line-height:1.1;padding:4px;box-shadow:0 12px 22px -12px rgba(20,20,20,.5),inset 0 -6px 12px rgba(0,0,0,.08),inset 0 6px 10px rgba(255,255,255,.45)}
-.pv{background:var(--panel);border:1px solid var(--border);border-radius:28px;padding:18px;box-shadow:0 20px 40px -28px rgba(20,20,20,.35);margin-bottom:18px}
-.pv-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch}
-.pv-side{border-radius:20px;padding:20px 24px}
-.pv-side.orig{background:#F3EFFF}.pv-side.dupe{background:#E4FAF2}
-.pv-ph{float:right;width:96px;height:96px;object-fit:contain;border-radius:12px;margin:0 0 8px 12px;background:#fff;box-shadow:0 8px 18px -10px rgba(0,0,0,.35)}
-.pv-side:after{content:"";display:block;clear:both}
-.pv-lab{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
-.pv-side.orig .pv-lab{color:#6a55e8}.pv-side.dupe .pv-lab{color:#00835d}
-.pv-h{font-size:13px;color:var(--ink2)}
-.pv-n{font-family:var(--disp);font-size:clamp(24px,2.6vw,32px);font-weight:700;line-height:1.1}
-.pv-mid{display:flex;align-items:center;justify-content:center;padding:0 14px}
-.pv-ring{--p:60;width:92px;height:92px;border-radius:50%;background:conic-gradient(#FF8C42 calc(var(--p)*1%),#ECEAE4 0);display:grid;place-items:center}
-.pv-ring b{width:70px;height:70px;border-radius:50%;background:#fff;display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:22px;line-height:1;text-align:center}
-.pv-ring small{display:block;font:600 10px var(--body);color:var(--muted);margin-top:2px}
-.pv-cap{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 6px 2px}
-.pv-cap b{display:block;font-size:15px;font-weight:700;margin-bottom:8px}
-.pv-chips{display:flex;flex-wrap:wrap;gap:6px}
+.pv{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:24px 22px;box-shadow:0 20px 40px -28px rgba(20,20,20,.35);margin-bottom:18px}
+.pv-top{display:grid;grid-template-columns:1fr 36px 1fr;gap:10px;align-items:center}
+.pv-side{text-align:center;min-width:0}
+.pv-lab{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px;margin-bottom:10px}
+.pv-side.orig .pv-lab{background:#F3EFFF;color:#6a55e8}.pv-side.dupe .pv-lab{background:#E4FAF2;color:#00835d}
+.pv-ph{display:block;width:120px;height:120px;object-fit:contain;border-radius:14px;background:#fff;margin:0 auto 10px}
+.pv-h{font-size:12px;color:var(--muted)}
+.pv-n{font-family:var(--disp);font-size:clamp(18px,2vw,22px);font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.pv-vs{text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
+.pv-score{margin:20px auto 12px;max-width:420px;text-align:center}
+.pv-score b{font-family:var(--disp);font-size:24px;font-weight:700}
+.pv-score span{color:var(--muted);font-size:13px}
+.pv-meter{height:8px;border-radius:99px;background:#ECEAE4;overflow:hidden;margin-top:8px}
+.pv-meter i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#FF8C42,#FFB36B)}
+.pv-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0}
 .pv-chips span{font-size:12px;font-weight:600;padding:5px 11px;border-radius:100px}
-.pv-act{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.pv-act .buy{display:inline-block;background:#00C48B;color:#04261b;font-weight:700;font-size:12px;letter-spacing:.03em;text-transform:uppercase;padding:11px 18px;border-radius:100px;transition:.18s}
+.pv-act{text-align:center}
+.pv-act .buy{display:inline-block;background:#00C48B;color:#04261b;font-weight:800;font-size:13px;letter-spacing:.03em;text-transform:uppercase;padding:13px 24px;border-radius:100px;transition:.18s}
 .pv-act .buy:hover{background:#00a877}
-.pv-act .buy.alt{background:var(--ink);color:#fff}
-.pv-act .buy.alt:hover{background:var(--rust)}
-.pv-act .gh{display:inline-block;font-weight:700;font-size:12px;letter-spacing:.03em;text-transform:uppercase;padding:10px 18px;border-radius:100px;border:1.5px solid var(--border);color:var(--ink)}
-.pv-act .gh:hover{border-color:var(--ink)}
-@media(max-width:760px){.pv-top{grid-template-columns:1fr}.pv-mid{padding:14px 0}.pv-side{padding:18px}}
+.pv-more{margin-top:12px;font-size:13px;color:var(--ink2)}
+.pv-more a{font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.pv-more a:hover{color:var(--rust)}
+@media(max-width:600px){.pv{padding:18px 12px}.pv-top{grid-template-columns:1fr 20px 1fr;gap:6px}.pv-ph{width:96px;height:96px}.pv-n{font-size:17px}.pv-lab{font-size:9px;letter-spacing:.06em;padding:4px 8px}}
 .pk-disc{font-size:12.5px;color:var(--muted);margin-top:22px;max-width:720px}
 
 /* ---- Today's picks shelf ---- */
@@ -327,7 +324,7 @@
       <div>
         <div class="pk-k">Same notes, smaller price tag</div>
         <h2>Famous vs <em>affordable</em></h2>
-        <p class="pk-sub">A famous perfume next to a similar, more affordable one. The ring shows how many of their listed notes match.</p>
+        <p class="pk-sub">A famous perfume next to a similar, more affordable one. The bar shows how many of their listed notes match.</p>
       </div>
       <a class="pk-all" href="dupe-finder.html">Try the Dupe Finder →</a>
     </div>
@@ -486,15 +483,17 @@
       var tot = Math.max(c.fn.length, c.dn.length), pct = Math.round(c.sh.length / tot * 100);
       var chips = c.sh.map(function (n) { var col = noteCol(n); return '<span style="background:' + col + ';color:' + noteTxt(col) + '">' + E(C(n)) + '</span>'; }).join('');
       var q = PFC.shopQuery(c.d);
-      var buy = (c.d.link ? '<a class="buy" href="' + E(c.d.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price \u2197</a>' : '<a class="buy" href="catalog.html?id=' + encodeURIComponent(c.d.slug) + '">View \u2197</a>') +
-        '<a class="buy alt" href="' + E(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE \u2197</a>' +
-        '<a class="buy alt noonlink" href="' + E(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE \u2197</a>';
+      var buy = c.d.link ? '<a class="buy" href="' + E(c.d.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price \u2197</a>' : '<a class="buy" href="catalog.html?id=' + encodeURIComponent(c.d.slug) + '">View \u2197</a>';
+      var more = 'Also at <a href="' + E(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE</a> \u00b7 ' +
+        '<a class="noonlink" href="' + E(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE</a> \u00b7 ' +
+        '<a href="catalog.html?id=' + encodeURIComponent(c.f.slug) + '">See ' + E(c.f.name) + '</a>';
       return '<div class="pv"><div class="pv-top">' +
-        '<div class="pv-side orig">' + pvPic(c.f) + '<div class="pv-lab">The famous one</div><div class="pv-h">' + E(c.f.house) + '</div><div class="pv-n">' + E(c.f.name) + '</div></div>' +
-        '<div class="pv-mid"><div class="pv-ring" style="--p:' + pct + '"><b><span>' + c.sh.length + '/' + tot + '<small>match</small></span></b></div></div>' +
-        '<div class="pv-side dupe">' + pvPic(c.d) + '<div class="pv-lab">The affordable one</div><div class="pv-h">' + E(c.d.house) + '</div><div class="pv-n">' + E(c.d.name) + '</div></div></div>' +
-        '<div class="pv-cap"><div><b>They share these notes</b><div class="pv-chips">' + chips + '</div></div>' +
-        '<div class="pv-act">' + buy + '<a class="gh" href="catalog.html?id=' + encodeURIComponent(c.f.slug) + '">See ' + E(c.f.name) + '</a></div></div></div>';
+        '<div class="pv-side orig"><div class="pv-lab">The famous one</div>' + pvPic(c.f) + '<div class="pv-h">' + E(c.f.house) + '</div><div class="pv-n">' + E(c.f.name) + '</div></div>' +
+        '<div class="pv-vs">vs</div>' +
+        '<div class="pv-side dupe"><div class="pv-lab">The affordable one</div>' + pvPic(c.d) + '<div class="pv-h">' + E(c.d.house) + '</div><div class="pv-n">' + E(c.d.name) + '</div></div></div>' +
+        '<div class="pv-score"><b>' + pct + '% alike</b> <span>\u00b7 ' + c.sh.length + ' of ' + tot + ' notes match</span><div class="pv-meter"><i style="width:' + pct + '%"></i></div></div>' +
+        '<div class="pv-chips">' + chips + '</div>' +
+        '<div class="pv-act">' + buy + '<div class="pv-more">' + more + '</div></div></div>';
     }).join('') || '<p class="pk-sub">Try the Dupe Finder to match any perfume with an affordable alternative.</p>';
   }).catch(function () {
     // If the catalogue can't load, point people to the catalogue so the page is never empty.
