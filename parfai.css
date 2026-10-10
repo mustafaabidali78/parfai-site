@@ -706,36 +706,43 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .lpribbon:hover .lp-cta{background:rgba(255,255,255,.16);text-decoration:none}
 @media(max-width:760px){.lpribbon{border-radius:26px;padding:16px 20px}}
 
-/* ---- Home weather pick: compact "three picks" layout ---- */
+/* ---- Home weather pick: weather colour bar plus three equal photo tiles ---- */
 .wxt{margin-top:0}
-.wxt-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:14px}
-.wxt-live{font:700 11px var(--body);letter-spacing:.06em;background:#2BB673;color:#fff;border-radius:99px;padding:4px 11px}
-.wxt-t{font-family:var(--disp);font-weight:600;font-size:26px;letter-spacing:-.01em}
-.wxt-s{font-size:13px;color:var(--muted)}
-.wxt-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px 16px}
-.wxt-link{font:600 12.5px var(--body);color:var(--ink2);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.wxt-link:hover{color:var(--ink)}
+.wxt-bar{--wa:#FF9A1F;--wb:#FF5A1F;--wt:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;padding:14px 22px;border-radius:20px;background:linear-gradient(110deg,var(--wa),var(--wb));color:var(--wt);margin-bottom:14px}
+.wxt-ic{font-size:28px;line-height:1}
+.wxt-t{font-family:var(--disp);font-weight:600;font-size:34px;letter-spacing:-.01em;line-height:1}
+.wxt-w{display:flex;flex-direction:column;line-height:1.25}
+.wxt-w b{font-size:15px;font-weight:700}
+.wxt-w span{font-size:13px;opacity:.92}
+.wxt-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px 16px}
+.wxt-link{font:600 12.5px var(--body);color:var(--wt);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;opacity:.95}
+.wxt-link:hover{opacity:1}
 .wxt-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.wxt-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:14px;display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:start;box-shadow:0 14px 30px -26px rgba(20,20,20,.4)}
-.wxt-card.top{border:1.5px solid var(--ink)}
-.wxt-th{position:relative;display:block;height:110px;border-radius:14px;overflow:hidden;background:#F5F1E8}
-.wxt-th .bottle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34px;height:62px;border-radius:8px 8px 12px 12px;background:rgba(255,255,255,.45);border:2px solid rgba(255,255,255,.75)}
-.wxt-th img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:contain}
-.wxt-th.hasimg{background:#fff!important;border:1px solid var(--border)}
-.wxt-th.hasimg .bottle{display:none}
-.wxt-tag{font:700 11px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.wxt-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:10px 10px 14px;display:flex;flex-direction:column;position:relative;min-width:0}
+.wxt-th{display:flex;align-items:center;justify-content:center;height:130px;border-radius:14px;background:#F7F5F1;margin-bottom:10px;overflow:hidden;text-decoration:none}
+.wxt-th img{max-height:108px;max-width:84%;width:auto;height:auto;object-fit:contain;mix-blend-mode:multiply}
+.wxt-bt{display:block;width:36px;height:62px;border-radius:9px 9px 12px 12px;background:rgba(0,0,0,.14);position:relative}
+.wxt-bt:before{content:"";position:absolute;left:50%;top:-10px;width:15px;height:12px;margin-left:-7.5px;border-radius:4px 4px 2px 2px;background:rgba(0,0,0,.2)}
+.wxt-tag{font:700 10.5px var(--body);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:0 3px;margin-bottom:3px}
 .wxt-card.top .wxt-tag{color:var(--rust)}
-.wxt-nm{display:block;font-family:var(--disp);font-weight:600;font-size:20px;line-height:1.15;color:var(--ink)}
-.wxt-hs{font-size:12px;color:var(--muted);margin-bottom:4px}
-.wxt-card p{font-size:12.5px;line-height:1.45;color:var(--ink2);margin:0 0 8px}
-.wxt-buy{display:inline-block;font:700 11px var(--body);background:var(--ink);color:#fff;border-radius:100px;padding:6px 12px;text-decoration:none}
+.wxt-nm{display:block;padding:0 3px;font-family:var(--disp);font-weight:600;font-size:20px;line-height:1.15;color:var(--ink);text-decoration:none}
+.wxt-nm:hover{text-decoration:underline}
+.wxt-hs{padding:0 3px;font:700 10.5px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.wxt-nts{display:flex;flex-wrap:wrap;gap:3px 11px;margin:8px 3px 12px}
+.wxt-nts span{display:inline-flex;align-items:center;gap:5px;font:600 12px var(--body);color:var(--ink)}
+.wxt-nts i{width:9px;height:9px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.1)}
+.wxt-buys{margin-top:auto;padding:0 3px}
+.wxt-buy{display:inline-block;font:700 12px var(--body);background:var(--ink);color:#fff;border-radius:100px;padding:8px 16px;text-decoration:none}
 .wxt-buy:hover{background:var(--rust)}
+.wxt-also{margin-top:8px;font-size:12px;color:var(--muted)}
+.wxt-also a{color:var(--ink2);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.wxt-also a:hover{color:var(--rust)}
 .wxt-credit{font-size:11.5px;color:var(--muted);margin-top:10px}
 .wxt-credit a{text-decoration:underline;text-underline-offset:2px}
 @media(max-width:900px){
- .wxt-t{font-size:22px}
+ .wxt-t{font-size:30px}
  .wxt-links{margin-left:0;width:100%}
- .wxt-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -16px;padding:4px 16px 12px;scrollbar-width:none}
+ .wxt-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -16px;padding:2px 16px 12px;scrollbar-width:none}
  .wxt-row::-webkit-scrollbar{display:none}
- .wxt-card{flex:0 0 84%;scroll-snap-align:start}
+ .wxt-card{flex:0 0 72%;max-width:300px;scroll-snap-align:start}
 }

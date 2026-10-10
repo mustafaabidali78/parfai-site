@@ -107,6 +107,7 @@ function weatherNoteGroup(note){
 function wxCap(s){ return String(s).replace(/\b([a-z])/g, m => m.toUpperCase()); }
 function wxEsc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function wxShortTitle(house, title){
+  title = String(title).replace(/\s*\((new|new packaging|2020|2021|2022|2023)\)\s*$/i, '');
   const h = house.toLowerCase();
   if (title.toLowerCase().indexOf(h + ' ') === 0 && title.length > h.length + 1) return title.slice(h.length + 1);
   return title;
@@ -439,22 +440,34 @@ function renderWeatherResult(el, result){
         <div class="wxh-tile" style="background:linear-gradient(150deg,${heroG[0]},${heroG[1]})"><div class="bottle"></div>${heroPhoto}</div>
       </a>
     </div>`;
-  // Home page, compact layout: weather line on top, then three picks to choose from.
+  // Home page layout: a bar coloured by the weather, then three equal photo tiles side by side.
   const TRIO_TAG = { hot: 'Best for the heat', mild: 'Best for today', rainy: 'Best for the rain', cold: 'Best for the cold', snowy: 'Best for the snow' };
+  // The bar colour tells the weather at a glance: strong orange when hot, fresh green when mild, blue-grey for rain, ice blue for cold, pale for snow.
+  const wxBarColors = (bucket, c) => {
+    if (bucket === 'hot') return c >= 38 ? ['#FF7A00', '#E8321A', '#fff'] : ['#FF9A1F', '#FF5A1F', '#fff'];
+    if (bucket === 'mild') return ['#C6EBA9', '#7FCB8E', '#12351d'];
+    if (bucket === 'rainy') return ['#7C96B2', '#4F6A89', '#fff'];
+    if (bucket === 'cold') return ['#8CC6F2', '#4C9BE0', '#fff'];
+    return ['#E9F3FB', '#C3DBEE', '#1d3550'];
+  };
+  const bar = wxBarColors(result.bucket, result.tempC);
+  const barCond = { hot: 'Hot day', mild: 'Mild day', rainy: 'Wet day', cold: 'Cold day', snowy: 'Freezing day' }[result.bucket] || 'Today';
+  const noteDot = n => (window.PFC && PFC.noteCol) ? PFC.noteCol(String(n).toLowerCase()) : '#C4BFEF';
   const trioCard = (p, i) => {
-    const g = WEATHER_GENDER_GRAD[p.gender] || WEATHER_GENDER_GRAD[2];
-    const pic = p.pid ? `<img src="catalog-img/${p.pid}.jpg" alt="${wxEsc(p.name)} bottle" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">` : '';
+    const pic = p.pid ? `<img src="catalog-img/${p.pid}.jpg" alt="" loading="lazy" onload="if(this.previousElementSibling)this.previousElementSibling.remove()" onerror="this.remove()">` : '';
     const tag = i === 0 ? (TRIO_TAG[result.bucket] || 'Best for today') : 'Also good today';
-    const line = i === 0 ? p.why : p.notes.slice(0, 3).map(wxCap).join(', ') + '.';
+    const href = 'catalog.html?id=' + encodeURIComponent(p.slug);
+    const q = (window.PFC && PFC.shopQuery) ? PFC.shopQuery(p) : (p.house + ' ' + p.name);
+    const amz = (typeof amazonAE === 'function') ? `<a href="${wxEsc(amazonAE(q))}" target="_blank" rel="sponsored nofollow noopener">Amazon UAE</a>` : '';
+    const noon = (typeof noonAE === 'function') ? `<a class="noonlink" href="${wxEsc(noonAE(q))}" target="_blank" rel="sponsored nofollow noopener">Noon UAE</a>` : '';
+    const also = [amz, noon].filter(Boolean).join(' &middot; ');
     return `<div class="wxt-card${i === 0 ? ' top' : ''}">
-      <a class="wxt-th" href="catalog.html?id=${encodeURIComponent(p.slug)}" aria-label="${wxEsc(p.name)}" style="background:linear-gradient(150deg,${g[0]},${g[1]})"><div class="bottle"></div>${pic}</a>
-      <div class="wxt-tx">
-        <div class="wxt-tag">${tag}</div>
-        <a class="wxt-nm" href="catalog.html?id=${encodeURIComponent(p.slug)}">${wxEsc(p.name)}</a>
-        <div class="wxt-hs">${wxEsc(p.house)}</div>
-        <p>${wxEsc(line)}</p>
-        ${p.link ? `<a class="wxt-buy" href="${wxEsc(p.link)}" target="_blank" rel="sponsored nofollow noopener">Check price ↗</a>` : ''}
-      </div>
+      <a class="wxt-th" href="${href}" aria-label="${wxEsc(p.name)}"><span class="wxt-bt"></span>${pic}</a>
+      <div class="wxt-tag">${tag}</div>
+      <a class="wxt-nm" href="${href}">${wxEsc(p.name)}</a>
+      <div class="wxt-hs">${wxEsc(p.house)}</div>
+      <div class="wxt-nts">${p.notes.slice(0, 3).map(n => `<span><i style="background:${noteDot(n)}"></i>${wxEsc(wxCap(n))}</span>`).join('')}</div>
+      <div class="wxt-buys">${p.link ? `<a class="wxt-buy" href="${wxEsc(p.link)}" target="_blank" rel="sponsored nofollow noopener" aria-label="Check price on FragranceNet for ${wxEsc(p.name)}">Check price</a>` : ''}${also ? `<div class="wxt-also">${also}</div>` : ''}</div>
     </div>`;
   };
   const trioHTML = `
@@ -463,12 +476,13 @@ function renderWeatherResult(el, result){
         <div>
           <div class="pk-k"><i></i><span>Live where you are</span></div>
           <h2>Best perfumes for <em>today's weather</em></h2>
-          <p class="pk-sub">Chosen from the full catalogue to suit the weather right where you are.</p>
+          <p class="pk-sub">Chosen from the full catalogue to suit the weather right where you are. A new set every day.</p>
         </div>
       </div>
-      <div class="wxt-head">
-        <span class="wxt-t">${icon} ${fmtTemp(result.tempC, unit)} in ${wxEsc(String(result.label).split(',')[0])}</span>
-        <span class="wxt-s">${cond}</span>
+      <div class="wxt-bar" style="--wa:${bar[0]};--wb:${bar[1]};--wt:${bar[2]}">
+        <span class="wxt-ic">${icon}</span>
+        <span class="wxt-t">${fmtTemp(result.tempC, unit)}</span>
+        <span class="wxt-w"><b>${wxEsc(String(result.label).split(',')[0])}</b><span>${barCond} &middot; ${cond}</span></span>
         <span class="wxt-links">
           <button class="wxt-link" type="button" data-action="manual">Not your location?</button>
           <button class="wxt-link" type="button" data-action="precise">Use precise location</button>
