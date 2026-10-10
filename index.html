@@ -77,22 +77,28 @@
 .mx-hint{font-size:12.5px;color:var(--muted);margin:18px 0 9px;min-height:16px}
 .mx-res h2{font:500 38px var(--disp);letter-spacing:-.02em;line-height:1.05;margin:0 0 6px;color:var(--ink)}
 .mx-count{font-size:12.5px;color:var(--muted);margin:0 0 12px;min-height:18px}
-.mx-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:760px){.mx-list{grid-template-columns:1fr}}
-.mr{padding:12px 14px;border-radius:16px;background:var(--panel);border:1px solid var(--border);box-shadow:0 14px 26px -22px rgba(20,20,20,.35);animation:mxpop .35s both;position:relative}
-@keyframes mxpop{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
-.mr a.mn{color:var(--ink);text-decoration:none;display:block}
+.mx-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:900px){.mx-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.mr{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:9px 9px 13px;display:flex;flex-direction:column;position:relative;animation:mxpop .35s both}
+@keyframes mxpop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.mr.msg{grid-column:1/-1;padding:14px 16px}
+.mr small{color:var(--ink2);font-size:12.5px;line-height:1.5}
+.mr-pic{height:104px;border-radius:12px;background:#F7F5F1;display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden}
+.mr-ph{max-height:86px;max-width:84%;width:auto;height:auto;object-fit:contain;mix-blend-mode:multiply}
+.mr .d{position:absolute;top:16px;left:16px;font:700 9.5px var(--body);letter-spacing:.1em;background:#FBE3C8;color:#6B3317;border-radius:100px;padding:3px 8px}
+.mr a.mn{color:var(--ink);text-decoration:none;display:block;padding:0 3px}
 .mr a.mn:hover b{text-decoration:underline}
-.mr b{font:700 17px var(--disp);display:block;padding-right:54px}
-.mr small{display:block;color:var(--ink2);font-size:12px;line-height:1.5}
-.mr em{font-style:normal;background:#FBE3C8;color:#6B3317;border-radius:6px;padding:0 5px}
-.mr .d{position:absolute;top:12px;right:12px;font:700 10px var(--body);letter-spacing:.1em;background:#FBE3C8;color:#6B3317;border-radius:100px;padding:3px 9px}
-.mr-ph{float:left;width:64px;height:64px;object-fit:contain;margin:0 12px 4px 0;mix-blend-mode:multiply}
-.mr:after{content:"";display:block;clear:both}
-.mr a.mn{overflow:hidden}
-.mr .mbuys{clear:both;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.mr .mbuy{display:inline-block;margin-top:0;font:700 11px var(--body);color:#fff;background:var(--ink);border-radius:100px;padding:6px 12px;text-decoration:none}
+.mr b{font:600 17px/1.15 var(--disp);display:block}
+.mr .mh{display:block;font:700 10.5px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.mr .mnotes{display:flex;flex-wrap:wrap;gap:3px 11px;margin:8px 3px 11px}
+.mr .mnote{display:inline-flex;align-items:center;gap:5px;font:600 12px var(--body);color:var(--ink)}
+.mr .mnote i{width:9px;height:9px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.1)}
+.mr .mbuys{margin-top:auto;padding:0 3px}
+.mr .mbuy{display:inline-block;font:700 12px var(--body);color:#fff;background:var(--ink);border-radius:100px;padding:8px 16px;text-decoration:none}
 .mr .mbuy:hover{background:var(--rust)}
+.mr .malso{margin-top:8px;font-size:12px;color:var(--muted)}
+.mr .malso a{color:var(--ink2);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.mr .malso a:hover{color:var(--rust)}
 .mx-foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .mx-foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-weight:600}
 
@@ -143,11 +149,6 @@
 .mx-notes,.mx-sugs{gap:8px}
 .mx-clear{padding:5px 12px;font-size:11.5px}
 .mx-res h2{font-size:30px}
-.mr{padding:10px 12px}
-.mr b{font-size:16px}
-.mr-ph{width:52px;height:52px}
-.mr .mbuys{gap:5px;margin-top:6px}
-.mr .mbuy{font-size:10.5px;padding:5px 10px}
 .mx-foot{margin-top:14px}
 }
 @media(max-width:560px){#mixer{padding-top:28px}}
@@ -306,7 +307,7 @@
         <div class="mx-list" id="mx-list" aria-live="polite"></div>
       </div>
     </div>
-    <div class="mx-foot"><span>Matches come from FragranceNet's catalogue. The Amazon UAE and Noon UAE buttons search for the same perfume, so check it is the right one. We may earn a commission if you buy through a link.</span></div>
+    <div class="mx-foot"><span>Matches come from FragranceNet's catalogue. The Amazon UAE and Noon UAE links search for the same perfume, so check it is the right one. We may earn a commission if you buy through a link.</span></div>
   </section>
 
   <section class="pk" id="picks">
@@ -331,7 +332,7 @@
       <a class="pk-all" href="dupe-finder.html">Try the Dupe Finder →</a>
     </div>
     <div id="pk-pairs"></div>
-    <p class="pk-disc">A dupe is a lower-priced perfume with similar listed notes to a famous one. Dupes are similar, not identical. We compare listed notes only. Prices change often, so check today's price on the retailer page. The Amazon UAE and Noon UAE buttons search for the same perfume, so check it is the right one. ParfAI may earn a commission if you buy through a link.</p>
+    <p class="pk-disc">A dupe is a lower-priced perfume with similar listed notes to a famous one. Dupes are similar, not identical. We compare listed notes only. Prices change often, so check today's price on the retailer page. The Amazon UAE and Noon UAE links search for the same perfume, so check it is the right one. ParfAI may earn a commission if you buy through a link.</p>
   </section>
 
   <section class="pk lyh" id="lyh">
@@ -638,23 +639,26 @@
 
     function drawResults() {
       var list = $('mx-list'), count = $('mx-count');
-      if (failed) { count.textContent = ''; list.innerHTML = '<div class="mr"><small>The catalogue could not load right now. Please refresh the page to try again.</small></div>'; return; }
-      if (!rows) { count.textContent = ''; list.innerHTML = '<div class="mr"><small>Loading 12,000+ perfumes…</small></div>'; return; }
-      if (!mix.length) { count.textContent = ''; list.innerHTML = '<div class="mr"><small>Tap a note to begin.</small></div>'; return; }
+      if (failed) { count.textContent = ''; list.innerHTML = '<div class="mr msg"><small>The catalogue could not load right now. Please refresh the page to try again.</small></div>'; return; }
+      if (!rows) { count.textContent = ''; list.innerHTML = '<div class="mr msg"><small>Loading 12,000+ perfumes…</small></div>'; return; }
+      if (!mix.length) { count.textContent = ''; list.innerHTML = '<div class="mr msg"><small>Tap a note to begin.</small></div>'; return; }
       var m = matches();
-      if (!m.picked.length) { count.textContent = ''; list.innerHTML = '<div class="mr"><small>Nothing in the catalogue has these notes yet. Try taking one out.</small></div>'; return; }
+      if (!m.picked.length) { count.textContent = ''; list.innerHTML = '<div class="mr msg"><small>Nothing in the catalogue has these notes yet. Try taking one out.</small></div>'; return; }
       count.textContent = m.maxHit === mix.length
         ? (m.full === 1 ? '1 perfume has' : m.full.toLocaleString('en-US') + ' perfumes have') + (mix.length > 1 ? ' all ' + mix.length + ' of your notes.' : ' this note.')
         : 'No perfume has all ' + mix.length + ' notes. Closest matches have ' + m.maxHit + '.';
       list.innerHTML = m.picked.map(function (p, k) {
         var r = p.r, href = 'catalog.html?id=' + encodeURIComponent(r.slug);
-        var notes = r.notes.slice(0, 9).map(function (n) { return mix.indexOf(n) >= 0 ? '<em>' + esc(PFC.cap(n)) + '</em>' : esc(PFC.cap(n)); }).join(', ');
-        var q = PFC.shopQuery(r);
-        var buy = '<div class="mbuys">' + (r.link ? '<a class="mbuy" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '') +
-          '<a class="mbuy" href="' + esc(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE ↗</a>' +
-          '<a class="mbuy noonlink" href="' + esc(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE ↗</a></div>';
+        var notes = mix.filter(function (n) { return r.notes.indexOf(n) >= 0; }).map(function (n) { return '<span class="mnote"><i style="background:' + colorOf(n) + '"></i>' + esc(PFC.cap(n)) + '</span>'; }).join('');
+        var q = PFC.shopQuery(r), ph = PFC.photo(r);
+        var amz = '<a href="' + esc(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE</a>';
+        var noon = '<a class="noonlink" href="' + esc(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE</a>';
+        var buy = '<div class="mbuys">' + (r.link
+          ? '<a class="mbuy" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener" aria-label="Check price on FragranceNet for ' + esc(r.name) + '">Check price</a><div class="malso">' + amz + ' &middot; ' + noon + '</div>'
+          : '<div class="malso" style="margin-top:0">' + amz + ' &middot; ' + noon + '</div>') + '</div>';
         return '<div class="mr" style="animation-delay:' + (k * 60) + 'ms">' + (r.dupe ? '<span class="d">DUPE</span>' : '') +
-          (PFC.photo(r) ? '<img class="mr-ph" src="' + PFC.photo(r) + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '<a class="mn" href="' + href + '"><b>' + esc(r.name) + '</b><small>' + esc(r.house) + '</small><small>' + notes + '</small></a>' + buy + '</div>';
+          '<div class="mr-pic">' + (ph ? '<img class="mr-ph" src="' + ph + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '</div>' +
+          '<a class="mn" href="' + href + '"><b>' + esc(r.name) + '</b><span class="mh">' + esc(r.house) + '</span></a><div class="mnotes">' + notes + '</div>' + buy + '</div>';
       }).join('');
     }
 
