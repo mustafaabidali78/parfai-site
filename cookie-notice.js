@@ -15,6 +15,20 @@
     reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} show(); }
   };
 
+  /* Visitor counter (Cloudflare Web Analytics). Only loads after the visitor accepts.
+     Paste the site token between the quotes below to switch it on. */
+  var STATS_TOKEN = '';
+  function loadStats() {
+    if (!STATS_TOKEN || window.__parfaiStats || !window.parfaiConsent.allowed()) return;
+    window.__parfaiStats = true;
+    var s = document.createElement('script');
+    s.defer = true;
+    s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', JSON.stringify({ token: STATS_TOKEN }));
+    document.head.appendChild(s);
+  }
+  loadStats();
+
   if (gpc) { if (!read()) write('declined'); return; }
   if (read()) return;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', show);
@@ -49,7 +63,7 @@
       '<div class="pc-row"><button type="button" class="pc-yes">Accept</button>' +
       '<button type="button" class="pc-no">Decline optional cookies</button></div>';
     document.body.appendChild(box);
-    function done(v) { write(v); box.remove(); }
+    function done(v) { write(v); box.remove(); loadStats(); }
     box.querySelector('.pc-yes').addEventListener('click', function () { done('accepted'); });
     box.querySelector('.pc-no').addEventListener('click', function () { done('declined'); });
   }
