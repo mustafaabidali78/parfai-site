@@ -210,7 +210,7 @@
 .sf-pic .sf-big{max-height:146px;max-width:126px;width:auto;height:auto;mix-blend-mode:multiply;animation:sfpop .4s both}
 .sf-info{min-width:0}
 .sf-lab{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sf-n{font-family:var(--disp);font-weight:600;font-size:clamp(24px,2.7vw,30px);line-height:1.1;letter-spacing:-.01em;margin:6px 0 4px;text-wrap:balance}
+.sf-n{font-family:var(--disp);font-weight:600;font-size:clamp(24px,2.7vw,30px);line-height:1.1;letter-spacing:-.01em;margin:0 0 4px;text-wrap:balance}
 .sf-h{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
 .sf-nts{min-height:34px;margin-top:12px}
 .sf-nts span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:5px 11px 5px 9px;border-radius:100px;margin:0 6px 6px 0;background:#fff;border:1px solid #E6E3DC;color:#2a2a28;animation:sfpop .4s both}
@@ -438,7 +438,7 @@
     shf.className = 'sf';
     function bottle(o, big) { return '<span class="sf-bt' + (big ? ' big' : '') + '" style="--c1:' + o.pal.c[0] + ';--c2:' + o.pal.c[1] + '"></span>'; }
     shf.innerHTML = '<div class="sf-pic" id="sf-pic"></div>' +
-      '<div class="sf-info"><div class="sf-lab" id="sf-lab">On the shelf today</div><div class="sf-n" id="sf-n"></div><div class="sf-h" id="sf-h"></div>' +
+      '<div class="sf-info"><div class="sf-n" id="sf-n"></div><div class="sf-h" id="sf-h"></div>' +
       '<div class="sf-nts" id="sf-nts" aria-live="polite"></div><a class="sf-go" id="sf-go" href="#">See this perfume <span>&rarr;</span></a></div>' +
       '<div class="sf-row" id="sf-row">' + info.map(function (o, i) {
         var u = PFC.photo(o.r);
