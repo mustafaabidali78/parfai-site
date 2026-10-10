@@ -217,7 +217,13 @@
 .sf-nts span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:5px 11px 5px 9px;border-radius:100px;margin:0 6px 6px 0;background:#fff;border:1px solid #E6E3DC;color:#2a2a28;animation:sfpop .4s both}
 .sf-nts i{width:10px;height:10px;border-radius:50%;display:inline-block}
 @keyframes sfpop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
-.sf-go{display:inline-flex;align-items:center;gap:8px;margin-top:6px;background:#141414;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;border-radius:100px;text-decoration:none;transition:.25s}
+.sf-act{display:flex;align-items:center;gap:8px 18px;flex-wrap:wrap;margin-top:6px}
+.sf-buy{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;min-width:0}
+.sf-buy b{font-weight:700;color:var(--ink2);white-space:nowrap}
+.sf-buy a{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.sf-buy a:hover{color:var(--rust)}
+.sf-buy .dot{display:none}
+.sf-go{display:inline-flex;align-items:center;gap:8px;margin-top:0;background:#141414;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;border-radius:100px;text-decoration:none;transition:.25s}
 .sf-go:hover{background:#00C48B;color:#06281d;gap:12px}
 .sf-dp{background:#00C48B;color:#06281d;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 8px;border-radius:100px}
 .sf-row{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px;padding-top:10px;border-top:1px solid #EEECE6}
@@ -432,7 +438,7 @@
     function bottle(o, big) { return '<span class="sf-bt' + (big ? ' big' : '') + '" style="--c1:' + o.pal.c[0] + ';--c2:' + o.pal.c[1] + '"></span>'; }
     shf.innerHTML = '<div class="sf-pic" id="sf-pic"></div>' +
       '<div class="sf-info"><div class="sf-n" id="sf-n"></div><div class="sf-h" id="sf-h"></div>' +
-      '<div class="sf-nts" id="sf-nts" aria-live="polite"></div><a class="sf-go" id="sf-go" href="#">See this perfume <span>&rarr;</span></a></div>' +
+      '<div class="sf-nts" id="sf-nts" aria-live="polite"></div><div class="sf-act"><a class="sf-go" id="sf-go" href="#">See this perfume <span>&rarr;</span></a><div class="sf-buy" id="sf-buy"></div></div></div>' +
       '<div class="sf-row" id="sf-row">' + info.map(function (o, i) {
         var u = PFC.photo(o.r);
         return '<button type="button" class="sf-b" data-i="' + i + '" aria-label="Show ' + E(o.r.name) + '"><span class="sf-tw">' + bottle(o) + (u ? '<img class="sf-img" src="' + u + '" alt="" loading="lazy" onload="this.previousSibling.remove()" onerror="this.remove()">' : '') + '</span><small>' + E(o.r.name) + '</small></button>';
@@ -448,6 +454,11 @@
       document.getElementById('sf-h').textContent = r.house + ' \u00b7 ' + PFC.GENDER[r.gender];
       document.getElementById('sf-nts').innerHTML = o.nts.map(function (n, k) { return '<span style="animation-delay:' + (k * 60) + 'ms"><i style="background:' + noteCol(n) + '"></i>' + E(C(n)) + '</span>'; }).join('');
       document.getElementById('sf-go').href = o.href;
+      var sq = PFC.shopQuery(r), sl = [];
+      if (r.link) sl.push('<a href="' + E(r.link) + '" target="_blank" rel="sponsored nofollow noopener">FragranceNet</a>');
+      sl.push('<a href="' + E(amazonAE(sq)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE</a>');
+      sl.push('<a class="noonlink" href="' + E(noonAE(sq)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE</a>');
+      document.getElementById('sf-buy').innerHTML = '<b>Buy at</b>' + sl.join('<span class="dot">&middot;</span>');
     }
     sfRow.addEventListener('click', function (e) { var b = e.target.closest('.sf-b'); if (b) sfPick(+b.getAttribute('data-i')); });
     sfRow.addEventListener('mouseover', function (e) { var b = e.target.closest('.sf-b'); if (b) { clearTimeout(sfTm); sfTm = setTimeout(function () { sfPick(+b.getAttribute('data-i')); }, 120); } });
