@@ -122,7 +122,13 @@ function wxDayKey(){
 function wxHash(s){
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  // extra mixing so that two neighbouring days give very different numbers
+  h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
   return h >>> 0;
+}
+function wxDayKeyBack(n){
+  const d = new Date(); d.setDate(d.getDate() - n);
+  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 }
 function wxRandom(seed){ // small seeded random number generator
   let a = seed >>> 0;
@@ -204,15 +210,24 @@ async function pickForWeather(bucket){
   }
 
   // Seeded draw: same pick for everyone with this weather today, a new pick tomorrow.
-  const rand = wxRandom(wxHash(wxDayKey() + '|' + bucket));
-  const chosen = [], usedHouses = {};
-  while (chosen.length < 3 && pool.length) {
-    const i = Math.floor(rand() * pool.length);
-    const x = pool.splice(i, 1)[0];
-    if (usedHouses[x.item[1]]) continue;
-    usedHouses[x.item[1]] = 1;
-    chosen.push(slimPick(x.item, data, bucket, x.s));
-  }
+  // The same draw is run for yesterday, and yesterday's three perfumes are skipped today.
+  const drawFor = (key, skip) => {
+    const rand = wxRandom(wxHash(key + '|' + bucket));
+    const left = pool.filter(x => !skip[x.item[0]]);
+    const out = [], usedHouses = {};
+    while (out.length < 3 && left.length) {
+      const i = Math.floor(rand() * left.length);
+      const x = left.splice(i, 1)[0];
+      if (usedHouses[x.item[1]]) continue;
+      usedHouses[x.item[1]] = 1;
+      out.push(x);
+    }
+    return out;
+  };
+  const asSkip = list => { const m = {}; list.forEach(x => { m[x.item[0]] = 1; }); return m; };
+  const dayBefore = asSkip(drawFor(wxDayKeyBack(3), asSkip(drawFor(wxDayKeyBack(4), {}))));
+  const yest = asSkip(drawFor(wxDayKeyBack(1), asSkip(drawFor(wxDayKeyBack(2), dayBefore))));
+  const chosen = drawFor(wxDayKey(), yest).map(x => slimPick(x.item, data, bucket, x.s));
   return chosen;
 }
 
