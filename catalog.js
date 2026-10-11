@@ -111,10 +111,30 @@
       '<div class="dsec"><h2>About this fragrance</h2><p>' + intro + '</p></div>' +
       '<div class="dsec"><h2>Sizes and where to buy</h2>' + variants + uae + noon +
       '<div class="cat-note" style="margin-top:14px">ParfAI earns a commission when you buy through these links, at no extra cost to you. Prices change often, so check the current price on the retailer page. As an Amazon Associate I earn from qualifying purchases. <a href="affiliate-disclosure.html">Affiliate disclosure</a></div></div>' +
+      '<div class="dsec rvsec"><h2>Reviews</h2><div id="rvlist"></div>' +
+      '<button type="button" class="rvbtn" data-write-review data-perfume-id="' + esc(r.slug) + '" data-perfume-name="' + esc(shortTitle(r)) + '">Write a ParfAI review</button>' +
+      '<a class="rvfr" href="https://www.fragrantica.com/search/?query=' + encodeURIComponent(r.house + ' ' + shortTitle(r)) + '" target="_blank" rel="nofollow noopener">More opinions on Fragrantica ↗</a></div>' +
       (more.length ? '<div class="dsec"><h2>More from ' + esc(r.house) + '</h2><div class="grid">' + more.map(cardHTML).join('') + '</div></div>' : '') +
       '</div>';
     window.scrollTo(0, 0);
+    loadReviews(r);
   }
+
+  function loadReviews(r) {
+    var box = $('rvlist');
+    if (typeof bindReviewButtons === 'function') bindReviewButtons();
+    if (!box || typeof fetchLiveReviews !== 'function') return;
+    fetchLiveReviews(r.slug, 5).then(function (list) {
+      var b = $('rvlist'); if (!b) return;
+      b.innerHTML = list.length ? list.map(function (x) {
+        return '<div class="rvc"><b>' + esc(x.author) + '</b><span class="st">' + '★'.repeat(x.rating) + '☆'.repeat(5 - x.rating) + '</span><p>' + esc(x.body) + '</p></div>';
+      }).join('') : '<p class="rvempty">No reviews yet. Be the first to share your take.</p>';
+    });
+  }
+  window.addEventListener('parfai:review-posted', function (e) {
+    var id = param('id'); var rr = rows.filter(function (x) { return x.slug === id; })[0];
+    if (rr && e.detail && e.detail.perfumeId === id) loadReviews(rr);
+  });
 
   function route() {
     var id = param('id');

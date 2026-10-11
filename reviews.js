@@ -167,7 +167,7 @@ function bindReviewButtons(){
     if (el.dataset.bound) return; el.dataset.bound = '1';
     el.addEventListener('click', (e)=>{
       e.preventDefault();
-      openReviewModal({ perfumeId: el.dataset.perfumeId || null });
+      openReviewModal({ perfumeId: el.dataset.perfumeId || null, perfumeName: el.dataset.perfumeName || null });
     });
   });
 }
