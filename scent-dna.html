@@ -49,7 +49,28 @@
   .sdnrow b{color:var(--ink)}
   .sdact{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
   .sdnote{font-size:12px;color:var(--muted);margin:14px 0 30px;max-width:700px}
-  @media(max-width:820px){.sdres,.sdrow{grid-template-columns:1fr;padding:22px 18px}.sdname{font-size:30px}}
+  .sdctl{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px;align-items:center}
+  .sdctl select{width:100%;max-width:100%;padding:14px 18px;text-overflow:ellipsis}
+  .sdctl select:disabled{opacity:.55;cursor:not-allowed}
+  .sdfacts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 16px;max-width:520px}
+  .sdfact{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:9px 13px}
+  .sdfact span{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .sdfact b{font-size:14px;color:var(--ink)}
+  .sdbars{margin:0 0 16px}
+  .sdbar{display:grid;grid-template-columns:110px 1fr 38px;gap:10px;align-items:center;font-size:13px;margin:0 0 7px;color:var(--ink2)}
+  .sdbar i{display:block;height:8px;border-radius:99px;background:var(--border);overflow:hidden}
+  .sdbar i u{display:block;height:100%;background:linear-gradient(90deg,#D98A4E,#B5582B);border-radius:99px;text-decoration:none}
+  .sdbar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+  .sdsec{margin-top:26px;background:#fff;border:1px solid var(--border);border-radius:28px;padding:26px 34px}
+  .sdsec h3{font-family:var(--disp);font-size:24px;font-weight:700;margin:0 0 14px}
+  .sdbuy{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--ink2)}
+  .sdbuy:last-of-type{border-bottom:0}
+  .sdbuy a.more{font-size:12.5px;color:var(--ink2);text-decoration:underline;text-underline-offset:3px}
+  .sdgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .sdgrid .pd-stage{height:190px}
+  @media(max-width:960px){.sdgrid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:820px){.sdres,.sdrow,.sdsec{grid-template-columns:1fr;padding:22px 18px}.sdname{font-size:30px}.sdctl{grid-template-columns:1fr}.sdfacts{grid-template-columns:repeat(2,1fr)}.sdbar{grid-template-columns:90px 1fr 34px}}
+  @media(max-width:520px){.sdgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -65,9 +86,13 @@
   </div>
 
   <div class="sdbox">
-    <div class="dfsearch">
-      <div class="searchbox">🔍<input id="q" type="text" placeholder="Search any perfume (e.g. Aventus, Sauvage, Libre, Good Girl)" autocomplete="off" aria-label="Search for a perfume"></div>
-      <div class="dfsugg" id="sugg" hidden></div>
+    <div class="sdctl">
+      <select id="hsel" class="chip-select" aria-label="Choose a perfume house"><option value="">Choose a house</option></select>
+      <select id="psel" class="chip-select" aria-label="Choose a perfume" disabled><option value="">Then choose a perfume</option></select>
+      <div class="dfsearch">
+        <div class="searchbox">🔍<input id="q" type="text" placeholder="Or type a perfume name" autocomplete="off" aria-label="Search for a perfume"></div>
+        <div class="dfsugg" id="sugg" hidden></div>
+      </div>
     </div>
     <div class="tabs" id="quick" style="justify-content:flex-start;margin:16px 0 0"></div>
   </div>
@@ -78,7 +103,7 @@
 <div id="footer-slot"></div>
 
 <script src="data.js?v=202610112400"></script>
-<script src="catalog-lib.js?v=202610090030"></script>
+<script src="catalog-lib.js?v=202610112500"></script>
 <script src="note-families.js?v=202610112400"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
@@ -88,7 +113,7 @@
   const $ = id => document.getElementById(id);
   const esc = PFC.esc, cap = PFC.cap;
   const SHORT = { 'Green & Aromatic': 'Green', 'Amber & Resin': 'Amber', 'Gourmand & Sweet': 'Sweet', 'Musk & Animalic': 'Musk', 'Leather & Tobacco': 'Leather', 'Marine & Mineral': 'Marine' };
-  let rows = [];
+  let rows = [], CAT = { pre: '', mid: '' };
 
   function tally(r) {
     const t = {}, notesBy = {};
@@ -133,6 +158,66 @@
     return s + '.';
   }
 
+
+  function facts(r) {
+    const f = [['House', esc(r.house)], ['For', esc(PFC.GENDER[r.gender])], ['Launched', r.year ? r.year : 'Not listed'], ['Listed notes', r.notes.length], ['Sizes', (r.variants || []).filter(v => !/tester/i.test(v[1])).length || r.sizes || 1]];
+    if (r.wear) f.push(['Best for', esc(cap(r.wear))]);
+    return f.map(x => '<div class="sdfact"><span>' + x[0] + '</span><b>' + x[1] + '</b></div>').join('');
+  }
+
+  function bars(t, used) {
+    const total = used.reduce((a, f) => a + t[f], 0);
+    if (!total) return '';
+    return '<div class="sdbars">' + used.map(f => { const pc = Math.round(100 * t[f] / total); return '<div class="sdbar"><span>' + esc(SHORT[f] || f) + '</span><i><u style="width:' + pc + '%"></u></i><em>' + pc + '%</em></div>'; }).join('') + '</div>';
+  }
+
+  function sizeLabel(v) {
+    return cap(String(v[1]).toLowerCase()).replace(/\b(\d+(?:\.\d+)?) (Oz|Ml|G)\b/g, (m, n, u) => n + ' ' + u.toLowerCase()) || 'Standard size';
+  }
+  function linkFor(v) { return CAT.pre + v[0] + CAT.mid + v[2]; }
+
+  function buySection(r) {
+    const q = PFC.shopQuery(r);
+    const allV = (r.variants || []).filter(v => !/tester/i.test(v[1]));
+    const vs0 = allV.slice(0, 8).map(v => '<div class="sdbuy"><span>' + esc(sizeLabel(v)) + '</span><a class="btn sm" href="' + esc(linkFor(v)) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a></div>').join('');
+    const vs = vs0 || (r.link ? '<div class="sdbuy"><span>Standard size</span><a class="btn sm" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a></div>' : '');
+    const more = allV.length > 8 ? '<div class="sdbuy"><span>' + (allV.length - 8) + ' more sizes on the <a href="catalog.html?id=' + encodeURIComponent(r.slug) + '" style="text-decoration:underline">perfume page</a></span></div>' : '';
+    const amz = '<div class="sdbuy"><span>In the UAE? Search it on Amazon.ae</span><span><a class="btn sm" href="' + esc(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Shop in the UAE ↗</a> <a class="more" href="' + esc(amazonAE(r.house)) + '" target="_blank" rel="sponsored nofollow noopener">More ' + esc(r.house) + '</a></span></div>';
+    const noon = '<div class="sdbuy"><span>Or Noon UAE. Use code <b>' + esc(NOON_CODE) + '</b> at checkout for cashback (terms apply)</span><span><a class="btn sm noonlink" href="' + esc(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Shop at Noon ↗</a> <a class="more noonlink" href="' + esc(noonAE(r.house)) + '" target="_blank" rel="sponsored nofollow noopener">More ' + esc(r.house) + '</a></span></div>';
+    return '<div class="sdsec"><h3>Where to buy</h3>' + vs + more + amz + noon + '<div class="sdnote" style="margin:12px 0 0">Prices change often, so check the current price on the store page. As an Amazon Associate I earn from qualifying purchases.</div></div>';
+  }
+
+  // Perfumes with the closest listed notes, from any house.
+  const NORMN = n => String(n).toLowerCase().replace(/-/g, ' ').replace(/\b(oil|absolute|essence|accord|notes?)\b/g, '').replace(/\s+/g, ' ').trim();
+  function similar(r) {
+    const tw = {}; r.notes.forEach((n, i) => { const k = NORMN(n); if (k && !(k in tw)) tw[k] = 1 / (1 + 0.12 * i); });
+    const keys = Object.keys(tw); if (keys.length < 2) return [];
+    const tTotal = keys.reduce((a, k) => a + tw[k], 0), out = [];
+    rows.forEach(c => {
+      if (!c.ok || c.slug === r.slug || c.name.toLowerCase() === r.name.toLowerCase()) return;
+      if (r.gender !== 2 && c.gender !== 2 && r.gender !== c.gender) return;
+      const cs = {}; c.notes.forEach(n => { cs[NORMN(n)] = 1; });
+      let cover = 0, shared = 0; keys.forEach(k => { if (cs[k]) { cover += tw[k]; shared++; } });
+      if (shared < 2) return;
+      out.push({ c, score: 0.7 * (cover / tTotal) + 0.3 * (shared / Math.max(c.notes.length, 1)) });
+    });
+    out.sort((a, b) => b.score - a.score);
+    const res = [], names = {}, per = {};
+    for (const x of out) { const nm = x.c.name.toLowerCase(); if (names[nm] || (per[x.c.house] || 0) >= 1) continue; names[nm] = 1; per[x.c.house] = 1; res.push(x.c); if (res.length >= 4) break; }
+    return res;
+  }
+  function similarSection(r) {
+    const list = similar(r);
+    if (!list.length) return '';
+    return '<div class="sdsec"><h3>Perfumes with a similar fingerprint</h3><div class="sdgrid">' + list.map(c => {
+      const R = { slug: c.slug, name: c.name, notes: c.notes.length ? c.notes : ['musk'], pid: c.pid };
+      return '<a class="pd" style="--c1:' + PFC.tint(R) + ';text-decoration:none;color:inherit" href="scent-dna.html?id=' + encodeURIComponent(c.slug) + '">' +
+        '<div class="pd-tg"><span class="gt">' + esc(PFC.GENDER[c.gender]) + '</span></div>' + PFC.stage(R, 160) +
+        '<div class="pd-hh">' + esc(c.house) + '</div><div class="pd-nm">' + esc(c.name) + '</div>' +
+        '<div class="pd-nt">' + esc(c.notes.slice(0, 3).map(cap).join(', ')) + '</div><div class="pd-sz">See its fingerprint →</div></a>';
+    }).join('') + '</div></div>';
+  }
+
   function render(r) {
     const box = $('results');
     if (!r) { box.innerHTML = ''; return; }
@@ -145,21 +230,38 @@
         '<div><div class="sdby">' + esc(r.house) + ' · ' + esc(PFC.GENDER[r.gender]) + '</div>' +
           '<h2 class="sdname">' + esc(r.name) + '</h2>' +
           '<div class="sdsum">' + summary(r, t) + '</div>' +
+          '<div class="sdfacts">' + facts(r) + '</div>' +
           '<div class="sdchips">' + used.slice(0, 5).map(f => '<span class="sdchip">' + esc(SHORT[f] || f) + ' <b>' + t[f] + '</b></span>').join('') + '</div>' +
           '<div class="sdact"><a class="btn sm" style="background:#141414" href="catalog.html?id=' + encodeURIComponent(r.slug) + '">View perfume →</a>' +
           (r.link ? '<a class="btn sm ghost" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '') + '</div>' +
         '</div>' +
       '</div>' +
       '<div class="sdrow"><div class="sdchart">' + radar(t) + '</div>' +
-        '<div class="sdnotes"><h3>What is in the mix</h3>' +
+        '<div class="sdnotes"><h3>What is in the mix</h3>' + bars(t, used) +
           (used.length ? used.map(f => '<p class="sdnrow"><b>' + esc(f) + '</b> · ' + esc(notesBy[f].map(cap).join(', ')) + '</p>').join('') : '<p class="sdnrow">No listed notes yet.</p>') +
         '</div></div>' +
+      buySection(r) + similarSection(r) +
       '<div class="sdnote">The shape counts how many of the perfume\'s listed notes fall in each family. It describes the notes on the label, not how strong each one smells. Our affiliate links earn ParfAI a commission at no extra cost to you. <a href="affiliate-disclosure.html">Affiliate disclosure</a></div>';
   }
 
+  function fillPerfumes(house, keep) {
+    const ps = $('psel');
+    if (!house) { ps.innerHTML = '<option value="">Then choose a perfume</option>'; ps.disabled = true; return; }
+    const list = rows.filter(x => x.ok && x.house === house).sort((a, b) => a.name.localeCompare(b.name));
+    ps.innerHTML = '<option value="">Choose a perfume (' + list.length + ')</option>' + list.map(x => '<option value="' + esc(x.slug) + '">' + esc(x.name) + ' · ' + esc(PFC.GENDER[x.gender]) + '</option>').join('');
+    ps.disabled = false;
+    if (keep) ps.value = keep;
+  }
+  function syncSelects(r) {
+    if (!r) return;
+    $('hsel').value = r.house;
+    fillPerfumes(r.house, r.slug);
+  }
+
   function select(r) {
-    $('q').value = r ? r.house + ' ' + r.name : '';
+    $('q').value = '';
     $('sugg').hidden = true;
+    syncSelects(r);
     render(r);
     if (r) history.replaceState(null, '', '?id=' + encodeURIComponent(r.slug));
   }
@@ -178,7 +280,12 @@
   }
 
   PFC.load().then(cat => {
-    rows = cat.rows;
+    rows = cat.rows; if (cat.pre !== undefined) CAT = { pre: cat.pre, mid: cat.mid };
+    const hs = {}; rows.forEach(x => { if (x.ok) hs[x.house] = (hs[x.house] || 0) + 1; });
+    $('hsel').innerHTML = '<option value="">Choose a house (' + Object.keys(hs).length + ')</option>' + Object.keys(hs).sort((a, b) => a.localeCompare(b)).map(h => '<option value="' + esc(h) + '">' + esc(h) + ' (' + hs[h] + ')</option>').join('');
+    $('hsel').addEventListener('change', e => { fillPerfumes(e.target.value); });
+    $('psel').addEventListener('change', e => { const r = rows.filter(x => x.slug === e.target.value)[0]; if (r) select(r); });
+
     let current = [];
     $('q').addEventListener('input', e => { current = search(e.target.value.trim()); showSugg(current); });
     $('q').addEventListener('keydown', e => { if (e.key === 'Enter' && current[0]) { e.preventDefault(); select(current[0]); } if (e.key === 'Escape') $('sugg').hidden = true; });

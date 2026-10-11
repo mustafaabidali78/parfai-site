@@ -49,7 +49,7 @@
         var rows = d.items.map(function (i) {
           var variant = i[7].filter(function (v) { return !/tester/i.test(v[1]); })[0] || i[7][0];
           var r = {
-            slug: i[0], house: i[1], title: i[2], name: shortTitle(i[1], i[2]), gender: i[3], year: i[4],
+            slug: i[0], house: i[1], title: i[2], name: shortTitle(i[1], i[2]), gender: i[3], year: i[4], variants: i[7],
             notes: cleanNotes(i[5]), wear: i[6], sizes: i[7].length, pid: i[7][0] ? i[7][0][0] : '',
             link: variant ? d.pre + variant[0] + d.mid + variant[2] : ''
           };
@@ -59,7 +59,7 @@
           r.hay = (r.house + ' ' + r.name).toLowerCase();
           return r;
         });
-        return { rows: rows };
+        return { rows: rows, pre: d.pre, mid: d.mid };
       });
       promise.catch(function () { promise = null; });
     }
