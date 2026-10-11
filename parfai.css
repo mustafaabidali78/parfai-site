@@ -845,3 +845,24 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 @media(max-width:820px){.tsl-out{grid-template-columns:1fr;gap:26px}.tsl-txt h3{font-size:42px}.tsl-im{width:104px;height:104px;padding:14px}}
 @media(max-width:520px){.tsl-picks{gap:14px 10px}.tsl-nm{font-size:17px}.tsl-scale span:nth-child(2),.tsl-scale span:nth-child(3){display:none}}
 @media(prefers-reduced-motion:reduce){.tsl-meter i,.tsl-im{transition:none}}
+
+/* Weather page top: editorial note ribbon */
+.wpe{--wb:#F2641F;margin:22px 0 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:26px 0 0;overflow:hidden}
+.wpe-live{display:inline-flex;align-items:center;gap:8px;font:700 11px var(--body);letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);border-radius:100px;padding:7px 14px;background:#fff}
+.wpe-live:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--wb);animation:wpepl 1.6s infinite}
+@keyframes wpepl{50%{opacity:.35}}
+.wpe-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-top:16px}
+.wpe h1{font-family:var(--disp);font-weight:600;font-size:64px;line-height:1;letter-spacing:-.02em;max-width:15ch;margin:0}
+.wpe-r{display:flex;align-items:flex-end;gap:22px;padding-left:10px}
+.wpe-bt{width:104px;height:126px;background:#fff;border-radius:16px;padding:8px;box-shadow:0 16px 26px -14px rgba(0,0,0,.5);transform:rotate(6deg);flex-shrink:0;transition:transform .2s;margin-bottom:8px}
+.wpe-bt:hover{transform:rotate(0) translateY(-3px)}
+.wpe-bt img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}
+.wpe-deg{font:600 150px/.85 var(--disp);letter-spacing:-.04em;color:transparent;-webkit-text-stroke:2px var(--ink);min-width:20px}
+.wpe-sub{font-size:15px;color:var(--ink2);max-width:60ch;margin-top:18px}
+.wpe-mq{margin-top:22px;border-top:1px solid var(--border);padding:12px 0;white-space:nowrap;overflow:hidden}
+.wpe-mq div{display:inline-block;animation:wpemq 40s linear infinite;font:italic 600 26px var(--disp)}
+.wpe-mq span{margin:0 18px}
+.wpe-mq i{font-style:normal;color:var(--wb)}
+@keyframes wpemq{to{transform:translateX(-50%)}}
+@media(max-width:820px){.wpe h1{font-size:42px}.wpe-deg{font-size:90px}.wpe-bt{width:78px;height:96px;margin-left:6px}.wpe-top{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){.wpe-mq div,.wpe-live:before{animation:none}}

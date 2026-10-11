@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Weather-Aware Pick of the Day — ParfAI">
 <meta name="twitter:description" content="Get a fragrance recommendation based on today's real weather, powered by ParfAI's Weather-Aware Pick.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610112800">
+<link rel="stylesheet" href="parfai.css?v=202610112900">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -62,15 +62,18 @@
 
   <div class="crumb"><a href="explore.html">Explore</a> / Weather-Aware Pick of the Day</div>
 
-  <div class="whero" id="whero">
-    <video class="whero-video" id="whero-video" muted loop playsinline preload="none"></video>
-    <div class="whero-scrim"></div>
-    <div class="whero-content">
-      <div class="pdhouse" id="whero-badge">● Live</div>
-      <h1 class="pdname" id="whero-h1" style="font-size:44px">Weather-Aware<br>Pick of the Day</h1>
-      <div class="pddesc" id="whero-sub">ParfAI looks at the real live weather wherever you actually are — not a guess, not a hardcoded region — and recommends a fragrance from the catalog suited to how it performs in heat, cold, humidity or rain.</div>
+  <header class="wpe" id="wpe">
+    <span class="wpe-live" id="wpe-live">Live weather</span>
+    <div class="wpe-top">
+      <h1 id="wpe-h1">Weather-Aware Pick of the Day</h1>
+      <div class="wpe-r">
+        <a class="wpe-bt" id="wpe-bt" href="#" hidden aria-label="Today's pick"></a>
+        <div class="wpe-deg" id="wpe-deg" aria-hidden="true"></div>
+      </div>
     </div>
-  </div>
+    <p class="wpe-sub" id="wpe-sub">ParfAI looks at the real live weather wherever you are and recommends a perfume from the catalogue that suits how it performs in heat, cold, humidity or rain.</p>
+    <div class="wpe-mq" aria-hidden="true"><div id="wpe-mq"></div></div>
+  </header>
 
   <section>
     <div class="shead"><h2>Your pick, right now</h2></div>
@@ -202,8 +205,29 @@
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script>
-  if (typeof onWeatherResolved === 'function' && typeof applyWeatherHero === 'function') {
-    onWeatherResolved(applyWeatherHero);
+  if (typeof onWeatherResolved === 'function') {
+    onWeatherResolved(function(r){
+      if (!r || !r.bucket) return;
+      var COPY = { hot:'Warm and bright, reach for citrus', mild:'Mild and easy, go effortless', rainy:'Grey skies, go clean and green', cold:'Cold and still, go bold and dense', snowy:'Freezing and hushed, go rich and warm' };
+      var COL = { hot:'#F2641F', mild:'#4FAF78', rainy:'#5E7A93', cold:'#3F7FB5', snowy:'#2E5C8A' };
+      var unit = tempUnitForCountry(r.countryCode), cond = (WEATHER_COND_TEXT[r.code] || 'these conditions').toLowerCase();
+      var el = document.getElementById('wpe'); if (!el) return;
+      el.style.setProperty('--wb', COL[r.bucket] || COL.mild);
+      document.getElementById('wpe-live').textContent = 'Live, ' + (r.label || 'your location') + ', ' + fmtTemp(r.tempC, unit);
+      document.getElementById('wpe-h1').textContent = COPY[r.bucket] || COPY.mild;
+      document.getElementById('wpe-deg').textContent = Math.round(unit === 'F' ? r.tempC * 9 / 5 + 32 : r.tempC) + '\u00b0';
+      document.getElementById('wpe-sub').textContent = "It's " + fmtTemp(r.tempC, unit) + ' and ' + cond + " where you are right now. Today's pick below is chosen from the real catalogue to suit exactly that.";
+      var p = r.picks && r.picks[0];
+      if (p && p.pid) {
+        var bt = document.getElementById('wpe-bt');
+        bt.href = 'catalog.html?id=' + encodeURIComponent(p.slug);
+        bt.innerHTML = '<img src="catalog-img/' + p.pid + '.jpg" alt="' + wxEsc(p.name) + '" onerror="this.parentNode.hidden=true">';
+        bt.hidden = false;
+      }
+      var words = (p && p.notes && p.notes.length >= 3) ? p.notes.slice(0, 6).map(wxCap) : ['Citrus','Woody','Floral','Amber','Musk','Green'];
+      var one = ''; for (var i = 0; i < 4; i++) one += words.map(function(w){ return '<span>' + wxEsc(w) + '</span><span><i>\u25CF</i></span>'; }).join('');
+      document.getElementById('wpe-mq').innerHTML = one + one;
+    });
   }
   if (typeof renderWeatherPick === 'function') renderWeatherPick('weather-live-panel');
   if (typeof renderWeatherExamples === 'function') renderWeatherExamples();
