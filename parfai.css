@@ -663,11 +663,11 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 @media(prefers-reduced-motion:reduce){.rring,.rspin{animation:none}}
 @media(max-width:900px){.navlinks.mobileopen .mega.mc .feat>.rwrap{display:none}.navlinks.mobileopen .mega.mc .f4 .bshade{display:none}}
 .mega.mc .feat>.jwrap{position:absolute;left:0;right:0;top:0;height:230px;z-index:1}
-.jbot{position:absolute;left:50%;top:34px;height:116px;transform:translateX(-50%)}
+.jbot{position:absolute;left:50%;top:48px;height:104px;transform:translateX(-50%)}
 .jbot img{height:100%;width:auto;filter:drop-shadow(0 10px 12px rgba(0,0,0,.55))}
-.jring{position:absolute;left:50%;top:92px;width:0;height:0}
+.jring{position:absolute;left:50%;top:104px;width:0;height:0}
 .jturn{position:absolute;left:0;top:0;width:0;height:0;animation:rturn 40s linear infinite}
-.jturn span{position:absolute;left:-5px;top:-100px;width:10px;height:100px;transform-origin:5px 100px;font-size:10px;font-weight:700;color:#E8B86A;text-align:center;line-height:10px}
+.jturn span{position:absolute;left:-5px;top:-92px;width:10px;height:92px;transform-origin:5px 92px;font-size:10px;font-weight:700;color:#E8B86A;text-align:center;line-height:10px}
 @media(prefers-reduced-motion:reduce){.jturn{animation:none}}
 @media(max-width:900px){.navlinks.mobileopen .mega.mc .feat>.jwrap{display:none}.navlinks.mobileopen .mega.mc .f3 .bshade{display:none}}
 @keyframes bdrift{to{transform:translateX(-50%)}}
