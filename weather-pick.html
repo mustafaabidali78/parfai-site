@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Weather-Aware Pick of the Day — ParfAI">
 <meta name="twitter:description" content="Get a fragrance recommendation based on today's real weather, powered by ParfAI's Weather-Aware Pick.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610112700">
+<link rel="stylesheet" href="parfai.css?v=202610112800">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -77,61 +77,29 @@
     <div class="lpanel" id="weather-live-panel"></div>
   </section>
 
-  <section>
-    <div class="shead"><h2>Why weather changes what you should wear</h2></div>
-    <div class="wexgrid">
-      <div class="wexcard hot">
-        <div class="wexicon">☀️</div>
-        <div class="wexlabel">Hot &amp; humid</div>
-        <div class="wexbar"><span></span></div>
-        <div class="wexbarlabel">Projection: amplified</div>
-        <div class="wexpicks"><span class="wexpick">Citrus</span><span class="wexpick">Aquatic</span></div>
-        <div class="wextxt">Heavy amber or gourmand turns cloying at 35°C — light notes perform exactly as intended.</div>
-      </div>
-      <div class="wexvs">vs</div>
-      <div class="wexcard cold">
-        <div class="wexicon">❄️</div>
-        <div class="wexlabel">Cold &amp; dry</div>
-        <div class="wexbar"><span></span></div>
-        <div class="wexbarlabel">Projection: suppressed</div>
-        <div class="wexpicks"><span class="wexpick">Woody</span><span class="wexpick">Amber</span><span class="wexpick">Spicy</span></div>
-        <div class="wextxt">The citrus that shines in summer barely registers — dense notes finally show their full sillage.</div>
-      </div>
+  <section class="tsl" id="tsl" aria-labelledby="tsl-h">
+    <div class="shead"><h2 id="tsl-h">Slide the temperature, change the perfume</h2></div>
+    <p class="tsl-intro">Heat lifts light notes and makes heavy ones cloying. Cold mutes the fresh notes and lets dark, rich ones bloom. Drag the bar to see what suits each kind of day. Every pick is drawn from the full catalogue of more than 12,000 perfumes.</p>
+    <div class="tsl-bar">
+      <div class="tsl-thumb" id="tsl-th">38°C</div>
+      <input type="range" id="tsl-rg" min="-10" max="45" step="1" value="38" aria-label="Temperature in degrees Celsius">
     </div>
-    <p class="wexnote">Perfumers plan around this and enthusiasts already rotate their collection by season, by hand. This feature just automates it, daily, from the real conditions outside.</p>
-  </section>
-
-  <section>
-    <div class="shead"><h2>Works anywhere — not just one climate</h2></div>
-    <p style="color:var(--ink2);font-size:14.5px;max-width:700px;margin-bottom:24px;font-weight:400">Computed from wherever you're actually visiting, worldwide. Three kinds of weather, three different picks, each drawn today from the full catalogue of more than 12,000 perfumes:</p>
-
-    <div class="wcities">
-      <div class="wcity" data-bucket="hot">
-        <div class="wctop" style="background:linear-gradient(160deg,#E8B04A,#C6963C)">
-          <div class="wcloc">Dubai, UAE</div>
-          <div class="wctemp">38°C</div>
-          <div class="wccond">☀️ Clear &amp; dry</div>
-        </div>
-        <div class="wcpick"><div class="wcwhy">Choosing from the full catalogue…</div></div>
+    <div class="tsl-pins" id="tsl-pins"></div>
+    <div class="tsl-scale"><span>-10°C Freezing</span><span>10°C</span><span>25°C</span><span>45°C Scorching</span></div>
+    <div class="tsl-ctl">
+      <button type="button" class="tsl-rain" id="tsl-rain" aria-pressed="false">&#127783;&#65039; It is raining</button>
+      <button type="button" class="tsl-mine" id="tsl-mine" hidden>Use my weather now</button>
+    </div>
+    <div class="tsl-out">
+      <div class="tsl-txt">
+        <div class="tsl-k" id="tsl-k">At 38°C</div>
+        <h3 id="tsl-hd">Light notes shine</h3>
+        <p id="tsl-p"></p>
+        <div class="tsl-ml">Projection</div>
+        <div class="tsl-meter"><i id="tsl-m"></i></div>
+        <div class="tsl-chips" id="tsl-c"></div>
       </div>
-
-      <div class="wcity" data-bucket="rainy">
-        <div class="wctop" style="background:linear-gradient(160deg,#7C93A6,#5E7A93)">
-          <div class="wcloc">London, UK</div>
-          <div class="wctemp">9°C</div>
-          <div class="wccond">🌧️ Light rain</div>
-        </div>
-        <div class="wcpick"><div class="wcwhy">Choosing from the full catalogue…</div></div>
-      </div>
-
-      <div class="wcity" data-bucket="snowy">
-        <div class="wctop" style="background:linear-gradient(160deg,#8A6B54,#6B4B3A)">
-          <div class="wcloc">New York, USA</div>
-          <div class="wctemp">-2°C</div>
-          <div class="wccond">❄️ Snow</div>
-        </div>
-        <div class="wcpick"><div class="wcwhy">Choosing from the full catalogue…</div></div>
-      </div>
+      <div class="tsl-picks" id="tsl-picks"></div>
     </div>
   </section>
 
@@ -161,6 +129,75 @@
 
 <script src="data.js?v=202610112400"></script>
 <script src="weather.js?v=202610112700"></script>
+
+<script>
+(function(){
+  var BANDS = {
+    snowy:{hd:'Dense and warm',p:'In deep cold, light notes all but disappear. Rich amber, oud and spice finally show their full strength and hold on the skin.',proj:22,chips:['Amber','Oud','Spicy','Woody'],col:'#2E5C8A',lab:'Freezing'},
+    cold:{hd:'Woods and spice',p:'Cool air mutes fresh top notes. Woody, spicy and warm fragrances hold up and last longer.',proj:38,chips:['Woody','Spicy','Amber'],col:'#3F7FB5',lab:'Cold'},
+    mild:{hd:'Almost anything works',p:'Mild weather is forgiving. Fresh florals, green notes and soft woods all sit nicely without being too loud.',proj:62,chips:['Floral','Green','Woody','Fresh'],col:'#3E9A62',lab:'Mild'},
+    hot:{hd:'Light notes shine',p:'Heat lifts every note. Heavy amber and gourmand scents turn cloying, while citrus and aquatic ones stay bright.',proj:92,chips:['Citrus','Aquatic','Aromatic'],col:'#E8502A',lab:'Hot'},
+    rainy:{hd:'Fresh but with some depth',p:'Damp air carries scent well. Clean, green and soft musky fragrances feel natural, and lighter woods hold up.',proj:55,chips:['Green','Musk','Fresh woody'],col:'#5E7A93',lab:'Rainy'}
+  };
+  var CITIES=[[-2,'New York'],[9,'London'],[38,'Dubai']];
+  var rg=document.getElementById('tsl-rg'); if(!rg) return;
+  var th=document.getElementById('tsl-th'), rainBtn=document.getElementById('tsl-rain'), mineBtn=document.getElementById('tsl-mine');
+  var raining=false, live=null, cache={}, token=0;
+  function bucketFor(t){ if(raining) return 'rainy'; if(t<=0) return 'snowy'; if(t<=12) return 'cold'; if(t>=27) return 'hot'; return 'mild'; }
+  var pinsEl=document.getElementById('tsl-pins');
+  CITIES.forEach(function(c){
+    var b=document.createElement('button'); b.type='button'; b.className='tsl-pin'; b.style.left=((c[0]+10)/55*100)+'%';
+    b.innerHTML='<span>'+c[1]+'</span><i></i>'; b.setAttribute('aria-label','Set temperature to '+c[0]+' degrees, like '+c[1]);
+    b.onclick=function(){ raining=false; rainBtn.setAttribute('aria-pressed','false'); rainBtn.classList.remove('on'); rg.value=c[0]; render(); };
+    pinsEl.appendChild(b);
+  });
+  function pic(p){
+    var ph='<span class="tsl-bt"></span>';
+    if(!p.pid) return ph;
+    return '<img src="catalog-img/'+p.pid+'.jpg" alt="" loading="lazy" onerror="this.outerHTML=\'<span class=&quot;tsl-bt&quot;></span>\'">';
+  }
+  function card(p,i){
+    var q=p.house+' '+p.name, href='catalog.html?id='+encodeURIComponent(p.slug);
+    var fn=p.link?'<a href="'+wxEsc(p.link)+'" target="_blank" rel="sponsored nofollow noopener">FragranceNet</a>':'';
+    var amz=(typeof amazonAE==='function')?'<a href="'+wxEsc(amazonAE(q))+'" target="_blank" rel="sponsored nofollow noopener">Amazon.ae</a>':'';
+    var noon=(typeof noonAE==='function')?'<a class="noonlink" href="'+wxEsc(noonAE(q))+'" target="_blank" rel="sponsored nofollow noopener">Noon</a>':'';
+    return '<div class="tsl-pk'+(i===0?' top':'')+'"><a class="tsl-im" href="'+href+'" aria-label="'+wxEsc(p.name)+'">'+pic(p)+'</a>'
+      +'<a class="tsl-nm" href="'+href+'">'+wxEsc(p.name)+'</a><span class="tsl-hs">'+wxEsc(p.house)+'</span>'
+      +'<span class="tsl-nt">'+wxEsc(p.notes.slice(0,3).map(wxCap).join(', '))+'</span>'
+      +'<span class="tsl-by">'+[fn,amz,noon].filter(Boolean).join('<em>&middot;</em>')+'</span></div>';
+  }
+  function showPicks(b,list,t){
+    if(token!==t) return;
+    var el=document.getElementById('tsl-picks');
+    el.innerHTML=list.slice(0,3).map(card).join('') + '<p class="tsl-disc">Links are affiliate links, so ParfAI may earn a small commission at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. A new set is drawn every day.</p>';
+  }
+  function render(){
+    var v=+rg.value, b=bucketFor(v), d=BANDS[b], t=++token;
+    th.style.left=((v+10)/55*100)+'%'; th.textContent=v+'°C';
+    rg.setAttribute('aria-valuetext',v+' degrees, '+d.lab);
+    document.getElementById('tsl-k').textContent=(raining?'Rainy day at ':'At ')+v+'°C';
+    document.getElementById('tsl-hd').textContent=d.hd;
+    document.getElementById('tsl-p').textContent=d.p;
+    var m=document.getElementById('tsl-m'); m.style.width=d.proj+'%'; m.style.background=d.col;
+    document.getElementById('tsl-c').innerHTML=d.chips.map(function(x){return '<span>'+x+'</span>';}).join('');
+    mineBtn.hidden=!(live!==null && live!==v) ;
+    if(cache[b]){ showPicks(b,cache[b],t); return; }
+    document.getElementById('tsl-picks').innerHTML='<div class="tsl-load">Choosing from the full catalogue…</div>';
+    pickForWeather(b).then(function(list){ cache[b]=list; showPicks(b,list,t); }).catch(function(){
+      if(token===t) document.getElementById('tsl-picks').innerHTML='<div class="tsl-load">The catalogue could not load. Please refresh the page.</div>';
+    });
+  }
+  rg.addEventListener('input',function(){ render(); });
+  rainBtn.onclick=function(){ raining=!raining; rainBtn.setAttribute('aria-pressed',String(raining)); rainBtn.classList.toggle('on',raining); render(); };
+  mineBtn.onclick=function(){ if(live===null) return; rg.value=live; raining=!!(window._tslLiveRain); rainBtn.setAttribute('aria-pressed',String(raining)); rainBtn.classList.toggle('on',raining); render(); };
+  render();
+  if (typeof onWeatherResolved==='function') onWeatherResolved(function(r){
+    if(!r||typeof r.tempC!=='number') return;
+    live=Math.max(-10,Math.min(45,Math.round(r.tempC))); window._tslLiveRain=(r.bucket==='rainy');
+    rg.value=live; raining=!!window._tslLiveRain; rainBtn.setAttribute('aria-pressed',String(raining)); rainBtn.classList.toggle('on',raining); render();
+  });
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
