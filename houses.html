@@ -55,10 +55,19 @@
 </script>
 <style>#more:not([hidden]){display:block}#more[hidden]{display:none!important}</style>
 <style>
-  /* House dropdown: same pill and arrow as the Explore filters */
-  .filterbar select.chip-select{-webkit-appearance:none;appearance:none;padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231a1a1a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;background-size:12px 8px}
-  .filterbar select#hsel{width:260px;max-width:100%;text-overflow:ellipsis}
-  @media(max-width:640px){.filterbar select#hsel{width:100%}}
+  /* Quick list of house names (shown for Designer, Niche or Affordable with All letters) */
+  .hlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:0 0 30px}
+  .hlist[hidden]{display:none}
+  .hlist-h{grid-column:1/-1;font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:2px 2px 2px}
+  .hl{display:flex;align-items:center;gap:12px;padding:8px 14px 8px 8px;background:#fff;border:1px solid var(--border);border-radius:100px;text-decoration:none;color:var(--ink);min-width:0;transition:border-color .15s,transform .15s}
+  .hl:hover{border-color:var(--ink);transform:translateY(-1px)}
+  .hl-i{flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:#f4f1ec;display:flex;align-items:center;justify-content:center;overflow:hidden;font:600 18px var(--disp);color:var(--ink2)}
+  .hl-i{position:relative}
+  .hl-i.ok{font-size:0}
+  .hl-i img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#f4f1ec;mix-blend-mode:multiply}
+  .hl-t{min-width:0;display:flex;flex-direction:column}
+  .hl-n{font:600 14px var(--body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hl-c{font:400 12px var(--body);color:var(--muted)}
 </style>
 </head>
 <body>
@@ -75,7 +84,6 @@
 
   <div class="filterbar" style="margin-bottom:14px">
     <div class="searchbox">🔍<input id="q" type="search" placeholder="Search houses (e.g. dior, lattafa, tom ford)" autocomplete="off"></div>
-    <select id="hsel" class="chip-select" aria-label="Choose a house"><option value="">All houses</option></select>
   </div>
   <div class="tabs" id="tabs" style="margin-bottom:14px">
     <span class="tab" data-tier="">All</span>
@@ -85,6 +93,7 @@
   </div>
   <div class="tabs" id="letters" style="gap:6px;margin-bottom:26px"></div>
 
+  <div class="hlist" id="hlist" hidden></div>
   <div class="resultcount" id="count"></div>
   <div class="grid" id="hgrid"></div>
   <button class="btn ghost" id="more" type="button" hidden style="margin:34px auto 10px">Show more</button>
@@ -99,7 +108,7 @@
 <script src="auth.js"></script>
 <script>
   var all = [], list = [], shown = 0, PAGE = 48;
-  var activeTier = qs('tier') || '', letter = '', q = '', hs = '';
+  var activeTier = qs('tier') || '', letter = '', q = '';
   var grid = document.getElementById('hgrid');
 
   function filtered() {
@@ -107,7 +116,6 @@
     return all.filter(function (h) {
       if (activeTier && h.tier !== activeTier) return false;
       if (letter && h.name.charAt(0).toUpperCase() !== letter && !(letter === '#' && !/[A-Z]/i.test(h.name.charAt(0)))) return false;
-      if (hs && h.name !== hs) return false;
       if (t && h.name.toLowerCase().indexOf(t) === -1) return false;
       return true;
     });
@@ -137,18 +145,25 @@
     document.querySelectorAll('#tabs .tab').forEach(function (t) { t.classList.toggle('on', t.dataset.tier === activeTier); });
     document.querySelectorAll('#letters .tab').forEach(function (t) { t.classList.toggle('on', t.dataset.l === letter); });
     gen++; document.getElementById('more').disabled = false; list = filtered(); shown = 0; grid.innerHTML = '';
+    var hl = document.getElementById('hlist');
+    if (activeTier && !letter && !q && list.length) {
+      hl.innerHTML = '<div class="hlist-h">All ' + list.length + ' ' + PFC.esc(activeTier.toLowerCase()) + ' houses, tap a name</div>' + list.map(function (h) {
+        var href = 'house.html?' + (h.id ? 'id=' + encodeURIComponent(h.id) : 'h=' + encodeURIComponent(h.name));
+        var ph = PFC.photo(h.rep);
+        return '<a class="hl" href="' + href + '"><span class="hl-i">' + PFC.esc(h.name.charAt(0)) + (ph ? '<img src="' + ph + '" alt="" loading="lazy" onload="this.parentNode.classList.add(\'ok\')" onerror="this.remove()">' : '') + '</span><span class="hl-t"><span class="hl-n">' + PFC.esc(h.name) + '</span><span class="hl-c">' + h.rows.length + ' fragrance' + (h.rows.length === 1 ? '' : 's') + '</span></span></a>';
+      }).join('');
+      hl.hidden = false;
+    } else { hl.hidden = true; hl.innerHTML = ''; }
     setCount();
     if (!list.length) grid.innerHTML = '<div style="grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center">No houses match that yet. Try fewer letters.</div>';
     showMore();
   }
   document.querySelectorAll('#tabs .tab').forEach(function (t) { t.addEventListener('click', function () { activeTier = t.dataset.tier; render(); }); });
   document.getElementById('q').addEventListener('input', function (e) { q = e.target.value.trim(); render(); });
-  document.getElementById('hsel').addEventListener('change', function (e) { hs = e.target.value; render(); });
   document.getElementById('more').addEventListener('click', showMore);
 
   PFC.load().then(function (cat) {
     all = PFC.houses(cat.rows);
-    document.getElementById('hsel').innerHTML = '<option value="">All houses</option>' + all.map(function (h) { return h.name; }).sort(function (a, b) { return a.localeCompare(b); }).map(function (n) { return '<option value="' + PFC.esc(n) + '">' + PFC.esc(n) + '</option>'; }).join('');
     var ls = '<span class="tab" data-l="" style="padding:7px 13px">All letters</span>';
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function (c) { if (all.some(function (h) { return h.name.charAt(0).toUpperCase() === c; })) ls += '<span class="tab" data-l="' + c + '" style="padding:7px 12px;min-width:36px;text-align:center">' + c + '</span>'; });
     var lw = document.getElementById('letters'); lw.innerHTML = ls;
