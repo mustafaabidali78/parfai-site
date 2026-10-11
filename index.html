@@ -122,10 +122,9 @@
 .lyh-fam{display:flex;flex-wrap:wrap;gap:6px}
 .lyh-fam span{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--body);background:var(--c);color:var(--ink);padding:4px 10px;border-radius:99px}
 .lyh-fam i{width:10px;height:10px;border-radius:50%;display:inline-block}
-.lyh-pics{z-index:2;pointer-events:none}
-.lyh-pl{flex:1 1 0;min-width:0;display:flex;justify-content:center;align-items:center;height:100%;position:relative;pointer-events:auto;cursor:pointer;color:inherit;text-decoration:none}
-.lyh-pl:hover .pd-bw{transform:translateY(-4px)}
-.lyh-pl:focus-visible{outline:3px solid #1F4A2C;outline-offset:2px;border-radius:12px}
+a.lyh-pics{text-decoration:none;color:inherit;cursor:pointer}
+a.lyh-pics:hover .pd-bw{transform:translateY(-4px)}
+a.lyh-pics:focus-visible{outline:3px solid #1F4A2C;outline-offset:2px;border-radius:24px}
 .lyh-go{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:600 18px/1 var(--body);background:var(--d);color:#fff;text-decoration:none}
 .lyh-go:after{content:"";position:absolute;inset:0;border-radius:24px}
 .lyh-card:hover .lyh-go{filter:brightness(.92)}
@@ -380,7 +379,7 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
       <div>
         <div class="pk-k">New &middot; Layering Recipe Builder</div>
         <h2>Popular pairs to <em>try today</em></h2>
-        <p class="pk-sub">Can't choose between two perfumes? Wear both. Tap a bottle to see that perfume, or tap the arrow to open the pair in the builder and make it yours.</p>
+        <p class="pk-sub">Can't choose between two perfumes? Wear both. Tap a pair to open it in the builder, then change the perfumes or sprays to make it yours.</p>
       </div>
       <a class="pk-all" href="layering.html">Build your own &rarr;</a>
     </div>
@@ -766,7 +765,7 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
       var href = 'layering.html?p=' + encodeURIComponent(a.slug + ':1,' + b.slug + ':1');
       var fams = order.filter(function (k) { return tot[k] / (sum || 1) >= .1; }).slice(0, 3).map(function (k) { return '<span><i style="background:' + F[k].c + '"></i>' + F[k].d.charAt(0).toUpperCase() + F[k].d.slice(1) + '</span>'; }).join('');
       var pal = PAL[idx++ % PAL.length];
-      return '<div class="lyh-card" style="--c:' + pal[0] + ';--d:' + pal[1] + '"><div class="lyh-pics"><a class="lyh-pl" href="catalog.html?id=' + encodeURIComponent(a.slug) + '" aria-label="See ' + esc(a.name) + '">' + PFC.art(a, 106) + '</a><span class="lyh-plus">+</span><a class="lyh-pl" href="catalog.html?id=' + encodeURIComponent(b.slug) + '" aria-label="See ' + esc(b.name) + '">' + PFC.art(b, 106) + '</a></div>' +
+      return '<div class="lyh-card" style="--c:' + pal[0] + ';--d:' + pal[1] + '"><a class="lyh-pics" href="' + esc(href) + '" aria-label="Try this pair: ' + esc(p[0]) + '">' + PFC.art(a, 106) + '<span class="lyh-plus">+</span>' + PFC.art(b, 106) + '</a>' +
         '<h3>' + esc(p[0]) + '</h3><div class="lyh-n">' + esc(a.name) + ' + ' + esc(b.name) + '</div><p>' + esc(p[3]) + '</p>' +
         '<div class="lyh-foot"><div class="lyh-fam">' + fams + '</div><a class="lyh-go" href="' + esc(href) + '" aria-label="Try this pair: ' + esc(p[0]) + '"><span aria-hidden="true">\u2192</span></a></div></div>';
     }).join('');
