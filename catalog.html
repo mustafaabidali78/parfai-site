@@ -47,9 +47,15 @@
   .vrow .vmore{flex-basis:100%;font-size:12.5px;color:var(--ink2);text-decoration:underline}
   .vrow span{font-size:14px;color:var(--ink);font-weight:600}
   .dsec p{color:var(--ink2);line-height:1.65;max-width:680px}
-  .rvsec .rvbtn{display:inline-block;background:#CFE8D5;color:#1F4A2C;border:0;border-radius:999px;padding:7px 14px;font:600 13px/1.2 Inter,system-ui,sans-serif;cursor:pointer;text-decoration:none}
-  .rvsec .rvbtn:hover{background:#c0e0c9}
-  .rvsec .rvfr{display:block;margin-top:10px;font-size:13px;color:var(--ink2);text-decoration:underline;text-underline-offset:3px}
+  .rvpill{display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;background:#faf7f1;border:1px solid var(--border);border-radius:24px;padding:6px 7px 6px 16px;font-size:13.5px;color:var(--ink2);margin-top:16px}
+  .rvstars{color:#d8d2c5;letter-spacing:2px;font-size:16px}.rvstars.on{color:#E8742A}
+  .rvcnt b{color:var(--ink)}
+  .rvglow{position:relative;overflow:hidden;display:inline-flex;gap:8px;align-items:center;padding:10px 18px;border:0;border-radius:999px;color:#10341d;cursor:pointer;font:700 14px/1.2 Inter,system-ui,sans-serif;background:linear-gradient(135deg,#bfe6c9,#8fd7a6 55%,#c9ecb4);box-shadow:0 6px 18px rgba(86,170,114,.38),inset 0 1px 0 rgba(255,255,255,.6)}
+  .rvglow::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-20deg);animation:rvshine 3.6s ease-in-out infinite;pointer-events:none}
+  @keyframes rvshine{0%,55%{left:-60%}100%{left:130%}}
+  .rvglow:focus-visible{outline:3px solid #1F4A2C;outline-offset:2px}
+  @media(prefers-reduced-motion:reduce){.rvglow::after{animation:none}}
+  .rvfrw{margin-top:9px}.rvfr{font-size:13px;color:var(--ink2);text-decoration:underline;text-underline-offset:3px}
   .rvsec .rvempty{font-size:14px;color:var(--ink2);margin:0 0 12px}
   .rvsec .rvc{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:10px;max-width:680px}
   .rvsec .rvc b{font-size:14px}.rvsec .rvc .st{color:#E8742A;font-size:13px;margin-left:8px;letter-spacing:1px}
@@ -104,7 +110,7 @@
 <script src="auth.js"></script>
 <script src="reviews.js?v=202610111200"></script>
 <script src="catalog-lib.js?v=202610090030"></script>
-<script src="catalog.js?v=202610111200"></script>
+<script src="catalog.js?v=202610111500"></script>
 <script src="cookie-notice.js"></script>
 </body>
 </html>
