@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Scent DNA — ParfAI</title>
+<meta name="description" content="See the note fingerprint of any perfume. ParfAI plots its listed notes across 12 scent families, from citrus and floral to woody and amber."/>
+<link rel="canonical" href="https://parfai.org/scent-dna.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ParfAI">
+<meta property="og:title" content="Scent DNA — ParfAI">
+<meta property="og:description" content="See the note fingerprint of any perfume across 12 scent families.">
+<meta property="og:url" content="https://parfai.org/scent-dna.html">
+<meta property="og:image" content="https://parfai.org/images/social/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Scent DNA — ParfAI">
+<meta name="twitter:description" content="See the note fingerprint of any perfume across 12 scent families.">
+<meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
+<link rel="stylesheet" href="parfai.css?v=202610112400">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  .sdbox{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:30px;margin:30px 0}
+  .sdbox .searchbox{flex:1}
+  .dfsearch{position:relative}
+  .dfsugg{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:0 18px 34px -20px rgba(20,20,20,.4);z-index:20;overflow:hidden}
+  .dfsugg button{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--border);padding:12px 18px;font-family:var(--body);font-size:14px;cursor:pointer;color:var(--ink)}
+  .dfsugg button:last-child{border-bottom:0}
+  .dfsugg button:hover,.dfsugg button:focus{background:rgba(0,0,0,.04)}
+  .dfsugg button span{color:var(--muted);font-size:12px}
+  .sdres{display:grid;grid-template-columns:260px 1fr;gap:34px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:28px;padding:28px 34px}
+  .sdres .pdbig{border:0;background:radial-gradient(circle at 50% 40%,var(--c1),transparent 70%)}
+  .sdres .pd-stage{height:230px}
+  .sdby{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .sdname{font-family:var(--disp);font-weight:700;font-size:38px;line-height:1.05;margin:4px 0 10px}
+  .sdsum{font-size:15px;color:var(--ink2);line-height:1.6;max-width:520px;margin-bottom:14px}
+  .sdchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .sdchip{display:inline-flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:6px 13px;font-size:12.5px;font-weight:600}
+  .sdchip b{color:var(--rust)}
+  .sdchart{display:flex;justify-content:center}
+  .sdchart svg{width:100%;max-width:400px;height:auto}
+  .sdrow{display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:center;margin-top:26px;background:#fff;border:1px solid var(--border);border-radius:28px;padding:26px 34px}
+  .sdnotes h3{font-family:var(--disp);font-size:22px;font-weight:700;margin:0 0 12px}
+  .sdnrow{font-size:13.5px;color:var(--ink2);margin:0 0 9px;line-height:1.5}
+  .sdnrow b{color:var(--ink)}
+  .sdact{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .sdnote{font-size:12px;color:var(--muted);margin:14px 0 30px;max-width:700px}
+  @media(max-width:820px){.sdres,.sdrow{grid-template-columns:1fr;padding:22px 18px}.sdname{font-size:30px}}
+</style>
+</head>
+<body>
+
+<nav id="nav-slot" data-active="explore"></nav>
+
+<div class="wrap">
+  <div class="hero" style="padding:50px 0 20px">
+    <div class="rule"></div>
+    <div class="k">Scent DNA</div>
+    <h1 style="font-size:56px">Every perfume has<br>a fingerprint.</h1>
+    <div class="sub">Search any of 12,000+ perfumes. ParfAI sorts its listed notes into 12 scent families and plots the shape, so you can see at a glance what it really smells like.</div>
+  </div>
+
+  <div class="sdbox">
+    <div class="dfsearch">
+      <div class="searchbox">🔍<input id="q" type="text" placeholder="Search any perfume (e.g. Aventus, Sauvage, Libre, Good Girl)" autocomplete="off" aria-label="Search for a perfume"></div>
+      <div class="dfsugg" id="sugg" hidden></div>
+    </div>
+    <div class="tabs" id="quick" style="justify-content:flex-start;margin:16px 0 0"></div>
+  </div>
+
+  <div id="results"></div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="data.js?v=202610112400"></script>
+<script src="catalog-lib.js?v=202610090030"></script>
+<script src="note-families.js?v=202610112400"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="auth.js"></script>
+<script>
+  // Scent DNA: sorts a perfume's listed notes into 12 families and draws the shape.
+  const $ = id => document.getElementById(id);
+  const esc = PFC.esc, cap = PFC.cap;
+  const SHORT = { 'Green & Aromatic': 'Green', 'Amber & Resin': 'Amber', 'Gourmand & Sweet': 'Sweet', 'Musk & Animalic': 'Musk', 'Leather & Tobacco': 'Leather', 'Marine & Mineral': 'Marine' };
+  let rows = [];
+
+  function tally(r) {
+    const t = {}, notesBy = {};
+    PFC.FAMILIES.forEach(f => { t[f] = 0; notesBy[f] = []; });
+    r.notes.forEach(n => { const f = PFC.family(n); if (f && t.hasOwnProperty(f)) { t[f]++; notesBy[f].push(n); } });
+    return { t, notesBy };
+  }
+
+  function radar(t) {
+    const fams = PFC.FAMILIES, n = fams.length, S = 400, cx = S / 2, cy = S / 2, R = 128;
+    const max = Math.max(1, ...fams.map(f => t[f]));
+    const ang = i => (Math.PI * 2 * i / n) - Math.PI / 2;
+    const pt = (i, fr) => [cx + Math.cos(ang(i)) * R * fr, cy + Math.sin(ang(i)) * R * fr];
+    let g = '';
+    [0.25, 0.5, 0.75, 1].forEach(f => { g += '<polygon points="' + fams.map((_, i) => pt(i, f).map(v => v.toFixed(1)).join(',')).join(' ') + '" fill="none" stroke="#E5DFD2" stroke-width="1"/>'; });
+    fams.forEach((f, i) => {
+      const [x, y] = pt(i, 1), [lx, ly] = pt(i, 1.2), c = Math.cos(ang(i));
+      const anchor = Math.abs(c) < 0.3 ? 'middle' : (c > 0 ? 'start' : 'end');
+      g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="#E5DFD2"/>';
+      g += '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" font-size="12" text-anchor="' + anchor + '" dominant-baseline="middle" fill="' + (t[f] ? '#2B2823' : '#9A9384') + '" font-weight="' + (t[f] ? 700 : 500) + '" font-family="Inter,system-ui,sans-serif">' + (SHORT[f] || f) + '</text>';
+    });
+    // A small base size keeps the shape visible even when a family has no notes; the curve is smoothed into a petal shape.
+    const pts = fams.map((f, i) => pt(i, 0.14 + 0.86 * t[f] / max));
+    let d = 'M' + pts[0].map(v => v.toFixed(1)).join(',');
+    for (let i = 0; i < n; i++) {
+      const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += 'C' + c1.map(v => v.toFixed(1)).join(',') + ' ' + c2.map(v => v.toFixed(1)).join(',') + ' ' + p2.map(v => v.toFixed(1)).join(',');
+    }
+    const dots = pts.map((p, i) => t[fams[i]] ? '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="4" fill="#B5582B"/>' : '').join('');
+    return '<svg viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="Scent family fingerprint">' + g +
+      '<path d="' + d + 'Z" fill="#D98A4E" fill-opacity=".32" stroke="#B5582B" stroke-width="2.5" stroke-linejoin="round"/>' + dots + '</svg>';
+  }
+
+  function summary(r, t) {
+    const top = PFC.FAMILIES.filter(f => t[f]).sort((a, b) => t[b] - t[a]);
+    if (!top.length) return esc(r.name) + ' does not have enough listed notes to draw a fingerprint yet.';
+    const nm = f => (SHORT[f] || f).toLowerCase();
+    let s = esc(r.name) + ' leans ' + nm(top[0]);
+    if (top[1]) s += ' and ' + nm(top[1]);
+    if (top[2]) s += ', with touches of ' + nm(top[2]);
+    return s + '.';
+  }
+
+  function render(r) {
+    const box = $('results');
+    if (!r) { box.innerHTML = ''; return; }
+    const { t, notesBy } = tally(r);
+    const used = PFC.FAMILIES.filter(f => t[f]).sort((a, b) => t[b] - t[a]);
+    const R = { slug: r.slug, name: r.name, notes: r.notes.length ? r.notes : ['musk'], pid: r.pid };
+    box.innerHTML =
+      '<div class="sdres">' +
+        '<div class="pdbig" style="--c1:' + PFC.tint(R) + '">' + PFC.stage(R, 200) + '</div>' +
+        '<div><div class="sdby">' + esc(r.house) + ' · ' + esc(PFC.GENDER[r.gender]) + '</div>' +
+          '<h2 class="sdname">' + esc(r.name) + '</h2>' +
+          '<div class="sdsum">' + summary(r, t) + '</div>' +
+          '<div class="sdchips">' + used.slice(0, 5).map(f => '<span class="sdchip">' + esc(SHORT[f] || f) + ' <b>' + t[f] + '</b></span>').join('') + '</div>' +
+          '<div class="sdact"><a class="btn sm" style="background:#141414" href="catalog.html?id=' + encodeURIComponent(r.slug) + '">View perfume →</a>' +
+          (r.link ? '<a class="btn sm ghost" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sdrow"><div class="sdchart">' + radar(t) + '</div>' +
+        '<div class="sdnotes"><h3>What is in the mix</h3>' +
+          (used.length ? used.map(f => '<p class="sdnrow"><b>' + esc(f) + '</b> · ' + esc(notesBy[f].map(cap).join(', ')) + '</p>').join('') : '<p class="sdnrow">No listed notes yet.</p>') +
+        '</div></div>' +
+      '<div class="sdnote">The shape counts how many of the perfume\'s listed notes fall in each family. It describes the notes on the label, not how strong each one smells. Our affiliate links earn ParfAI a commission at no extra cost to you. <a href="affiliate-disclosure.html">Affiliate disclosure</a></div>';
+  }
+
+  function select(r) {
+    $('q').value = r ? r.house + ' ' + r.name : '';
+    $('sugg').hidden = true;
+    render(r);
+    if (r) history.replaceState(null, '', '?id=' + encodeURIComponent(r.slug));
+  }
+
+  function search(q) {
+    const toks = q.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!toks.length) return [];
+    return rows.filter(r => r.ok && toks.every(t => r.hay.indexOf(t) !== -1)).sort((a, b) => b.sizes - a.sizes || a.name.localeCompare(b.name)).slice(0, 8);
+  }
+  function showSugg(list) {
+    const el = $('sugg');
+    if (!list.length) { el.hidden = true; return; }
+    el.innerHTML = list.map((r, i) => '<button type="button" data-i="' + i + '"><b>' + esc(r.name) + '</b><span>' + esc(r.house) + ' · ' + esc(PFC.GENDER[r.gender]) + '</span></button>').join('');
+    el.hidden = false;
+    el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => select(list[+b.dataset.i])));
+  }
+
+  PFC.load().then(cat => {
+    rows = cat.rows;
+    let current = [];
+    $('q').addEventListener('input', e => { current = search(e.target.value.trim()); showSugg(current); });
+    $('q').addEventListener('keydown', e => { if (e.key === 'Enter' && current[0]) { e.preventDefault(); select(current[0]); } if (e.key === 'Escape') $('sugg').hidden = true; });
+    document.addEventListener('click', e => { if (!e.target.closest('.dfsearch')) $('sugg').hidden = true; });
+
+    const QUICK = ['Creed Aventus', 'Baccarat Rouge 540', 'Dior Sauvage', 'Black Opium', 'Tom Ford Oud Wood', 'Parfums de Marly Delina', 'Lancome La Vie Est Belle', 'Paco Rabanne Invictus'];
+    const chips = QUICK.map(q => search(q).filter(r => !r.dupe).sort((a, b) => b.sizes - a.sizes)[0] || search(q)[0]).filter(Boolean);
+    $('quick').innerHTML = chips.map((r, i) => '<button type="button" class="tab" data-i="' + i + '">' + esc(r.name) + '</button>').join('');
+    $('quick').querySelectorAll('button').forEach(b => b.addEventListener('click', () => select(chips[+b.dataset.i])));
+
+    const id = new URLSearchParams(location.search).get('id');
+    const start = id ? rows.filter(r => r.slug === id)[0] : null;
+    select(start || chips[0] || null);
+    if (!id) history.replaceState(null, '', location.pathname);
+  }).catch(() => {
+    $('results').innerHTML = '<div class="sdbox" style="text-align:center;color:var(--muted)">The catalogue could not be loaded. Please refresh the page.</div>';
+  });
+</script>
+<script src="cookie-notice.js"></script>
+</body>
+</html>
