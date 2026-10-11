@@ -54,6 +54,12 @@
 }
 </script>
 <style>#more:not([hidden]){display:block}#more[hidden]{display:none!important}</style>
+<style>
+  /* House dropdown: same pill and arrow as the Explore filters */
+  .filterbar select.chip-select{-webkit-appearance:none;appearance:none;padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231a1a1a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;background-size:12px 8px}
+  .filterbar select#hsel{width:260px;max-width:100%;text-overflow:ellipsis}
+  @media(max-width:640px){.filterbar select#hsel{width:100%}}
+</style>
 </head>
 <body>
 
@@ -69,6 +75,7 @@
 
   <div class="filterbar" style="margin-bottom:14px">
     <div class="searchbox">🔍<input id="q" type="search" placeholder="Search houses (e.g. dior, lattafa, tom ford)" autocomplete="off"></div>
+    <select id="hsel" class="chip-select" aria-label="Choose a house"><option value="">All houses</option></select>
   </div>
   <div class="tabs" id="tabs" style="margin-bottom:14px">
     <span class="tab" data-tier="">All</span>
@@ -92,7 +99,7 @@
 <script src="auth.js"></script>
 <script>
   var all = [], list = [], shown = 0, PAGE = 48;
-  var activeTier = qs('tier') || '', letter = '', q = '';
+  var activeTier = qs('tier') || '', letter = '', q = '', hs = '';
   var grid = document.getElementById('hgrid');
 
   function filtered() {
@@ -100,6 +107,7 @@
     return all.filter(function (h) {
       if (activeTier && h.tier !== activeTier) return false;
       if (letter && h.name.charAt(0).toUpperCase() !== letter && !(letter === '#' && !/[A-Z]/i.test(h.name.charAt(0)))) return false;
+      if (hs && h.name !== hs) return false;
       if (t && h.name.toLowerCase().indexOf(t) === -1) return false;
       return true;
     });
@@ -135,10 +143,12 @@
   }
   document.querySelectorAll('#tabs .tab').forEach(function (t) { t.addEventListener('click', function () { activeTier = t.dataset.tier; render(); }); });
   document.getElementById('q').addEventListener('input', function (e) { q = e.target.value.trim(); render(); });
+  document.getElementById('hsel').addEventListener('change', function (e) { hs = e.target.value; render(); });
   document.getElementById('more').addEventListener('click', showMore);
 
   PFC.load().then(function (cat) {
     all = PFC.houses(cat.rows);
+    document.getElementById('hsel').innerHTML = '<option value="">All houses</option>' + all.map(function (h) { return h.name; }).sort(function (a, b) { return a.localeCompare(b); }).map(function (n) { return '<option value="' + PFC.esc(n) + '">' + PFC.esc(n) + '</option>'; }).join('');
     var ls = '<span class="tab" data-l="" style="padding:7px 13px">All letters</span>';
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function (c) { if (all.some(function (h) { return h.name.charAt(0).toUpperCase() === c; })) ls += '<span class="tab" data-l="' + c + '" style="padding:7px 12px;min-width:36px;text-align:center">' + c + '</span>'; });
     var lw = document.getElementById('letters'); lw.innerHTML = ls;
