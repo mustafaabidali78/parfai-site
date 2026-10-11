@@ -784,3 +784,18 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
  .wxt-row::-webkit-scrollbar{display:none}
  .wxt-card{flex:0 0 72%;max-width:300px;scroll-snap-align:start}
 }
+
+/* Weather pick: light tiles so bottle photos show, bigger picture, buy row */
+.wpxthumb{width:104px;height:132px;border-radius:14px;border:1px solid rgba(0,0,0,.06)}
+.wpxthumb img{max-width:84%;max-height:88%;filter:none}
+.wpxthumb .bottle,.wpxaltthumb .bottle,.wcthumb .bottle{background:rgba(60,40,110,.16);border:1.5px solid rgba(60,40,110,.3)}
+.wpxaltthumb{width:34px;height:42px;border:1px solid rgba(0,0,0,.06)}
+.wpxaltthumb img{max-width:86%;max-height:88%}
+.wpxaltlink{background:#fff;color:#2a2438}
+.wpxbuys{margin-top:12px}
+.wpxbuylab{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.wpxbuyrow{display:flex;flex-wrap:wrap;gap:8px}
+.wpxbuyrow .wpxbuy{margin-top:0}
+.laypromo .wpxbuylab{color:rgba(255,255,255,.82)}
+.laypromo .wpxaltlink{background:rgba(255,255,255,.12);color:#fff}
+@media(max-width:520px){.wpxthumb{width:84px;height:108px}}

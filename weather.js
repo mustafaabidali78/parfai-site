@@ -232,6 +232,13 @@ async function pickForWeather(bucket){
   return chosen;
 }
 
+function wxBuyLinks(p){
+  const q = (window.PFC && PFC.shopQuery) ? PFC.shopQuery(p) : (p.house + ' ' + p.name);
+  const fn = p.link ? `<a class="wpxbuy" href="${wxEsc(p.link)}" target="_blank" rel="sponsored nofollow noopener">FragranceNet ↗</a>` : '';
+  const amz = (typeof amazonAE === 'function') ? `<a class="wpxbuy" href="${wxEsc(amazonAE(q))}" target="_blank" rel="sponsored nofollow noopener">Amazon.ae ↗</a>` : '';
+  const noon = (typeof noonAE === 'function') ? `<a class="wpxbuy noonlink" href="${wxEsc(noonAE(q))}" target="_blank" rel="sponsored nofollow noopener">Noon ↗</a>` : '';
+  return `<div class="wpxbuys"><div class="wpxbuylab">Where to buy</div><div class="wpxbuyrow">${fn}${amz}${noon}</div></div>`;
+}
 const WEATHER_GENDER_GRAD = { 0: ['#6C7BFF', '#00B8D4'], 1: ['#FF4D9D', '#FF8C42'], 2: ['#8B7CFF', '#C86BFF'] };
 const WEATHER_GENDER_TEXT = { 0: 'For men', 1: 'For women', 2: 'Unisex' };
 function bottleThumbHTML(p, cls){
@@ -239,7 +246,9 @@ function bottleThumbHTML(p, cls){
   const g = WEATHER_GENDER_GRAD[p.gender] || WEATHER_GENDER_GRAD[2];
   const big = cls === 'wpxthumb' || cls === 'wcthumb' || cls === 'wpxaltthumb';
   const pic = big && p.pid ? `<img src="catalog-img/${p.pid}.jpg" alt="" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">` : '';
-  return `<div class="${cls}" style="background:linear-gradient(150deg,${g[0]},${g[1]})"><div class="bottle"></div>${pic}</div>`;
+  // Light tile so the (white-background) bottle photos stay visible; a soft tint shows the gender colour.
+  const tint = { 0: '#E8EDFF', 1: '#FFE8F1', 2: '#EFEAFF' }[p.gender] || '#EFEAFF';
+  return `<div class="${cls}" style="background:${tint}"><div class="bottle"></div>${pic}</div>`;
 }
 
 function tempUnitForCountry(countryCode){
@@ -400,14 +409,14 @@ function renderWeatherResult(el, result){
             <a class="wpxname" href="catalog.html?id=${encodeURIComponent(top.slug)}">${wxEsc(top.name)}</a>
             <div class="wcfam">${wxEsc(top.house)} · ${wxEsc(top.notes.slice(0, 3).map(wxCap).join(', '))}</div>
             <div class="wcwhy">${wxEsc(top.why)}</div>
-            ${top.link ? `<a class="wpxbuy" href="${wxEsc(top.link)}" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>` : ''}
+            ${wxBuyLinks(top)}
           </div>
         </div>
         ${alts.length ? `<div class="wpxaltlabel">Also good today</div><div class="wpxalt">${alts.map(p => `<a class="wpxaltlink" href="catalog.html?id=${encodeURIComponent(p.slug)}">${bottleThumbHTML(p, 'wpxaltthumb')}${wxEsc(p.name)}</a>`).join('')}</div>` : ''}
       </div>
     </div>
     <div class="wpxcredit">
-      Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Price links are affiliate links.
+      Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Buy links are affiliate links, so ParfAI may earn a small commission at no extra cost to you. As an Amazon Associate I earn from qualifying purchases.
       <button class="wpxchange" type="button" data-action="precise">Use precise location</button>
       <button class="wpxchange" type="button" data-action="manual">Not your location?</button>
     </div>
@@ -428,9 +437,9 @@ function renderWeatherResult(el, result){
         <a class="wpxname" href="catalog.html?id=${encodeURIComponent(top.slug)}">${wxEsc(top.name)}</a>
         <div class="wcfam">${wxEsc(top.house)} · ${wxEsc(top.notes.slice(0, 3).map(wxCap).join(', '))}</div>
         <div class="wcwhy">${wxEsc(top.why)}</div>
-        ${top.link ? `<a class="wpxbuy" href="${wxEsc(top.link)}" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>` : ''}
+        ${wxBuyLinks(top)}
         <div class="wpxcredit">
-          Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Price links are affiliate links.
+          Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Buy links are affiliate links, so ParfAI may earn a small commission at no extra cost to you. As an Amazon Associate I earn from qualifying purchases.
           <button class="wpxchange" type="button" data-action="precise">Use precise location</button>
           <button class="wpxchange" type="button" data-action="manual">Not your location?</button>
         </div>
@@ -491,7 +500,7 @@ function renderWeatherResult(el, result){
         </span>
       </div>
       <div class="wxt-row">${result.picks.slice(0, 3).map(trioCard).join('')}</div>
-      <div class="wxt-credit">Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Price links are affiliate links.</div>
+      <div class="wxt-credit">Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Buy links are affiliate links, so ParfAI may earn a small commission at no extra cost to you. As an Amazon Associate I earn from qualifying purchases.</div>
     </div>`;
   el.innerHTML = el.dataset.hero === '3' ? trioHTML : (el.dataset.hero === '1' ? heroHTML : normalHTML);
 
