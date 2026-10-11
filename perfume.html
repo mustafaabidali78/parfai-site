@@ -18,7 +18,7 @@
 <meta id="twitter-title" name="twitter:title" content="Fragrance — ParfAI">
 <meta id="twitter-desc" name="twitter:description" content="Fragrance notes, ratings, and where to buy on ParfAI.">
 <meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610112200">
+<link rel="stylesheet" href="parfai.css?v=202610112300">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -53,6 +53,27 @@
   ]
 }
 </script>
+<style>
+  .pyramid .plevel{display:flex;flex-wrap:wrap;align-content:flex-start;align-items:center;gap:8px}
+  .pyramid .plevel .lh{width:100%;margin-bottom:4px}
+  .pyramid .notechip{margin:0}
+  .accordwrap{margin:22px 0 6px}
+  .ratingbars{margin:20px 0 0}
+  .dsec{margin-top:56px}
+  .dsec .shead{margin-bottom:18px}
+  .rvpill{display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;background:#faf7f1;border:1px solid var(--border);border-radius:24px;padding:6px 7px 6px 16px;font-size:13.5px;color:var(--ink2)}
+  .rvstars{color:#d8d2c5;letter-spacing:2px;font-size:16px}.rvstars.on{color:#E8742A}
+  .rvcnt b{color:var(--ink)}
+  .rvglow{position:relative;overflow:hidden;display:inline-flex;gap:8px;align-items:center;padding:10px 18px;border:0;border-radius:999px;color:#10341d;cursor:pointer;font:700 14px/1.2 Inter,system-ui,sans-serif;background:linear-gradient(135deg,#bfe6c9,#8fd7a6 55%,#c9ecb4);box-shadow:0 6px 18px rgba(86,170,114,.38),inset 0 1px 0 rgba(255,255,255,.6)}
+  .rvglow::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-20deg);animation:rvshine 3.6s ease-in-out infinite;pointer-events:none}
+  @keyframes rvshine{0%,55%{left:-60%}100%{left:130%}}
+  .rvglow:focus-visible{outline:3px solid #1F4A2C;outline-offset:2px}
+  @media(prefers-reduced-motion:reduce){.rvglow::after{animation:none}}
+  .rvlist{margin-top:18px}
+  .rvc{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:10px;max-width:680px}
+  .rvc b{font-size:14px}.rvc .st{color:#E8742A;font-size:13px;margin-left:8px;letter-spacing:1px}
+  .rvc p{margin:6px 0 0;font-size:14px;color:var(--ink2);overflow-wrap:anywhere}
+</style>
 </head>
 <body>
 
@@ -64,12 +85,16 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610112200"></script>
+<script src="data.js?v=202610112300"></script>
+<script src="catalog-lib.js?v=202610090030"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
 <script src="reviews.js"></script>
 <script>
+(async function(){
+  let LINKS = {};
+  try { const rr = await fetch('catalog/perfume-links.json'); if (rr.ok) LINKS = await rr.json(); } catch (e) {}
   const id = qs('id');
   const p = perfumeById(id);
   const content = document.getElementById('content');
@@ -95,10 +120,21 @@
     // Search words for Amazon.ae and Noon: house plus the perfume name.
     const shopQ = (houseName(p.houseId) + ' ' + p.name).replace(/\s+/g,' ').trim();
     const retailers = [
-      {id:'fn', name:'FragranceNet', sub:'US store', url:`https://www.fragrancenet.com/catalogsearch/result?q=${encodeURIComponent(p.name)}`},
+      {id:'fn', name:'FragranceNet', sub:'US store', url:(LINKS[p.id] && LINKS[p.id].l) || `https://www.fragrancenet.com/catalogsearch/result?q=${encodeURIComponent(p.name)}`},
       {id:'amz', name:'Amazon.ae', sub:'UAE', url:amazonAE(shopQ)},
       {id:'noon', name:'Noon', sub:'UAE', url:noonAE(shopQ), cls:' noonlink'},
     ];
+
+    // Bottle cards in the same white "pedestal" style as Explore.
+    const simCard = x => {
+      const notes = [...x.notes.top, ...x.notes.heart, ...x.notes.base].map(n => String(n).toLowerCase());
+      const R = { slug: x.id, name: x.name, notes: notes.length ? notes : ['musk'], pid: (LINKS[x.id] || {}).p || '' };
+      const stage = PFC.stage(R, 170);
+      return '<a class="pd" style="--c1:' + PFC.tint(R) + ';text-decoration:none;color:inherit" href="perfume.html?id=' + encodeURIComponent(x.id) + '">' +
+        '<div class="pd-tg"><span class="gt">' + PFC.esc(x.gender) + '</span>' + (x.dupeOf ? '<span class="dp">DUPE</span>' : '') + '</div>' + stage +
+        '<div class="pd-hh">' + PFC.esc(houseName(x.houseId)) + '</div><div class="pd-nm">' + PFC.esc(x.name) + '</div>' +
+        '<div class="pd-nt">' + PFC.esc(notes.slice(0, 3).map(PFC.cap).join(', ')) + '</div></a>';
+    };
 
     content.innerHTML = `
       <div class="crumb"><a href="explore.html">Explore</a> / <a href="house.html?id=${p.houseId}">${houseName(p.houseId)}</a> / ${p.name}</div>
@@ -152,34 +188,23 @@
       ${dupes.length ? `
       <section>
         <div class="shead"><h2>Affordable dupes</h2><a href="dupe-finder.html?for=${p.id}">Full comparison →</a></div>
-        <div class="grid">${dupes.map((d,i)=>pcardHTML(d,i)).join('')}</div>
+        <div class="grid">${dupes.map(simCard).join('')}</div>
       </section>` : ''}
 
       <section>
         <div class="shead"><h2>Similar fragrances</h2></div>
-        <div class="grid">${similar.map((s,i)=>pcardHTML(s,i)).join('')}</div>
+        <div class="grid">${similar.map(simCard).join('')}</div>
       </section>
 
-      <section class="split">
-        <div class="card">
-          <h3>Reviews</h3>
-          
-          <div id="revs"></div>
-          <a class="btn ghost block" style="margin-top:16px" href="#" data-write-review data-perfume-id="${p.id}">Write a review</a>
-        </div>
-        <div class="card">
-          <h3>Questions &amp; answers</h3>
-          <div style="padding:13px 0;font-size:13px;color:var(--muted)">No questions yet for ${p.name} — Q&amp;A is coming soon to ParfAI.</div>
-        </div>
+      <section class="dsec rvsec">
+        <div class="shead"><h2>Reviews</h2></div>
+        <div class="rvpill"><span class="rvstars" id="rvstars" aria-hidden="true">☆☆☆☆☆</span><span class="rvcnt" id="rvcnt">No reviews yet</span>
+          <button type="button" class="rvglow" data-write-review data-perfume-id="${p.id}" data-perfume-name="${p.name.replace(/"/g,'&quot;')}"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>Write a ParfAI review</button></div>
+        <div class="rvlist" id="revs"></div>
       </section>
     `;
 
     document.getElementById('retailers').innerHTML = retailers.map(r=>`<a class="retail${r.cls||''}" data-r="${r.id}" href="${r.url}" target="_blank" rel="nofollow sponsored noopener">${r.name} <span class="p">${r.sub}</span></a>`).join('');
-    // Swap the FragranceNet search link for the tracked product link when ParfAI has one.
-    fetch('catalog/perfume-links.json').then(r=>r.ok?r.json():null).then(m=>{
-      const a = document.querySelector('#retailers a[data-r="fn"]');
-      if (m && m[p.id] && a) a.href = m[p.id];
-    }).catch(()=>{});
 
     // Structured data (Product + rating, and breadcrumbs) so search engines can
     // show star ratings and a breadcrumb trail for this fragrance.
@@ -212,9 +237,18 @@
 
     function renderRevs(list){
       const E = escHtml;
-      document.getElementById('revs').innerHTML = list.length ? list.map((r,i)=>`<div class="rc" style="background:var(--bg);padding:0;border:none;margin-bottom:14px"><div class="top" style="margin-bottom:8px"><div class="thumb" style="background:${gr(i)}"></div><div><div class="pn">${E(r.who)}</div><div class="stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div></div></div><div class="body" style="overflow-wrap:anywhere">${E(r.tx)}</div></div>`).join('') : `<p style="font-size:14px;color:var(--muted)">No reviews yet. Be the first to share your take.</p>`;
+      const st = document.getElementById('rvstars'), ct = document.getElementById('rvcnt');
+      if (list.length) {
+        const avg = list.reduce((t,r)=>t+(Number(r.s)||0),0) / list.length, full = Math.floor(avg);
+        st.textContent = '★'.repeat(full) + '☆'.repeat(5-full); st.className = 'rvstars on';
+        ct.innerHTML = '<b>' + avg.toFixed(1) + '</b> · ' + list.length + ' review' + (list.length === 1 ? '' : 's');
+      } else {
+        st.textContent = '☆☆☆☆☆'; st.className = 'rvstars'; ct.textContent = 'No reviews yet';
+      }
+      document.getElementById('revs').innerHTML = list.slice(0, 5).map(r=>`<div class="rvc"><b>${E(r.who)}</b><span class="st">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</span><p>${E(r.tx)}</p></div>`).join('');
     }
 
+    if (typeof bindReviewButtons === 'function') bindReviewButtons();
     renderRevs([]);
 
     function refreshLiveRevs(){
@@ -227,6 +261,7 @@
       if (!e.detail || e.detail.perfumeId === p.id) refreshLiveRevs();
     });
   }
+})();
 </script>
 <script src="cookie-notice.js"></script>
 </body>
