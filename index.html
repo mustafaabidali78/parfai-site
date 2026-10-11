@@ -208,6 +208,11 @@
 .pv-lab{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:100px;margin-bottom:8px}
 .pv-side.orig .pv-lab{background:#F3EFFF;color:#6a55e8}.pv-side.dupe .pv-lab{background:#E4FAF2;color:#00835d}
 .pv-ph{display:block;width:104px;height:104px;object-fit:contain;border-radius:14px;background:#fff;margin:0 auto 8px}
+.pv-go{display:block;color:inherit;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pv-go:hover .pv-n,.pv-go:focus-visible .pv-n{text-decoration:underline;text-underline-offset:3px}
+.pv-go .pv-ph{transition:transform .2s ease}.pv-go:hover .pv-ph{transform:translateY(-3px)}
+.pv-go:focus-visible{outline:3px solid #1F4A2C;outline-offset:3px;border-radius:12px}
+@media(prefers-reduced-motion:reduce){.pv-go .pv-ph{transition:none}.pv-go:hover .pv-ph{transform:none}}
 .pv-h{font-size:12px;color:var(--muted)}
 .pv-n{font-family:var(--disp);font-size:clamp(17px,1.5vw,20px);font-weight:700;line-height:1.15;overflow-wrap:anywhere}
 .pv-vs{text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
@@ -512,9 +517,9 @@
         '<a class="noonlink" href="' + E(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE</a> \u00b7 ' +
         '<a href="catalog.html?id=' + encodeURIComponent(c.f.slug) + '">See ' + E(c.f.name) + '</a>';
       return '<div class="pv"><div class="pv-top">' +
-        '<div class="pv-side orig"><div class="pv-lab">The famous one</div>' + pvPic(c.f) + '<div class="pv-h">' + E(c.f.house) + '</div><div class="pv-n">' + E(c.f.name) + '</div></div>' +
+        '<div class="pv-side orig"><div class="pv-lab">The famous one</div><a class="pv-go" href="catalog.html?id=' + encodeURIComponent(c.f.slug) + '" aria-label="See ' + E(c.f.name) + ' by ' + E(c.f.house) + '">' + pvPic(c.f) + '<div class="pv-h">' + E(c.f.house) + '</div><div class="pv-n">' + E(c.f.name) + '</div></a></div>' +
         '<div class="pv-vs">vs</div>' +
-        '<div class="pv-side dupe"><div class="pv-lab">The affordable one</div>' + pvPic(c.d) + '<div class="pv-h">' + E(c.d.house) + '</div><div class="pv-n">' + E(c.d.name) + '</div></div></div>' +
+        '<div class="pv-side dupe"><div class="pv-lab">The affordable one</div><a class="pv-go" href="catalog.html?id=' + encodeURIComponent(c.d.slug) + '" aria-label="See ' + E(c.d.name) + ' by ' + E(c.d.house) + '">' + pvPic(c.d) + '<div class="pv-h">' + E(c.d.house) + '</div><div class="pv-n">' + E(c.d.name) + '</div></a></div></div>' +
         '<div class="pv-score"><b>' + pct + '% alike</b> <span>\u00b7 ' + c.sh.length + ' of ' + tot + ' notes match</span><div class="pv-meter"><i style="width:' + pct + '%"></i></div></div>' +
         '<div class="pv-chips">' + chips + '</div>' +
         '<div class="pv-act">' + buy + '<div class="pv-more">' + more + '</div></div></div>';
