@@ -1338,6 +1338,16 @@ function logoSVG(w,h){
   </svg>`;
 }
 
+/* ---------- Full catalogue card: slowly drifting rows of small bottle pictures ---------- */
+function bottleRows(){
+  let h='<div class="brows" aria-hidden="true">';
+  for(let r=0;r<9;r++){
+    let one='';
+    for(let i=0;i<12;i++) one+='<img src="images/nav/b'+String(((r*5+i*3)%20)+1).padStart(2,'0')+'.webp" alt="" loading="lazy" decoding="async">';
+    h+='<div class="brow '+(r%2?'l':'r')+'" style="top:'+(r*62+4)+'px"><div class="btrk">'+one+one+'</div></div>';
+  }
+  return h+'</div><div class="bshade" aria-hidden="true"></div>';
+}
 /* ---------- nav dropdown (feature card + clean list) ---------- */
 function navMega(label, m){
   const esc = t => String(t).replace(/&(?!amp;|lt;|gt;|quot;|#)/g,'&amp;').replace(/</g,'&lt;');
@@ -1346,7 +1356,7 @@ function navMega(label, m){
   const list = arr => arr.map(i=>`<a class="it" href="${i[2]}"><b>${esc(i[0])}${badge(i[3])}</b><span>${esc(i[1])}</span></a>`).join('');
   return `<span class="megawrap"><span class="menu${m.on?' on':''}">${label} <span class="car">▾</span></span>
         <div class="mega mc"><div class="mwrap">
-          <a class="feat ${m.f}" href="${m.feat[4]}"><small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
+          <a class="feat ${m.f}" href="${m.feat[4]}">${m.f==='f1'?bottleRows():''}<small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
           <div class="mrest"><div class="colhead">${m.head}</div>
             <div class="chips">${m.chips.map(c=>`<a href="${c[1]}">${c[0]}</a>`).join('')}</div>
             <div class="mcols">${m.cols.map(c=>`<div><div class="colhead">${c[0]}</div>${list(c[1])}</div>`).join('')}</div>
