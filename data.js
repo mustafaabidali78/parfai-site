@@ -1613,6 +1613,32 @@ function startBackButtons(){
   window.addEventListener('scroll',sc,{passive:true});sc();
 }
 
+function startCrumbLinks(){
+  // Every part of a breadcrumb trail is a link: the last part (this page) links to itself,
+  // a blog category links to the blog list.
+  function fix(){
+    var path=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+    document.querySelectorAll('.crumb,.crumbs').forEach(function(c){
+      if(c.getAttribute('data-crumbfix')===c.textContent) return;
+      var last=c.lastChild;
+      if(last&&last.nodeType===3){
+        var m=last.nodeValue.match(/^(\s*\/\s*)([\s\S]*?)(\s*)$/);
+        if(m&&m[2]){
+          var a=document.createElement('a');
+          a.href=path.indexOf('blog-')===0?'blog.html':location.pathname.split('/').pop()+location.search;
+          a.textContent=m[2];
+          last.nodeValue=m[1];
+          c.appendChild(a);
+          if(m[3]) c.appendChild(document.createTextNode(m[3]));
+        }
+      }
+      c.setAttribute('data-crumbfix',c.textContent);
+    });
+  }
+  fix();
+  if(window.MutationObserver) new MutationObserver(fix).observe(document.body,{childList:true,subtree:true});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const navSlot = document.getElementById('nav-slot');
   const footSlot = document.getElementById('footer-slot');
@@ -1624,4 +1650,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footSlot) footSlot.innerHTML = renderFooter();
   startSigSystem();
   startBackButtons();
+  startCrumbLinks();
 });
