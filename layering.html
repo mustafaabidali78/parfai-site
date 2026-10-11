@@ -65,6 +65,7 @@
 .lystart button,.lybtn{font:600 13px var(--body);padding:9px 16px;border-radius:100px;background:var(--panel);border:1px solid var(--border);color:var(--ink2);cursor:pointer}
 .lystart button:hover,.lybtn:hover{border-color:var(--ink);color:var(--ink)}
 .lyslots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.lyl{display:block;color:inherit;text-decoration:none}.lyn .lyl:hover,.lyl:focus-visible{text-decoration:underline;text-underline-offset:3px}
 .lys{position:relative;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:20px;min-height:340px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 14px 30px -26px rgba(20,20,20,.4)}
 .lys+.lys:before{content:"+";position:absolute;left:-21px;top:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:grid;place-items:center;font:600 18px var(--body);color:var(--muted);z-index:2}
 .lys.empty{border-style:dashed;justify-content:center;box-shadow:none;background:transparent}
@@ -193,7 +194,8 @@
         (i === 2 ? '<button class="lyx" type="button" data-close3="1">Not now</button>' : '') + '</div>';
     }
     var sp = [1, 2, 3].map(function (n) { return '<button type="button" data-sp="' + i + ':' + n + '" aria-pressed="' + (sprays[i] === n) + '" aria-label="' + n + ' spray' + (n > 1 ? 's' : '') + '">' + n + '</button>'; }).join('');
-    return '<div class="lys">' + PFC.art(r, 150) + '<div class="lyh">' + esc(r.house) + '</div><div class="lyn">' + esc(r.name) + '</div><div class="lynotes">' + chips(r.notes, 5) + '</div>' +
+    var pl = 'catalog.html?id=' + encodeURIComponent(r.slug);
+    return '<div class="lys"><a class="lyl" href="' + pl + '" target="_blank" rel="noopener" aria-label="See ' + esc(r.name) + ' (opens in a new tab)">' + PFC.art(r, 150) + '</a><div class="lyh">' + esc(r.house) + '</div><div class="lyn"><a class="lyl" href="' + pl + '" target="_blank" rel="noopener">' + esc(r.name) + '</a></div><div class="lynotes">' + chips(r.notes, 5) + '</div>' +
       '<div class="lysp"><small>Sprays</small>' + sp + '</div><button class="lyx" type="button" data-clear="' + i + '">Change perfume</button></div>';
   }
   function drawSlots() { $('ly-slots').innerHTML = [0, 1, 2].map(slotHTML).join(''); drawResult(); sync(); }

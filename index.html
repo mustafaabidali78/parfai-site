@@ -208,6 +208,9 @@
 .pv-lab{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:100px;margin-bottom:8px}
 .pv-side.orig .pv-lab{background:#F3EFFF;color:#6a55e8}.pv-side.dupe .pv-lab{background:#E4FAF2;color:#00835d}
 .pv-ph{display:block;width:104px;height:104px;object-fit:contain;border-radius:14px;background:#fff;margin:0 auto 8px}
+a.sf-pic,a.mr-pic{text-decoration:none;color:inherit;cursor:pointer}
+.sf-nl{color:inherit;text-decoration:none}.sf-nl:hover,.sf-nl:focus-visible{text-decoration:underline;text-underline-offset:3px}
+a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-offset:3px;border-radius:12px}
 .pv-go{display:block;color:inherit;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .pv-go:hover .pv-n,.pv-go:focus-visible .pv-n{text-decoration:underline;text-underline-offset:3px}
 .pv-go .pv-ph{transition:transform .2s ease}.pv-go:hover .pv-ph{transform:translateY(-3px)}
@@ -459,7 +462,7 @@
     var shf = document.getElementById('pk-list');
     shf.className = 'sf';
     function bottle(o, big) { return '<span class="sf-bt' + (big ? ' big' : '') + '" style="--c1:' + o.pal.c[0] + ';--c2:' + o.pal.c[1] + '"></span>'; }
-    shf.innerHTML = '<div class="sf-pic" id="sf-pic"></div>' +
+    shf.innerHTML = '<a class="sf-pic" id="sf-pic" href="#" aria-label="See this perfume"></a>' +
       '<div class="sf-info"><div class="sf-n" id="sf-n"></div><div class="sf-h" id="sf-h"></div>' +
       '<div class="sf-nts" id="sf-nts" aria-live="polite"></div><div class="sf-act"><a class="sf-go" id="sf-go" href="#">See this perfume <span>&rarr;</span></a><div class="sf-buy" id="sf-buy"></div></div></div>' +
       '<div class="sf-row" id="sf-row">' + info.map(function (o, i) {
@@ -473,7 +476,8 @@
       [].forEach.call(sfRow.children, function (b, k) { b.classList.toggle('on', k === i); b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
       sfPic.innerHTML = bottle(o, true);
       if (u) { var im = new Image(); im.className = 'sf-big'; im.alt = ''; im.onload = function () { if (sfCur === i) { sfPic.innerHTML = ''; sfPic.appendChild(im); } }; im.src = u; }
-      document.getElementById('sf-n').innerHTML = E(r.name) + (r.dupe ? ' <span class="sf-dp">DUPE</span>' : '');
+      document.getElementById('sf-n').innerHTML = '<a class="sf-nl" href="' + E(o.href) + '">' + E(r.name) + '</a>' + (r.dupe ? ' <span class="sf-dp">DUPE</span>' : '');
+      sfPic.href = o.href;
       document.getElementById('sf-h').textContent = r.house + ' \u00b7 ' + PFC.GENDER[r.gender];
       document.getElementById('sf-nts').innerHTML = o.nts.map(function (n, k) { return '<span style="animation-delay:' + (k * 60) + 'ms"><i style="background:' + noteCol(n) + '"></i>' + E(C(n)) + '</span>'; }).join('');
       document.getElementById('sf-go').href = o.href;
@@ -686,7 +690,7 @@
           ? '<a class="mbuy" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener" aria-label="Check price on FragranceNet for ' + esc(r.name) + '">Check price</a><div class="malso">' + amz + ' &middot; ' + noon + '</div>'
           : '<div class="malso" style="margin-top:0">' + amz + ' &middot; ' + noon + '</div>') + '</div>';
         return '<div class="mr" style="animation-delay:' + (k * 60) + 'ms">' + (r.dupe ? '<span class="d">DUPE</span>' : '') +
-          '<div class="mr-pic">' + (ph ? '<img class="mr-ph" src="' + ph + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '</div>' +
+          '<a class="mr-pic" href="' + href + '" aria-label="See ' + esc(r.name) + '">' + (ph ? '<img class="mr-ph" src="' + ph + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '</a>' +
           '<a class="mn" href="' + href + '"><b>' + esc(r.name) + '</b><span class="mh">' + esc(r.house) + '</span></a><div class="mnotes">' + notes + '</div>' + buy + '</div>';
       }).join('');
     }

@@ -29,7 +29,7 @@
   .dfrow .searchbox{flex:1;min-width:260px}
   .matchcard{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:16px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
   @media(max-width:640px){.matchcard{grid-template-columns:1fr}}
-  .matchcard .sw{width:56px;height:88px;border-radius:10px 10px 14px 14px;flex-shrink:0;overflow:hidden}
+  .matchcard .sw{display:block;width:56px;height:88px;border-radius:10px 10px 14px 14px;flex-shrink:0;overflow:hidden}
   .matchcard .sw .swph{display:block;width:100%;height:100%;object-fit:contain;opacity:0;mix-blend-mode:multiply}
   .matchcard .sw.has{width:96px;height:110px;background:none!important}
   .matchcard .sw.has .swph{opacity:1}
@@ -182,7 +182,7 @@
       const why = shared.length ? `Shares ${shared.length > 1 ? shared.slice(0, -1).join(', ') + ' and ' + shared[shared.length - 1] : shared[0]} with ${esc(target.name)}.` : '';
       const tn = Object.keys(weights(target)).length;
       return `<div class="matchcard">
-        <div class="sw" style="background:linear-gradient(140deg,${g[0]},${g[1]})">${PFC.photo(r) ? `<img class="swph" src="${PFC.photo(r)}" alt="" loading="lazy" onload="this.parentNode.classList.add('has')" onerror="this.remove()">` : ''}</div>
+        <a class="sw" href="catalog.html?id=${encodeURIComponent(r.slug)}" aria-label="See ${esc(r.name)}" style="background:linear-gradient(140deg,${g[0]},${g[1]})">${PFC.photo(r) ? `<img class="swph" src="${PFC.photo(r)}" alt="" loading="lazy" onload="this.parentNode.classList.add('has')" onerror="this.remove()">` : ''}</a>
         <div>
           <a class="nm" href="catalog.html?id=${encodeURIComponent(r.slug)}">${esc(r.name)}</a>
           <div class="bd">${esc(r.house)} · ${esc(PFC.GENDER[r.gender])}${m.pick ? ' · <b>Community favourite</b>' : ''}</div>
