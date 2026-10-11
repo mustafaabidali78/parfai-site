@@ -234,7 +234,10 @@
           '<div class="sdfacts">' + facts(r) + '</div>' +
           '<div class="sdchips">' + used.slice(0, 5).map(f => '<span class="sdchip">' + esc(SHORT[f] || f) + ' <b>' + t[f] + '</b></span>').join('') + '</div>' +
           '<div class="sdact"><a class="btn sm" style="background:#141414" href="catalog.html?id=' + encodeURIComponent(r.slug) + '">View perfume →</a>' +
-          (r.link ? '<a class="btn sm ghost" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '') + '</div>' +
+          (r.link ? '<a class="btn sm ghost" href="' + esc(r.link) + '" target="_blank" rel="sponsored nofollow noopener">FragranceNet ↗</a>' : '') +
+          '<a class="btn sm ghost" href="' + esc(amazonAE(PFC.shopQuery(r))) + '" target="_blank" rel="sponsored nofollow noopener">Amazon.ae ↗</a>' +
+          '<a class="btn sm ghost noonlink" href="' + esc(noonAE(PFC.shopQuery(r))) + '" target="_blank" rel="sponsored nofollow noopener">Noon ↗</a></div>' +
+          '<div class="sdnote" style="margin:10px 0 0">Prices change often. Noon code <b>' + esc(NOON_CODE) + '</b> gives cashback (terms apply). ParfAI earns a commission on purchases through these links. As an Amazon Associate I earn from qualifying purchases.</div>' +
         '</div>' +
       '</div>' +
       '<div class="sdrow"><div class="sdchart">' + radar(t) + '</div>' +
