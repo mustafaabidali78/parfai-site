@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Weather-Aware Pick of the Day — ParfAI</title>
+<title>Weather-Aware Pick of the Day | ParfAI</title>
 <meta name="description" content="Get a fragrance recommendation based on today's real weather, powered by ParfAI's Weather-Aware Pick."/>
 <link rel="canonical" href="https://parfai.org/weather-pick.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ParfAI">
-<meta property="og:title" content="Weather-Aware Pick of the Day — ParfAI">
+<meta property="og:title" content="Weather-Aware Pick of the Day | ParfAI">
 <meta property="og:description" content="Get a fragrance recommendation based on today's real weather, powered by ParfAI's Weather-Aware Pick.">
 <meta property="og:url" content="https://parfai.org/weather-pick.html">
 <meta property="og:image" content="https://parfai.org/images/social/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Weather-Aware Pick of the Day — ParfAI">
+<meta name="twitter:title" content="Weather-Aware Pick of the Day | ParfAI">
 <meta name="twitter:description" content="Get a fragrance recommendation based on today's real weather, powered by ParfAI's Weather-Aware Pick.">
 <meta name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610113200">
+<link rel="stylesheet" href="parfai.css?v=202610113300">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -107,22 +107,20 @@
     </div>
   </section>
 
-  <section>
+  <section class="hiw">
     <div class="shead"><h2>How this works</h2></div>
-    <div class="lpanel">
-      <div class="lblendtxt" style="margin-top:0;max-width:none">
-        <b>Locating you, worldwide, without asking first.</b> The pick above starts from an IP-based location lookup — no permission prompt, resolves instantly — so it works the moment you land on the page, anywhere in the world. If you want it more precise, "Use precise location" asks your browser directly for GPS-level coordinates. Nothing about your exact location is ever stored beyond the resolved city, country, and that day's weather snapshot, cached in your browser only, for a few hours.<br><br>
-        <b>Live, not simulated.</b> Current temperature and conditions come from <a href="https://open-meteo.com" target="_blank" rel="noopener" style="color:var(--ink)">Open-Meteo</a>, a free weather API, fetched fresh for your coordinates every time the cache expires. If your network blocks the lookup or it fails for any reason, you get a manual city picker instead of a broken or fake result — pick a city and it pulls real live weather for that city instead.<br><br>
-        <b>Matching weather to fragrance, no AI call needed.</b> Temperature and conditions sort into a handful of bands — hot, mild, cold, rainy, snowy — and each band favours a different set of notes. Every perfume in the full catalogue is scored on its listed notes: bright citrus and watery notes score high in the heat, warm amber, vanilla and woody notes score high in the cold, and green, woody notes score high in the rain. The best matches go into a shortlist, and one of them is drawn as today's pick, with two alternates from different houses. The draw changes every day, so you won't see the same perfume all week.<br><br>
-        <b>Locale-correct by default.</b> Temperature displays in °C or °F automatically based on your resolved country.
-      </div>
+    <div class="hiw-grid">
+      <div><div class="hiw-k">Your location</div><p>Found from your connection, with no pop-up. Tap Use precise location for a closer match. Only your city and today's weather are kept, in your browser.</p></div>
+      <div><div class="hiw-k">Live weather</div><p>Temperature and conditions come from <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>, fresh for your spot. If the lookup fails, you pick a city instead.</p></div>
+      <div><div class="hiw-k">The match</div><p>Weather sorts into hot, mild, cold, rainy or snowy. Citrus and aquatic notes suit the heat, amber and woods the cold, green notes the rain. One perfume is drawn each day.</p></div>
+      <div><div class="hiw-k">Your units</div><p>Shown in °C or °F, set by your country.</p></div>
     </div>
   </section>
 
-  <section style="text-align:center">
-    <div class="band" style="background:linear-gradient(120deg,#2A3A47,#3D5266)">
+  <section>
+    <div class="band wband">
       <h2>Curious what else fits your mood?</h2>
-      <p>The weather pick is one way in — browse the full catalogue by note or house to find your own.</p>
+      <p>Browse the full catalogue by note or house to find your own.</p>
       <a class="btn" href="catalog.html">Browse the full catalogue</a>
     </div>
   </section>
