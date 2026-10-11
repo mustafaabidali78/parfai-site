@@ -232,6 +232,40 @@ async function pickForWeather(bucket){
   return chosen;
 }
 
+/* Weather scene for the boarding-pass stub: the picture and colour follow the real conditions. */
+function weatherScene(code, bucket, tempC){
+  const rain = [51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code);
+  const snow = [71,73,75,77,85,86].includes(code);
+  const storm = [95,96,99].includes(code);
+  if (storm) return { kind: 'storm', g: ['#55537A', '#2B2A45'] };
+  if (snow) return { kind: 'snow', g: ['#5B7FA6', '#2E4E73'] };
+  if (rain) return { kind: 'rain', g: ['#4C6784', '#2C435C'] };
+  if (code === 45 || code === 48) return { kind: 'fog', g: ['#7B8189', '#575C63'] };
+  if (code === 3) return { kind: 'cloud', g: ['#6B7A8C', '#445163'] };
+  const clear = code === 2 ? 'partly' : 'sun';
+  const g = tempC >= 27 ? ['#D9480F', '#A93408'] : (tempC <= 12 ? ['#3A6EA5', '#1C3F66'] : ['#3E8E5E', '#1F6B43']);
+  return { kind: clear, g };
+}
+function weatherSceneSVG(kind){
+  const cloud = '<path class="wps-cloud" d="M22 44a12 12 0 0 1 2-23.8A16 16 0 0 1 55 22a11 11 0 0 1 1 22z"/>';
+  const sun = '<g class="wps-sun"><circle cx="40" cy="30" r="12"/><g class="wps-rays">' + [0,45,90,135,180,225,270,315].map(a => '<line x1="40" y1="8" x2="40" y2="14" transform="rotate(' + a + ' 40 30)"/>').join('') + '</g></g>';
+  let inner = '';
+  if (kind === 'sun') inner = sun;
+  else if (kind === 'partly') inner = '<g transform="translate(-10 -6) scale(.8)">' + sun + '</g><g transform="translate(8 6)">' + cloud + '</g>';
+  else if (kind === 'cloud') inner = '<g class="wps-drift">' + cloud + '</g>';
+  else if (kind === 'fog') inner = '<g class="wps-fog"><line x1="14" y1="22" x2="66" y2="22"/><line x1="22" y1="32" x2="70" y2="32"/><line x1="12" y1="42" x2="60" y2="42"/></g>';
+  else if (kind === 'rain') inner = cloud + '<g class="wps-drops"><line x1="30" y1="50" x2="27" y2="58"/><line x1="40" y1="50" x2="37" y2="58"/><line x1="50" y1="50" x2="47" y2="58"/></g>';
+  else if (kind === 'snow') inner = cloud + '<g class="wps-flakes"><circle cx="30" cy="54" r="2"/><circle cx="41" cy="52" r="2"/><circle cx="52" cy="55" r="2"/></g>';
+  else if (kind === 'storm') inner = cloud + '<polygon class="wps-bolt" points="42,44 34,56 40,56 36,66 50,52 43,52 47,44"/>';
+  return '<svg class="wps wps-' + kind + '" viewBox="0 0 80 70" aria-hidden="true">' + inner + '</svg>';
+}
+function wxBuyRow(p){
+  const q = (window.PFC && PFC.shopQuery) ? PFC.shopQuery(p) : (p.house + ' ' + p.name);
+  const fn = p.link ? `<a class="wpt-bb dk" href="${wxEsc(p.link)}" target="_blank" rel="sponsored nofollow noopener">FragranceNet</a>` : '';
+  const amz = (typeof amazonAE === 'function') ? `<a class="wpt-bb" href="${wxEsc(amazonAE(q))}" target="_blank" rel="sponsored nofollow noopener">Amazon.ae</a>` : '';
+  const noon = (typeof noonAE === 'function') ? `<a class="wpt-bb noonlink" href="${wxEsc(noonAE(q))}" target="_blank" rel="sponsored nofollow noopener">Noon</a>` : '';
+  return fn + amz + noon;
+}
 function wxBuyLinks(p){
   const q = (window.PFC && PFC.shopQuery) ? PFC.shopQuery(p) : (p.house + ' ' + p.name);
   const fn = p.link ? `<a class="wpxbuy" href="${wxEsc(p.link)}" target="_blank" rel="sponsored nofollow noopener">FragranceNet ↗</a>` : '';
@@ -394,31 +428,32 @@ function renderWeatherResult(el, result){
     return;
   }
 
+  const scene = weatherScene(result.code, result.bucket, result.tempC);
+  const topPic = top.pid ? `<img src="catalog-img/${top.pid}.jpg" alt="" loading="lazy" onerror="this.outerHTML='<span class=&quot;wpt-bt&quot;></span>'">` : '<span class="wpt-bt"></span>';
+  const topHref = 'catalog.html?id=' + encodeURIComponent(top.slug);
+  const altLinks = alts.map(p => `<a href="catalog.html?id=${encodeURIComponent(p.slug)}">${wxEsc(p.name)}</a>`).join(', ');
   const normalHTML = `
-    <div class="wpxlive">
-      <div class="wpxnow">
-        <div class="wpxloc">${result.label}</div>
-        <div class="wpxtemp">${icon} ${fmtTemp(result.tempC, unit)}</div>
-        <div class="wpxcond">${cond}</div>
+    <div class="wpt" style="--s1:${scene.g[0]};--s2:${scene.g[1]}">
+      <div class="wpt-stub">
+        <div class="wpt-art">${weatherSceneSVG(scene.kind)}</div>
+        <div class="wpt-t">${Math.round(unit === 'F' ? result.tempC * 9 / 5 + 32 : result.tempC)}&deg;${unit}</div>
+        <div class="wpt-c">${wxEsc(String(result.label).split(',')[0])} &middot; ${wxEsc(cond)}</div>
       </div>
-      <div class="wpxpickwrap">
-        <div class="wcpicklabel">Today's pick for you</div>
-        <div class="wpxpick">
-          <a href="catalog.html?id=${encodeURIComponent(top.slug)}">${bottleThumbHTML(top, 'wpxthumb')}</a>
-          <div class="wpxpicktext">
-            <a class="wpxname" href="catalog.html?id=${encodeURIComponent(top.slug)}">${wxEsc(top.name)}</a>
-            <div class="wcfam">${wxEsc(top.house)} · ${wxEsc(top.notes.slice(0, 3).map(wxCap).join(', '))}</div>
-            <div class="wcwhy">${wxEsc(top.why)}</div>
-            ${wxBuyLinks(top)}
-          </div>
+      <div class="wpt-main">
+        <a class="wpt-th" href="${topHref}" aria-label="${wxEsc(top.name)}">${topPic}</a>
+        <div class="wpt-mid">
+          <div class="wpt-k">Today's pick for you</div>
+          <a class="wpt-nm" href="${topHref}">${wxEsc(top.name)}</a>
+          <div class="wpt-nt"><b>${wxEsc(top.house)}</b> ${wxEsc(top.notes.slice(0, 3).map(wxCap).join(', '))}</div>
+          <div class="wpt-why">${wxEsc(top.why)}</div>
         </div>
-        ${alts.length ? `<div class="wpxaltlabel">Also good today</div><div class="wpxalt">${alts.map(p => `<a class="wpxaltlink" href="catalog.html?id=${encodeURIComponent(p.slug)}">${bottleThumbHTML(p, 'wpxaltthumb')}${wxEsc(p.name)}</a>`).join('')}</div>` : ''}
+        <div class="wpt-buy">${wxBuyRow(top)}</div>
       </div>
     </div>
-    <div class="wpxcredit">
-      Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Buy links are affiliate links, so ParfAI may earn a small commission at no extra cost to you. As an Amazon Associate I earn from qualifying purchases.
-      <button class="wpxchange" type="button" data-action="precise">Use precise location</button>
-      <button class="wpxchange" type="button" data-action="manual">Not your location?</button>
+    <div class="wpt-fine">
+      ${altLinks ? `Also good today: ${altLinks}. ` : ''}Live weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Buy links are affiliate links, so ParfAI may earn a small commission at no extra cost to you. As an Amazon Associate I earn from qualifying purchases.
+      <button class="wpt-lnk" type="button" data-action="precise">Use precise location</button>
+      <button class="wpt-lnk" type="button" data-action="manual">Not your location?</button>
     </div>
   `;
 
