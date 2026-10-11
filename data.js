@@ -1362,6 +1362,16 @@ function houseRows(){
   }
   return h+'</div><div class="bshade" aria-hidden="true"></div>';
 }
+/* ---------- Write a review card: a slow ring of bottles turning around a gold star ---------- */
+function reviewRing(){
+  const pics=['09','13','10','05','01','18','17','08','02','04'];
+  let ring='';
+  pics.forEach(function(p,i){
+    const a=36*i;
+    ring+='<div class="rpos" style="transform:rotate('+a+'deg) translateY(-92px)"><div class="rcnt" style="transform:rotate('+(-a)+'deg)"><div class="rspin"><img src="images/nav/b'+p+'.webp" alt="" loading="lazy" decoding="async"></div></div></div>';
+  });
+  return '<div class="rwrap" aria-hidden="true"><div class="rring">'+ring+'</div><div class="rcore"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"/></svg></div></div><div class="bshade" aria-hidden="true"></div>';
+}
 /* ---------- nav dropdown (feature card + clean list) ---------- */
 function navMega(label, m){
   const esc = t => String(t).replace(/&(?!amp;|lt;|gt;|quot;|#)/g,'&amp;').replace(/</g,'&lt;');
@@ -1370,7 +1380,7 @@ function navMega(label, m){
   const list = arr => arr.map(i=>`<a class="it" href="${i[2]}"><b>${esc(i[0])}${badge(i[3])}</b><span>${esc(i[1])}</span></a>`).join('');
   return `<span class="megawrap"><span class="menu${m.on?' on':''}">${label} <span class="car">▾</span></span>
         <div class="mega mc"><div class="mwrap">
-          <a class="feat ${m.f}" href="${m.feat[4]}">${m.f==='f1'?bottleRows():m.f==='f2'?houseRows():''}<small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
+          <a class="feat ${m.f}" href="${m.feat[4]}">${m.f==='f1'?bottleRows():m.f==='f2'?houseRows():m.f==='f4'?reviewRing():''}<small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
           <div class="mrest"><div class="colhead">${m.head}</div>
             <div class="chips">${m.chips.map(c=>`<a href="${c[1]}">${c[0]}</a>`).join('')}</div>
             <div class="mcols">${m.cols.map(c=>`<div><div class="colhead">${c[0]}</div>${list(c[1])}</div>`).join('')}</div>

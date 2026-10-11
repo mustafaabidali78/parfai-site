@@ -651,6 +651,17 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .mega.mc .f2 .btrk img{height:36px}
 .hnm{font-family:var(--disp);font-style:italic;font-size:26px;color:rgba(255,255,255,.2);white-space:nowrap;flex:none}
 .hnm.hi{color:rgba(255,226,190,.75)}
+.mega.mc .feat>.rwrap{position:absolute;left:0;right:0;top:0;bottom:205px;z-index:1}
+.rring{position:absolute;left:50%;top:50%;width:0;height:0;animation:rturn 60s linear infinite}
+.rpos{position:absolute;left:0;top:0;width:0;height:0}
+.rcnt{position:absolute;left:-26px;top:-34px;width:52px;height:68px;display:flex;align-items:center;justify-content:center}
+.rspin{animation:rturn 60s linear infinite reverse}
+.rspin img{height:52px;width:auto;max-width:56px;object-fit:contain;filter:drop-shadow(0 6px 7px rgba(0,0,0,.5))}
+.rcore{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(232,184,106,.12);box-shadow:0 0 0 1px rgba(232,184,106,.35),0 0 30px rgba(232,184,106,.35)}
+.rcore svg{width:28px;height:28px;fill:#E8B86A}
+@keyframes rturn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.rring,.rspin{animation:none}}
+@media(max-width:900px){.navlinks.mobileopen .mega.mc .feat>.rwrap{display:none}.navlinks.mobileopen .mega.mc .f4 .bshade{display:none}}
 @keyframes bdrift{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.btrk{animation:none}}
 .mega.mc .f2{--tint:#6a3a1c}.mega.mc .f2:before{background:conic-gradient(from 90deg,#FF8C42,#FFD27A,#FF4D9D,#FF8C42)}
