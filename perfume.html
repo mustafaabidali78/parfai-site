@@ -18,7 +18,7 @@
 <meta id="twitter-title" name="twitter:title" content="Fragrance — ParfAI">
 <meta id="twitter-desc" name="twitter:description" content="Fragrance notes, ratings, and where to buy on ParfAI.">
 <meta id="twitter-image" name="twitter:image" content="https://parfai.org/images/social/og-default.jpg">
-<link rel="stylesheet" href="parfai.css?v=202610112100">
+<link rel="stylesheet" href="parfai.css?v=202610112200">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -64,7 +64,7 @@
 
 <div id="footer-slot"></div>
 
-<script src="data.js?v=202610112100"></script>
+<script src="data.js?v=202610112200"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -92,8 +92,12 @@
     const dupes = (p.dupeIds||[]).map(perfumeById).filter(Boolean);
     const original = p.dupeOf ? perfumeById(p.dupeOf) : null;
 
+    // Search words for Amazon.ae and Noon: house plus the perfume name.
+    const shopQ = (houseName(p.houseId) + ' ' + p.name).replace(/\s+/g,' ').trim();
     const retailers = [
-      {name:'FragranceNet', url:`https://www.fragrancenet.com/catalogsearch/result?q=${encodeURIComponent(p.name)}`},
+      {id:'fn', name:'FragranceNet', sub:'US store', url:`https://www.fragrancenet.com/catalogsearch/result?q=${encodeURIComponent(p.name)}`},
+      {id:'amz', name:'Amazon.ae', sub:'UAE', url:amazonAE(shopQ)},
+      {id:'noon', name:'Noon', sub:'UAE', url:noonAE(shopQ), cls:' noonlink'},
     ];
 
     content.innerHTML = `
@@ -115,7 +119,7 @@
           </div>
           <div class="pddesc">${p.description}</div>
           <div class="pdbuy" id="retailers"></div>
-          <div class="disclose">Some links are affiliate links — ParfAI may earn a commission at no extra cost to you.</div>
+          <div class="disclose">Prices change often, so check the current price on the store page. Noon code <b>NDY353</b> gives cashback at checkout (terms apply). ParfAI earns a commission when you buy through these links, at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. <a href="affiliate-disclosure.html" style="color:inherit;text-decoration:underline">Affiliate disclosure</a></div>
           ${!p.dupeOf ? `<div style="margin-top:16px"><a class="btn" style="background:#141414" href="dupe-finder.html?for=${p.id}">Find an affordable dupe →</a></div>` : ''}
         </div>
       </div>
@@ -170,7 +174,12 @@
       </section>
     `;
 
-    document.getElementById('retailers').innerHTML = retailers.map(r=>`<a class="retail" href="${r.url}" target="_blank" rel="nofollow sponsored noopener">${r.name} <span class="p">$${p.price}</span></a>`).join('');
+    document.getElementById('retailers').innerHTML = retailers.map(r=>`<a class="retail${r.cls||''}" data-r="${r.id}" href="${r.url}" target="_blank" rel="nofollow sponsored noopener">${r.name} <span class="p">${r.sub}</span></a>`).join('');
+    // Swap the FragranceNet search link for the tracked product link when ParfAI has one.
+    fetch('catalog/perfume-links.json').then(r=>r.ok?r.json():null).then(m=>{
+      const a = document.querySelector('#retailers a[data-r="fn"]');
+      if (m && m[p.id] && a) a.href = m[p.id];
+    }).catch(()=>{});
 
     // Structured data (Product + rating, and breadcrumbs) so search engines can
     // show star ratings and a breadcrumb trail for this fragrance.
@@ -183,8 +192,7 @@
       "image": imageUrl,
       "description": p.description,
       "brand": { "@type": "Brand", "name": houseName(p.houseId) },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": p.rating, "reviewCount": p.reviews, "bestRating": "5" },
-      "offers": { "@type": "Offer", "url": pageUrl, "priceCurrency": "USD", "price": p.price, "availability": "https://schema.org/InStock" }
+      "aggregateRating": { "@type": "AggregateRating", "ratingValue": p.rating, "reviewCount": p.reviews, "bestRating": "5" }
     };
     const breadcrumbSchema = {
       "@context": "https://schema.org",

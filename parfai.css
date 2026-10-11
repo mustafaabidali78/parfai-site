@@ -215,8 +215,10 @@ select.chip,.chip-select{font-family:var(--body);font-weight:600;font-size:13px;
 .pdmeta b{color:#fff}
 .pddesc{font-size:15px;color:rgba(255,255,255,.92);max-width:520px;margin-bottom:22px;font-weight:500}
 .pdbuy{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
-.retail{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);border-radius:100px;padding:12px 18px;font-family:var(--body);font-weight:700;font-size:13px;color:#fff}
-.retail .p{margin-left:6px;color:rgba(255,255,255,.8);font-weight:600;font-size:12px}
+.retail{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);border-radius:100px;padding:12px 16px;font-family:var(--body);font-weight:700;font-size:13px;color:#fff}
+.retail .p{margin-left:2px;color:rgba(255,255,255,.8);font-weight:600;font-size:12px}
+.retail:hover{background:rgba(255,255,255,.26)}
+.disclose b{color:#fff}
 .disclose{font-size:11px;color:rgba(255,255,255,.75);margin-top:6px}
 @media(max-width:820px){.pdhero{grid-template-columns:1fr;padding:36px 28px;text-align:center}.pdimg{height:220px}.pdmeta{justify-content:center}}
 
