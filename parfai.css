@@ -647,6 +647,10 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .btrk{display:flex;gap:18px;width:max-content;height:100%;align-items:center;animation:bdrift 44s linear infinite}
 .brow.r .btrk{animation-direction:reverse;animation-duration:50s}
 .btrk img{height:50px;width:auto;flex:none;filter:drop-shadow(0 5px 6px rgba(0,0,0,.5))}
+.mega.mc .f2 .brow{height:50px}
+.mega.mc .f2 .btrk img{height:36px}
+.hnm{font-family:var(--disp);font-style:italic;font-size:26px;color:rgba(255,255,255,.2);white-space:nowrap;flex:none}
+.hnm.hi{color:rgba(255,226,190,.75)}
 @keyframes bdrift{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.btrk{animation:none}}
 .mega.mc .f2{--tint:#6a3a1c}.mega.mc .f2:before{background:conic-gradient(from 90deg,#FF8C42,#FFD27A,#FF4D9D,#FF8C42)}
