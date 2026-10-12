@@ -763,12 +763,6 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
     { c: '#8DB36B', d: 'fresh', re: /bergamot|lemon|orange|mandarin|grapefruit|lime|citrus|citron|yuzu|apple|pear|peach|pineapple|mint|melon|currant|marine|sea |water|aquatic|green|tea|cucumber|rhubarb|litchi|lychee|mango|kiwi|apricot|plum|grape|fruit|basil|rosemary|sage|thyme|herb|galbanum|ozone|aldehyde|petitgrain|tangerine|verbena|cassis|banana|papaya|passion|guava|pomegranate|lavandin/ },
     { c: '#B5532E', d: 'spicy', re: /saffron|cardamom|pepper|cinnamon|ginger|clove|nutmeg|amber|musk|spice|cumin|coriander|anise|curry|cassia|paprika|chili|turmeric|ambrette|ambroxan|salt|mineral|spicy/ }
   ];
-  var PAIRS = [
-    ['Cozy amber', 'maison-francis-kurkdjian-maison-francis-kurkdjian-baccarat-rouge-540-unisex', 'tom-ford-tom-ford-tobacco-vanille-unisex', 'Saffron and amberwood over tobacco leaf, vanilla and cacao.'],
-    ['Rose and vanilla', 'parfums-de-marly-parfums-de-marly-delina-women', 'carolina-herrera-ch-good-girl-women', 'Turkish rose meets tuberose, cacao and tonka bean.'],
-    ['Dark and sweet', 'tom-ford-tom-ford-oud-wood-men', 'yves-saint-laurent-black-opium-women', 'Smoky oud wrapped in coffee, vanilla and orange blossom.'],
-    ['Fresh meets smoky', 'creed-creed-aventus-men', 'tom-ford-tom-ford-oud-wood-men', 'Pineapple and bergamot lifting deep oud and sandalwood.']
-  ];
   var PAL = [['#FFD9C2', '#E9703A'], ['#FAD3E3', '#D6407F'], ['#DCD3FA', '#6C4BD8'], ['#CDEBD9', '#23935E']], idx = 0;
   function famOf(n) { for (var i = 0; i < F.length; i++) if (F[i].re.test(n)) return i; return -1; }
   function prof(r) {
@@ -779,7 +773,24 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
   function esc(s) { return PFC.esc(s); }
   PFC.load().then(function (d) {
     var by = {}; d.rows.forEach(function (r) { by[r.slug] = r; });
-    var out = PAIRS.filter(function (p) { return by[p[1]] && by[p[2]]; }).map(function (p) {
+    var pool = d.rows.filter(function (r) { return r.ok && !r.dupe && r.sizes >= 5 && r.pid && r.notes && r.notes.length >= 4; });
+    pool.sort(function (x, y) { return PFC.hash('lyh-v2|' + x.slug) - PFC.hash('lyh-v2|' + y.slug); });
+    var N = pool.length, start = (PFC.dayNumber() * 8) % Math.max(N, 1), day = [];
+    for (var q = 0; q < Math.min(8, N); q++) day.push(pool[(start + q) % N]);
+    function top(r) { var n = r.notes.slice(0, 2).map(function (x) { return String(x).toLowerCase(); }); return n.join(' and '); }
+    function domOf(pr) { var m = 0; for (var k = 1; k < 5; k++) if (pr[k] > pr[m]) m = k; return m; }
+    var pairs = [], left = day.slice(0, 4), rest = day.slice(4);
+    left.forEach(function (a) {
+      var pa = prof(a), best = -1, bs = 9;
+      rest.forEach(function (b, j) { if (b.house === a.house) return; var pb = prof(b), dp = 0; for (var k = 0; k < 5; k++) dp += pa[k] * pb[k]; if (dp < bs) { bs = dp; best = j; } });
+      if (best < 0) best = 0;
+      var b = rest.splice(best, 1)[0]; if (!b) return;
+      var fa = F[domOf(pa)].d, fb = F[domOf(prof(b))].d;
+      var title = fa === fb ? 'Double ' + fa : fa.charAt(0).toUpperCase() + fa.slice(1) + ' meets ' + fb;
+      var blurb = top(a).charAt(0).toUpperCase() + top(a).slice(1) + ' meets ' + top(b) + '.';
+      pairs.push([title, a.slug, b.slug, blurb]);
+    });
+    var out = pairs.filter(function (p) { return by[p[1]] && by[p[2]]; }).map(function (p) {
       var a = by[p[1]], b = by[p[2]], pa = prof(a), pb = prof(b), tot = [0, 0, 0, 0, 0], sum = 0, i;
       for (i = 0; i < 5; i++) { tot[i] = pa[i] + pb[i]; sum += tot[i]; }
       var order = [0, 1, 2, 3, 4].sort(function (x, y) { return tot[y] - tot[x]; });
@@ -789,7 +800,7 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
       var fams = order.filter(function (k) { return tot[k] / (sum || 1) >= .1; }).slice(0, 3).map(function (k) { return '<span><i style="background:' + F[k].c + '"></i>' + F[k].d.charAt(0).toUpperCase() + F[k].d.slice(1) + '</span>'; }).join('');
       var pal = PAL[idx++ % PAL.length];
       return '<div class="lyh-card" style="--c:' + pal[0] + ';--d:' + pal[1] + '"><a class="lyh-pics" href="' + esc(href) + '" aria-label="Try this pair: ' + esc(p[0]) + '">' + PFC.art(a, 106) + '<span class="lyh-plus">+</span>' + PFC.art(b, 106) + '</a>' +
-        '<h3>' + esc(p[0]) + '</h3><div class="lyh-n">' + esc(a.name) + ' + ' + esc(b.name) + '</div><p>' + esc(p[3]) + '</p>' +
+        '<h3>' + esc(p[0]) + '</h3><div class="lyh-n">' + esc(a.title) + ' + ' + esc(b.title) + '</div><p>' + esc(p[3]) + '</p>' +
         '<div class="lyh-foot"><div class="lyh-fam">' + fams + '</div><a class="lyh-go" href="' + esc(href) + '" aria-label="Try this pair: ' + esc(p[0]) + '"><span aria-hidden="true">\u2192</span></a></div></div>';
     }).join('');
     if (out) row.innerHTML = out; else document.getElementById('lyh').hidden = true;
