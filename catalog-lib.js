@@ -76,16 +76,28 @@
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
-  function dayKey() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
-  // Draws n items from pool, one per house, avoiding the slugs in "skip".
-  function draw(pool, n, salt, skip) {
-    var rand = rng(hash(dayKey() + '|' + salt)), out = [], houses = {}, left = pool.slice();
+  function dayKey(back) { var d = new Date(); if (back) d.setDate(d.getDate() - back); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  // A whole number for today's calendar day (1, 2, 3 ...). Used to walk through a fixed list one step per day.
+  function dayNumber() { var d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000); }
+  function drawFor(key, pool, n, salt, skip) {
+    var rand = rng(hash(key + '|' + salt)), out = [], houses = {}, left = pool.slice();
     while (out.length < n && left.length) {
       var x = left.splice(Math.floor(rand() * left.length), 1)[0];
       if (houses[x.house] || (skip && skip[x.slug])) continue;
       houses[x.house] = 1; out.push(x);
     }
     return out;
+  }
+  // Draws n items from pool, one per house, avoiding the slugs in "skip".
+  // When the pool is big enough, nothing that was picked yesterday is picked again, so every day looks new.
+  function draw(pool, n, salt, skip) {
+    var skip2 = skip, ok = pool.length >= n * 3;
+    if (ok) {
+      skip2 = {}; if (skip) for (var k in skip) skip2[k] = skip[k];
+      drawFor(dayKey(1), pool, n, salt, skip).forEach(function (x) { skip2[x.slug] = 1; });
+    }
+    var out = drawFor(dayKey(), pool, n, salt, skip2);
+    return (out.length < n && ok) ? drawFor(dayKey(), pool, n, salt, skip) : out;
   }
 
 
@@ -166,5 +178,5 @@
       '<div class="pd-act">' + buy + '</div></div>';
   }
 
-  window.PFC = { shopQuery: shopQuery, load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, photo: photo, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
+  window.PFC = { dayNumber: dayNumber, hash: hash, shopQuery: shopQuery, load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, photo: photo, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
 })();

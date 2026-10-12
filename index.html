@@ -420,7 +420,7 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
 
 <script src="data.js?v=202610120100"></script>
 <script src="weather.js?v=202610113100"></script>
-<script src="catalog-lib.js?v=202610112500"></script>
+<script src="catalog-lib.js?v=202610120200"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
 <script src="auth.js"></script>
@@ -504,9 +504,9 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
     sfPick(0);
 
     // ---- Great value dupes: pair each affordable perfume with the famous one it shares the most notes with ----
+    // The pairs walk through one fixed list, two new pairs per day, so today never repeats yesterday.
     var cands = [];
     budget.forEach(function (d) {
-      if (used[d.slug]) return;
       var dn = uniq(d.notes).slice(0, 6), best = null;
       famous.forEach(function (f) {
         var fn = uniq(f.notes).slice(0, 6);
@@ -515,10 +515,24 @@ a.sf-pic:focus-visible,a.mr-pic:focus-visible{outline:3px solid #1F4A2C;outline-
       });
       if (best && best.sh.length >= 3 && best.sh.length / Math.min(dn.length, best.fn.length) >= 0.6) cands.push({ d: d, dn: dn, f: best.f, fn: best.fn, sh: best.sh });
     });
-    var chosen = [], seenF = {};
-    PFC.draw(cands.map(function (c) { var o = Object.create(c.d); o._c = c; o.house = c.d.house; return o; }), 12, 'pk-pairs').forEach(function (o) {
-      var c = o._c; if (chosen.length < 2 && !seenF[c.f.slug]) { seenF[c.f.slug] = 1; chosen.push(c); }
-    });
+    cands.sort(function (x, y) { return PFC.hash('pairs-v1|' + x.d.slug) - PFC.hash('pairs-v1|' + y.d.slug); });
+    // Build the whole rotation once: pairs of (affordable, famous) that do not share a house or a famous perfume.
+    var pairList = [], rem = cands.slice();
+    while (rem.length > 1) {
+      var a0 = rem.shift(), j = -1;
+      for (var q = 0; q < rem.length; q++) { if (rem[q].f.slug !== a0.f.slug && rem[q].d.house !== a0.d.house) { j = q; break; } }
+      if (j < 0) continue;
+      pairList.push([a0, rem.splice(j, 1)[0]]);
+    }
+    var chosen = [];
+    if (pairList.length) {
+      var di = PFC.dayNumber() % pairList.length;
+      for (var t = 0; t < pairList.length; t++) {
+        var pr = pairList[(di + t) % pairList.length];
+        if (!used[pr[0].d.slug] && !used[pr[1].d.slug]) { chosen = pr; break; }
+      }
+      if (!chosen.length) chosen = pairList[di];
+    }
     function words(a){
       var w = a.map(function (n) { var c = noteCol(n); return '<mark style="background:' + c + ';color:' + noteTxt(c) + '">' + E(n) + '</mark>'; });
       return w.length > 1 ? w.slice(0, -1).join(', ') + ' and ' + w[w.length - 1] : w[0];
