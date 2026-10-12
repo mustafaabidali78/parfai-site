@@ -90,6 +90,7 @@
 .lysugg button:last-child{border-bottom:0}.lysugg button:hover,.lysugg button.on{background:var(--bg)}
 .lysugg{max-height:340px;overflow-y:auto}
 .lyhouse{-webkit-appearance:none;appearance:none;width:100%;margin-top:10px;height:46px;padding:0 40px 0 18px;text-overflow:ellipsis;font:600 13px var(--body);color:var(--ink);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231a1a1a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center;background-size:12px 8px;border:1px solid var(--border);border-radius:100px;cursor:pointer}
+.lypf{margin-top:0}
 .lyhouse:hover,.lyhouse:focus{border-color:var(--ink);outline:none}
 .lyhint{padding:9px 16px;font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
 .lysugg small{display:block;font:500 12px var(--body);color:var(--muted)}
@@ -224,7 +225,7 @@
     var r = slots[i];
     if (!r) {
       if (i === 2 && !open3) return '<div class="lys empty"><button class="lyadd" type="button" data-open3="1">+ Add a third perfume (optional)</button></div>';
-      return '<div class="lys empty"><div class="lyemp">' + (i === 2 ? 'A third perfume' : 'Perfume ' + (i + 1)) + '</div><div class="lysearch"><input type="text" data-q="' + i + '" placeholder="Search any perfume" autocomplete="off" aria-label="Search for perfume ' + (i + 1) + '"><div class="lysugg" data-s="' + i + '" hidden></div></div><select class="lyhouse" data-h="' + i + '" aria-label="Browse perfumes by house"><option value="">Or choose from a list of houses</option>' + houseOpts() + '</select>' +
+      return '<div class="lys empty"><div class="lyemp">' + (i === 2 ? 'A third perfume' : 'Perfume ' + (i + 1)) + '</div><div class="lysearch"><input type="text" data-q="' + i + '" placeholder="Search any perfume" autocomplete="off" aria-label="Search for perfume ' + (i + 1) + '"><div class="lysugg" data-s="' + i + '" hidden></div></div><select class="lyhouse" data-h="' + i + '" aria-label="Browse perfumes by house"><option value="">Or pick from a list: choose a house first</option>' + houseOpts() + '</select><div class="lypf" data-pf="' + i + '"></div>' +
         (i === 2 ? '<button class="lyx" type="button" data-close3="1">Not now</button>' : '') + '</div>';
     }
     var sp = [1, 2, 3].map(function (n) { return '<button type="button" data-sp="' + i + ':' + n + '" aria-pressed="' + (sprays[i] === n) + '" aria-label="' + n + ' spray' + (n > 1 ? 's' : '') + '">' + n + '</button>'; }).join('');
@@ -306,12 +307,17 @@
   box.addEventListener('focusin', function (e) { if (e.target.getAttribute && e.target.getAttribute('data-q') !== null) showSugg(e.target); });
   box.addEventListener('click', function (e) { var t = e.target; if (t.getAttribute && t.getAttribute('data-q') !== null) showSugg(t); });
   box.addEventListener('change', function (e) {
-    var q = e.target.getAttribute && e.target.getAttribute('data-h'); if (q === null || q === undefined) return;
-    var h = e.target.value, s = box.querySelector('[data-s="' + q + '"]'); if (!h) { s.hidden = true; return; }
+    var t = e.target; if (!t.getAttribute) return;
+    var pf = t.getAttribute('data-p');
+    if (pf !== null) { if (t.value) pick(+pf, t.value); return; }
+    var q = t.getAttribute('data-h'); if (q === null) return;
+    var wrap = box.querySelector('[data-pf="' + q + '"]'), h = t.value; if (!h) { wrap.innerHTML = ''; return; }
+    var sg = box.querySelector('[data-s="' + q + '"]'); if (sg) sg.hidden = true;
     var skip = chosen(), list = rows.filter(function (r) { return r.ok && r.house === h && skip.indexOf(r.slug) < 0; });
     list.sort(function (a, b) { return (b.sizes - a.sizes) || a.name.localeCompare(b.name); });
-    s.innerHTML = '<div class="lyhint">' + esc(h) + ': tap a perfume</div>' + list.map(function (r) { return '<button type="button" data-pick="' + q + ':' + esc(r.slug) + '">' + esc(r.name) + '<small>' + (r.year ? r.year : esc(r.house)) + '</small></button>'; }).join('');
-    s.hidden = false; s.scrollTop = 0;
+    wrap.innerHTML = '<select class="lyhouse" data-p="' + q + '" aria-label="Choose a perfume from ' + esc(h) + '"><option value="">Now choose a perfume (' + list.length + ')</option>' +
+      list.map(function (r) { return '<option value="' + esc(r.slug) + '">' + esc(r.name) + (r.year ? ' (' + r.year + ')' : '') + '</option>'; }).join('') + '</select>';
+    var ps = wrap.firstChild; try { if (ps.showPicker) ps.showPicker(); } catch (err) { ps.focus(); }
   });
   box.addEventListener('keydown', function (e) {
     var q = e.target.getAttribute && e.target.getAttribute('data-q'); if (q === null || q === undefined) return;
@@ -328,7 +334,7 @@
     else if (b.getAttribute('data-open3')) { open3 = true; drawSlots(); setTimeout(function () { var i3 = box.querySelector('[data-q="2"]'); if (i3) i3.focus(); }, 0); }
     else if (b.getAttribute('data-close3')) { open3 = false; drawSlots(); }
   });
-  document.addEventListener('click', function (e) { if (!e.target.closest('.lysearch')) box.querySelectorAll('.lysugg').forEach(function (s) { s.hidden = true; }); });
+  document.addEventListener('click', function (e) { if (!e.target.closest('.lysearch, .lyhouse')) box.querySelectorAll('.lysugg').forEach(function (s) { s.hidden = true; }); });
 
   $('ly-out').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
