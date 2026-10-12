@@ -963,6 +963,9 @@ const BLOG_POSTS = [
   { slug:'blog-new-fragrance-launches-september-2026', title:'The Biggest New Fragrance Launches of September 2026',
     excerpt:'A roundup of real new fragrance launches from September 2026, from Maison Francis Kurkdjian\'s Oud Velvet Mood to Paco Rabanne\'s 1 Million Black, with notes, prices, and sources.',
     date:'2026-10-05', category:'New Releases', perfumeIds:[] },
+  { slug:'blog-edt-vs-edp-vs-parfum', title:'EDT vs EDP vs Parfum: What the Letters Actually Tell You',
+    excerpt:'EDT, EDP and Parfum are not just a strength dial. We check what each one really means against our own catalog, and find the label predicts a lot less than most people think.',
+    date:'2026-10-12', category:'Notes & Education', perfumeIds:['sauvage','erba-pura','zara-red-vanilla','roja-elysium','roja-danger','clubdenuit','aventus'] },
 ];
 
 /* ---------- helpers ---------- */
