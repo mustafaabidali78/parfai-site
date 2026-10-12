@@ -1385,7 +1385,8 @@ function navMega(label, m){
   const badge = t => t ? ` <span class="newbadge"${t==='SOON'?' style="background:var(--rust)"':''}>${t}</span>` : '';
   const big = m.feat[1].length>26 ? ' sm' : '';
   const list = arr => arr.map(i=>`<a class="it" href="${i[2]}"><b>${esc(i[0])}${badge(i[3])}</b><span>${esc(i[1])}</span></a>`).join('');
-  return `<span class="megawrap"><span class="menu${m.on?' on':''}">${label} <span class="car">▾</span></span>
+  const NAVC={Explore:'#8B7CFF',Houses:'#FF8C42',Community:'#FF4D9D',Blog:'#00C48B'};
+  return `<span class="megawrap"><span class="menu${m.on?' on':''}" style="--c:${NAVC[label]||'#8B7CFF'}">${label} <span class="car">▾</span></span>
         <div class="mega mc"><div class="mwrap">
           <a class="feat ${m.f}" href="${m.feat[4]}">${m.f==='f1'?bottleRows():m.f==='f2'?houseRows():m.f==='f4'?reviewRing():m.f==='f3'?journalBadge():''}<small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
           <div class="mrest"><div class="colhead">${m.head}</div>
