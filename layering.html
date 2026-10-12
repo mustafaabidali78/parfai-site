@@ -145,6 +145,12 @@
  .lyres{padding:24px 20px}
  .lycols{grid-template-columns:1fr}
 }
+.lycta{display:flex;align-items:center;justify-content:space-between;gap:20px 28px;flex-wrap:wrap;margin:36px 0 10px;padding:22px 28px;border-radius:24px;background:#FAD3E3;border:1px solid #F3BFD5}
+.lycta-t{flex:1 1 360px;max-width:640px}
+.lycta h2{font:600 24px/1.15 var(--disp);letter-spacing:-.01em;margin:0 0 4px;color:var(--ink)}
+.lycta p{font:400 14px/1.55 var(--body);color:var(--ink2);margin:0}
+.lycta .btn{flex:none}
+@media(max-width:860px){.lycta{padding:20px}}
 </style>
 </head>
 <body>
@@ -170,12 +176,9 @@
 
   <p class="lynote">Blends are predicted from each perfume's listed notes. They are a guide, not a lab test, so try a small amount on your skin first. Matches come from FragranceNet's catalogue. The Amazon UAE and Noon UAE buttons search for the same perfume, so check it is the right one. We may earn a commission if you buy through a link.</p>
 
-  <section style="text-align:center;margin-top:40px">
-    <div class="band" style="background:linear-gradient(120deg,#402B20,#6B4B3A)">
-      <h2>Want to save and share your recipes?</h2>
-      <p>Saving recipes, rating them and sharing wear notes is next on the roadmap. Follow along in the community, or tell us which pairings you would build first.</p>
-      <a class="btn" href="community.html">Join the community</a>
-    </div>
+  <section class="lycta">
+    <div class="lycta-t"><h2>Want to save and share your recipes?</h2><p>Saving recipes, rating them and sharing wear notes is next on the roadmap. Tell us which pairings you would build first.</p></div>
+    <a class="btn sm" href="community.html">Join the community</a>
   </section>
 
 </div>
@@ -225,7 +228,7 @@
     var r = slots[i];
     if (!r) {
       if (i === 2 && !open3) return '<div class="lys empty"><button class="lyadd" type="button" data-open3="1">+ Add a third perfume (optional)</button></div>';
-      return '<div class="lys empty"><div class="lyemp">' + (i === 2 ? 'A third perfume' : 'Perfume ' + (i + 1)) + '</div><div class="lysearch"><input type="text" data-q="' + i + '" placeholder="Search any perfume" autocomplete="off" aria-label="Search for perfume ' + (i + 1) + '"><div class="lysugg" data-s="' + i + '" hidden></div></div><select class="lyhouse" data-h="' + i + '" aria-label="Browse perfumes by house"><option value="">Or pick from a list: choose a house first</option>' + houseOpts() + '</select><div class="lypf" data-pf="' + i + '"></div>' +
+      return '<div class="lys empty"><div class="lyemp">' + (i === 2 ? 'A third perfume' : 'Perfume ' + (i + 1)) + '</div><select class="lyhouse" data-h="' + i + '" aria-label="Browse perfumes by house"><option value="">Step 1: choose a house</option>' + houseOpts() + '</select><div class="lypf" data-pf="' + i + '"></div>' +
         (i === 2 ? '<button class="lyx" type="button" data-close3="1">Not now</button>' : '') + '</div>';
     }
     var sp = [1, 2, 3].map(function (n) { return '<button type="button" data-sp="' + i + ':' + n + '" aria-pressed="' + (sprays[i] === n) + '" aria-label="' + n + ' spray' + (n > 1 ? 's' : '') + '">' + n + '</button>'; }).join('');
@@ -315,7 +318,7 @@
     var sg = box.querySelector('[data-s="' + q + '"]'); if (sg) sg.hidden = true;
     var skip = chosen(), list = rows.filter(function (r) { return r.ok && r.house === h && skip.indexOf(r.slug) < 0; });
     list.sort(function (a, b) { return (b.sizes - a.sizes) || a.name.localeCompare(b.name); });
-    wrap.innerHTML = '<select class="lyhouse" data-p="' + q + '" aria-label="Choose a perfume from ' + esc(h) + '"><option value="">Now choose a perfume (' + list.length + ')</option>' +
+    wrap.innerHTML = '<select class="lyhouse" data-p="' + q + '" aria-label="Choose a perfume from ' + esc(h) + '"><option value="">Step 2: choose a perfume (' + list.length + ')</option>' +
       list.map(function (r) { return '<option value="' + esc(r.slug) + '">' + esc(r.name) + (r.year ? ' (' + r.year + ')' : '') + '</option>'; }).join('') + '</select>';
     var ps = wrap.firstChild; try { if (ps.showPicker) ps.showPicker(); } catch (err) { ps.focus(); }
   });
