@@ -64,8 +64,17 @@
 .mx-tab{flex:1 1 0;min-width:0;border:1px solid var(--border);background:#fff;border-radius:14px;padding:10px 2px 9px;font:600 13px var(--body);color:var(--ink2);text-align:center;cursor:pointer;position:relative;transition:border-color .15s}
 .mx-tab em{display:block;font:500 11px var(--body);font-style:normal;color:var(--muted);margin-top:2px}
 .mx-tab:hover{border-color:var(--ink)}
-.mx-tab[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
-.mx-tab[aria-selected="true"] em{color:rgba(255,255,255,.65)}
+/* Each smell family has its own pastel: butter (Sweet), sage (Woods), pink (Flowers), aqua (Fresh), coral (Spicy) */
+.mx-tab:nth-child(1){--p:#FFE9B8;--d:#E2B64D}
+.mx-tab:nth-child(2){--p:#D9E7D0;--d:#86A978}
+.mx-tab:nth-child(3){--p:#F7D3E6;--d:#DB8FB5}
+.mx-tab:nth-child(4){--p:#CDE9F1;--d:#7DBCD1}
+.mx-tab:nth-child(5){--p:#F6CDBF;--d:#DE8F77}
+.mx-tab{background:color-mix(in srgb,var(--p) 38%,#fff);border-color:color-mix(in srgb,var(--p) 80%,#fff);color:var(--ink)}
+.mx-tab:hover{background:color-mix(in srgb,var(--p) 70%,#fff);border-color:var(--d)}
+.mx-tab[aria-selected="true"]{background:var(--p);color:var(--ink);border-color:var(--d);box-shadow:0 8px 18px -10px var(--d)}
+.mx-tab[aria-selected="true"] em{color:var(--ink2)}
+.mx-tab[aria-selected="true"]::after{content:"";position:absolute;left:50%;bottom:-7px;width:12px;height:12px;margin-left:-6px;background:var(--p);border-right:1px solid var(--d);border-bottom:1px solid var(--d);transform:rotate(45deg);border-radius:0 0 3px 0}
 .mx-tab b{position:absolute;top:-6px;right:-3px;min-width:18px;height:18px;border-radius:9px;background:linear-gradient(110deg,#FF5C93,#FF9A3C);color:#fff;font:700 11px/18px var(--body);padding:0 5px;box-sizing:border-box}
 .mx-notes,.mx-sugs{display:flex;flex-wrap:wrap;gap:9px}
 .mx-chip{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--border);background:#fff;border-radius:100px;padding:10px 16px 10px 12px;font:600 14px var(--body);color:var(--ink);cursor:pointer;transition:border-color .15s,transform .15s}
