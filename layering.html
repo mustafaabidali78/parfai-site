@@ -109,6 +109,28 @@
 .lybuy a:hover{background:var(--rust)}
 .lyacts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .lyacts .msg{font-size:13px;color:var(--muted)}
+.lyres{padding-top:32px}
+.lyhead{text-align:center;margin-bottom:6px}
+.lyres .lyhead h2{font:600 clamp(32px,4vw,44px)/1.05 var(--disp);margin:2px 0 8px}
+.lyres .lyhead .lyd{margin:0 auto 20px;max-width:640px;font-size:15px}
+.lykey{justify-content:center;margin-bottom:10px}
+.lyshare{text-align:center;color:var(--muted);font-size:13px;margin:0 0 26px}
+.lysteps{display:grid;grid-template-columns:1fr 34px 1fr;gap:10px;align-items:stretch;margin-bottom:26px}
+.lysteps.n3{grid-template-columns:1fr 30px 1fr 30px 1fr}
+.lystep{position:relative;background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px 18px 20px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.lynum{position:absolute;left:14px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:700 14px var(--body)}
+.lyart{min-height:96px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.lyst{font:700 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--rust)}
+.lysn{font:600 21px/1.15 var(--disp);margin:4px 0 2px}
+.lysh{font:500 12px var(--body);color:var(--muted)}
+.lysprays{font-size:13px;color:var(--ink2);margin:8px 0 6px}
+.lysnotes{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:12px}
+.lyb{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:auto}
+.lyb a{font:700 11px var(--body);color:#fff;background:var(--ink);border-radius:100px;padding:7px 12px;text-decoration:none}
+.lyb a:hover{background:var(--rust)}
+.lyplus{align-self:center;text-align:center;font:600 28px var(--disp);color:var(--rust)}
+.lyres .lyacts{justify-content:center}
+@media(max-width:760px){.lysteps,.lysteps.n3{grid-template-columns:1fr}.lyplus{display:none}}
 .lynote{font-size:12.5px;color:var(--muted);margin:16px 0 0;max-width:720px;line-height:1.55}
 @media(max-width:860px){
  .lyhero h1{font-size:38px}
@@ -219,25 +241,24 @@
     var shared = Object.keys(cnt).filter(function (n) { return cnt[n] > 1; });
     sel.forEach(function (x) { x.own = x.r.notes.filter(function (n) { return cnt[n] === 1; }); });
     var lead = sel.slice().sort(function (a, b) { return b.n - a.n; })[0];
-    var adds = sel.map(function (x) { return '<b>' + esc(x.r.name) + '</b> brings ' + (x.own.length ? x.own.slice(0, 3).map(cap).join(', ') : 'its own twist') + '.'; }).join(' ');
-    var desc = 'A <b>' + d1 + (d2 ? ' and ' + d2 : '') + '</b> blend. ' + (sel[0].n !== sel[1].n || sel.length > 2 ? esc(lead.r.name) + ' leads with the most sprays. ' : 'Both play an equal part. ') + adds;
     // wearing order: heaviest base first
     var heavy = sel.map(function (x) { var p = profile(x.r), b = 0; for (var i = 0; i < 5; i++) b += p[i] * F[i].base; return { x: x, b: b }; }).sort(function (a, b) { return b.b - a.b; });
-    var wear = '<b>How to wear it:</b> spray <b>' + esc(heavy[0].x.r.name) + '</b> first (' + heavy[0].x.n + ' spray' + (heavy[0].x.n > 1 ? 's' : '') + '), it is the deeper, longer-lasting one. Then layer ' +
-      heavy.slice(1).map(function (h) { return '<b>' + esc(h.x.r.name) + '</b> (' + h.x.n + ' spray' + (h.x.n > 1 ? 's' : '') + ')'; }).join(' and ') + ' over it, a little higher on the body. Start light, you can always add more.';
-    var cols = '<div><h4>What they share</h4>' + (shared.length ? chips(shared, 8) : '<span style="font-size:13px;color:var(--muted)">No notes in common, so they contrast.</span>') + '</div>' +
-      sel.slice(0, 2).map(function (x) { return '<div><h4>' + esc(x.r.name) + ' adds</h4>' + (x.own.length ? chips(x.own, 6) : '<span style="font-size:13px;color:var(--muted)">Mostly the shared notes.</span>') + '</div>'; }).join('');
-    if (sel.length > 2) cols = cols.replace('<div><h4>What they share', '<div><h4>What they share') ;
-    var buy = sel.map(function (x) {
-      var q = PFC.shopQuery(x.r);
-      return '<div class="row"><div class="nm">' + esc(x.r.name) + '<small>' + esc(x.r.house) + '</small></div><div class="lb">' +
-        (x.r.link ? '<a href="' + esc(x.r.link) + '" target="_blank" rel="sponsored nofollow noopener">Check price on FragranceNet ↗</a>' : '') +
+    var heads = ['Spray first', 'Layer on top', 'Then add'];
+    var tips = ['The deeper, longer-lasting one.', 'A little higher on the body.', 'A light touch to finish.'];
+    var steps = heavy.map(function (h, k) {
+      var x = h.x, q = PFC.shopQuery(x.r), notes = (x.own && x.own.length ? x.own : x.r.notes).slice(0, 3);
+      return (k ? '<div class="lyplus" aria-hidden="true">+</div>' : '') + '<div class="lystep"><div class="lynum">' + (k + 1) + '</div><div class="lyart">' + PFC.art(x.r, 96) + '</div>' +
+        '<div class="lyst">' + heads[k] + '</div><div class="lysn">' + esc(x.r.name) + '</div><div class="lysh">' + esc(x.r.house) + '</div>' +
+        '<div class="lysprays">' + x.n + ' spray' + (x.n > 1 ? 's' : '') + '. ' + tips[k] + '</div><div class="lysnotes">' + chips(notes, 3) + '</div>' +
+        '<div class="lyb">' + (x.r.link ? '<a href="' + esc(x.r.link) + '" target="_blank" rel="sponsored nofollow noopener">FragranceNet ↗</a>' : '') +
         '<a href="' + esc(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE ↗</a>' +
         '<a class="noonlink" href="' + esc(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE ↗</a></div></div>';
     }).join('');
-    out.innerHTML = '<div class="lyres"><div class="lyk">Your blend</div><h2>' + sel.map(function (x) { return esc(x.r.name); }).join(' + ') + '</h2><p class="lyd">' + desc + '</p>' +
-      '<div class="lybar" role="img" aria-label="Blend breakdown">' + bar + '</div><div class="lykey">' + key + '</div>' +
-      '<div class="lycols">' + cols + '</div><div class="lywear">' + wear + '</div><div class="lybuy">' + buy + '</div>' +
+    var head = d1.charAt(0).toUpperCase() + d1.slice(1) + (d2 ? ' and ' + d2 : '');
+    var share = shared.length ? 'They share ' + shared.slice(0, 3).map(cap).join(', ') + '.' : 'No notes in common, so they contrast.';
+    out.innerHTML = '<div class="lyres"><div class="lyhead"><div class="lyk">Your blend</div><h2>' + head + '</h2><p class="lyd">' + sel.map(function (x) { return esc(x.r.name); }).join(' + ') + '</p></div>' +
+      '<div class="lybar" role="img" aria-label="Blend breakdown">' + bar + '</div><div class="lykey">' + key + '</div><p class="lyshare">' + esc(share) + ' Start light, you can always add more.</p>' +
+      '<div class="lysteps n' + sel.length + '">' + steps + '</div>' +
       '<div class="lyacts"><button class="btn sm" type="button" id="ly-share">Copy link to this blend</button><button class="btn ghost sm" type="button" id="ly-reset">Start over</button><span class="msg" id="ly-msg" aria-live="polite"></span></div></div>';
   }
 
