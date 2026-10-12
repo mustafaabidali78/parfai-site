@@ -88,6 +88,9 @@
 .lysugg{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:0 24px 50px -24px rgba(20,20,20,.35);z-index:20;overflow:hidden;text-align:left}
 .lysugg button{display:block;width:100%;text-align:left;padding:10px 16px;background:none;border:0;border-bottom:1px solid var(--border);cursor:pointer;font:600 14px var(--body);color:var(--ink)}
 .lysugg button:last-child{border-bottom:0}.lysugg button:hover,.lysugg button.on{background:var(--bg)}
+.lysugg{max-height:340px;overflow-y:auto}
+.lyhouse{-webkit-appearance:none;appearance:none;width:100%;margin-top:10px;height:46px;padding:0 40px 0 18px;text-overflow:ellipsis;font:600 13px var(--body);color:var(--ink);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231a1a1a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center;background-size:12px 8px;border:1px solid var(--border);border-radius:100px;cursor:pointer}
+.lyhouse:hover,.lyhouse:focus{border-color:var(--ink);outline:none}
 .lyhint{padding:9px 16px;font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
 .lysugg small{display:block;font:500 12px var(--body);color:var(--muted)}
 .lyres{margin-top:30px;background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:34px 36px;box-shadow:0 14px 30px -26px rgba(20,20,20,.4)}
@@ -208,12 +211,20 @@
   }
   function chips(list, n) { return list.slice(0, n).map(function (x) { return '<span class="notechip">' + esc(cap(x)) + '</span>'; }).join(''); }
 
+  var houseHTML = '';
+  function houseOpts() {
+    if (houseHTML) return houseHTML;
+    var cnt = {}; rows.forEach(function (r) { if (r.ok) cnt[r.house] = (cnt[r.house] || 0) + 1; });
+    var names = Object.keys(cnt).filter(function (h) { return cnt[h] >= 2; }).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+    houseHTML = names.map(function (h) { return '<option value="' + esc(h) + '">' + esc(h) + ' (' + cnt[h] + ')</option>'; }).join('');
+    return houseHTML;
+  }
   // ----- slots -----
   function slotHTML(i) {
     var r = slots[i];
     if (!r) {
       if (i === 2 && !open3) return '<div class="lys empty"><button class="lyadd" type="button" data-open3="1">+ Add a third perfume (optional)</button></div>';
-      return '<div class="lys empty"><div class="lyemp">' + (i === 2 ? 'A third perfume' : 'Perfume ' + (i + 1)) + '</div><div class="lysearch"><input type="text" data-q="' + i + '" placeholder="Search any perfume" autocomplete="off" aria-label="Search for perfume ' + (i + 1) + '"><div class="lysugg" data-s="' + i + '" hidden></div></div>' +
+      return '<div class="lys empty"><div class="lyemp">' + (i === 2 ? 'A third perfume' : 'Perfume ' + (i + 1)) + '</div><div class="lysearch"><input type="text" data-q="' + i + '" placeholder="Search any perfume" autocomplete="off" aria-label="Search for perfume ' + (i + 1) + '"><div class="lysugg" data-s="' + i + '" hidden></div></div><select class="lyhouse" data-h="' + i + '" aria-label="Browse perfumes by house"><option value="">Or choose from a list of houses</option>' + houseOpts() + '</select>' +
         (i === 2 ? '<button class="lyx" type="button" data-close3="1">Not now</button>' : '') + '</div>';
     }
     var sp = [1, 2, 3].map(function (n) { return '<button type="button" data-sp="' + i + ':' + n + '" aria-pressed="' + (sprays[i] === n) + '" aria-label="' + n + ' spray' + (n > 1 ? 's' : '') + '">' + n + '</button>'; }).join('');
@@ -294,6 +305,14 @@
   box.addEventListener('input', function (e) { showSugg(e.target); });
   box.addEventListener('focusin', function (e) { if (e.target.getAttribute && e.target.getAttribute('data-q') !== null) showSugg(e.target); });
   box.addEventListener('click', function (e) { var t = e.target; if (t.getAttribute && t.getAttribute('data-q') !== null) showSugg(t); });
+  box.addEventListener('change', function (e) {
+    var q = e.target.getAttribute && e.target.getAttribute('data-h'); if (q === null || q === undefined) return;
+    var h = e.target.value, s = box.querySelector('[data-s="' + q + '"]'); if (!h) { s.hidden = true; return; }
+    var skip = chosen(), list = rows.filter(function (r) { return r.ok && r.house === h && skip.indexOf(r.slug) < 0; });
+    list.sort(function (a, b) { return (b.sizes - a.sizes) || a.name.localeCompare(b.name); });
+    s.innerHTML = '<div class="lyhint">' + esc(h) + ': tap a perfume</div>' + list.map(function (r) { return '<button type="button" data-pick="' + q + ':' + esc(r.slug) + '">' + esc(r.name) + '<small>' + (r.year ? r.year : esc(r.house)) + '</small></button>'; }).join('');
+    s.hidden = false; s.scrollTop = 0;
+  });
   box.addEventListener('keydown', function (e) {
     var q = e.target.getAttribute && e.target.getAttribute('data-q'); if (q === null || q === undefined) return;
     var s = box.querySelector('[data-s="' + q + '"]');
