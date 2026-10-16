@@ -6,6 +6,9 @@
 (function () {
   var PAGE = 48;
   var GENDER = ['Men', 'Women', 'Unisex'];
+  // Perfumers (noses), filled in over time. Shown only when we have a checked name.
+  var perfumers = fetch('catalog/perfumers.json?v=1').then(function (x) { return x.ok ? x.json() : {}; }).catch(function () { return {}; });
+  function nameList(a) { return a.length < 3 ? a.join(' and ') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
   var data = null, rows = [], filtered = [], shown = 0;
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -112,17 +115,24 @@
       '<div class="dhero"><div class="pdbig" style="--c1:' + PFC.tint(rowFor(r)) + '">' + PFC.stage(rowFor(r), 230) + '</div>' +
       '<div><div class="by"><a href="catalog.html?house=' + encodeURIComponent(r.house) + '">' + esc(r.house) + '</a></div><h1>' + esc(shortTitle(r)) + '</h1>' +
       '<div style="color:var(--ink2);font-size:14px">' + esc(facts.join('  ·  ')) + '</div>' +
+      '<div id="creator" style="color:var(--ink2);font-size:14px;margin-top:4px" hidden></div>' +
       '<div class="chips">' + r.notes.slice(0, 12).map(function (n) { return '<a class="chip" href="catalog.html?q=' + encodeURIComponent(n) + '">' + esc(cap(n)) + '</a>'; }).join('') + '</div>' +
       '<div class="rvpill"><span class="rvstars" id="rvstars" aria-hidden="true">☆☆☆☆☆</span><span class="rvcnt" id="rvcnt">No reviews yet</span>' +
       '<button type="button" class="rvglow" data-write-review data-perfume-id="' + esc(r.slug) + '" data-perfume-name="' + esc(shortTitle(r)) + '"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>Write a ParfAI review</button></div>' +
       '<div class="rvfrw"><a class="rvfr" href="https://www.fragrantica.com/search/?query=' + encodeURIComponent(r.house + ' ' + shortTitle(r)) + '" target="_blank" rel="nofollow noopener">More opinions on Fragrantica ↗</a></div></div></div>' +
-      '<div class="dsec"><h2>About this fragrance</h2><p>' + intro + '</p></div>' +
+      '<div class="dsec"><h2>About this fragrance</h2><p id="about-p">' + intro + '</p></div>' +
       '<div class="dsec"><h2>Sizes and where to buy</h2>' + variants + uae + noon +
       '<div class="cat-note" style="margin-top:14px">ParfAI earns a commission when you buy through these links, at no extra cost to you. Prices change often, so check the current price on the retailer page. As an Amazon Associate I earn from qualifying purchases. <a href="affiliate-disclosure.html">Affiliate disclosure</a></div></div>' +
       '<div class="dsec rvsec" id="rvsec" hidden><h2>Reviews</h2><div id="rvlist"></div></div>' +
       (more.length ? '<div class="dsec"><h2>More from ' + esc(r.house) + '</h2><div class="grid">' + more.map(cardHTML).join('') + '</div></div>' : '') +
       '</div>';
     window.scrollTo(0, 0);
+    perfumers.then(function (m) {
+      var e = m[r.slug], box = $('creator'), ap = $('about-p');
+      if (!e || !e.length || !box) return;
+      box.innerHTML = 'Created by <b>' + esc(nameList(e)) + '</b>'; box.hidden = false;
+      if (ap) ap.innerHTML += ' It was created by ' + esc(nameList(e)) + '.';
+    });
     loadReviews(r);
   }
 
