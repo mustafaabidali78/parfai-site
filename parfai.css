@@ -610,7 +610,10 @@ svg.bt{display:block;overflow:visible}
 .pd-nm{font-family:var(--disp);font-size:25px;font-weight:600;line-height:1.1;margin:2px 0 3px;color:var(--ink)}
 .pd-nt{font-size:12.5px;color:var(--ink2);line-height:1.4}
 .pd-sz{font-size:11px;color:var(--muted);margin-top:8px}
-.pd-act{margin-top:12px}
+.pd-act{margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.pd-alt{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+a.pd-sm{font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:100px;border:1px solid var(--border);background:#fff;color:var(--ink);text-decoration:none;transition:.2s}
+a.pd-sm:hover{border-color:var(--ink);background:var(--ink);color:#fff}
 a.pd-buy{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:100px;text-decoration:none;transition:.2s}
 a.pd-buy:hover{background:var(--rust);color:#fff}
 /* big bottle on a perfume's own page */

@@ -168,6 +168,16 @@
       '<div class="pd-sz">' + h.rows.length + ' fragrance' + (h.rows.length === 1 ? '' : 's') + ' on ParfAI</div></a>';
   }
 
+  // Buy row for a card: FragranceNet price button first, then small Amazon UAE and Noon UAE buttons.
+  function buyHTML(main, q) {
+    var out = '<div class="pd-act">' + main;
+    if (typeof amazonAE === 'function' && q) {
+      out += '<div class="pd-alt"><a class="pd-sm" href="' + esc(amazonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Amazon UAE</a>' +
+        '<a class="pd-sm noonlink" href="' + esc(noonAE(q)) + '" target="_blank" rel="sponsored nofollow noopener">Noon UAE</a></div>';
+    }
+    return out + '</div>';
+  }
+
   // A card in the pedestal style. The picture and name open the catalogue page; the button is the affiliate link.
   function cardHTML(r) {
     var href = 'catalog.html?id=' + encodeURIComponent(r.slug);
@@ -175,8 +185,8 @@
     return '<div class="pd" style="--c1:' + tint(r) + '"><div class="pd-tg"><span class="gt">' + esc(GENDER[r.gender]) + '</span>' + (r.dupe ? '<span class="dp">DUPE</span>' : '') + '</div>' +
       '<a class="pd-main" href="' + href + '" aria-label="' + esc(r.name) + ' by ' + esc(r.house) + '">' + stage(r, 170) +
       '<div class="pd-hh">' + esc(r.house) + '</div><div class="pd-nm">' + esc(r.name) + '</div><div class="pd-nt">' + esc(r.notes.slice(0, 3).map(cap).join(', ')) + '</div></a>' +
-      '<div class="pd-act">' + buy + '</div></div>';
+      buyHTML(buy, shopQuery(r)) + '</div>';
   }
 
-  window.PFC = { dayNumber: dayNumber, hash: hash, shopQuery: shopQuery, load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, photo: photo, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
+  window.PFC = { buyHTML: buyHTML, dayNumber: dayNumber, hash: hash, shopQuery: shopQuery, load: load, houses: houses, houseCardHTML: houseCardHTML, normName: normName, HOUSE_ALIAS: HOUSE_ALIAS, cardHTML: cardHTML, stage: stage, art: art, photo: photo, bottle: bottle, noteCol: noteCol, noteTxt: noteTxt, tint: tint, draw: draw, esc: esc, cap: cap, GENDER: GENDER, GENDER_GRAD: GENDER_GRAD };
 })();

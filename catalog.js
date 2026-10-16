@@ -49,7 +49,7 @@
       '<div class="pd-hh">' + esc(r.house) + '</div><div class="pd-nm">' + esc(shortTitle(r)) + '</div>' +
       (notes ? '<div class="pd-nt">' + esc(notes) + '</div>' : '') +
       '<div class="pd-sz">' + plural(r.variants.length, 'size option') + '</div></a>' +
-      '<div class="pd-act">' + buy + '</div></div>';
+      PFC.buyHTML(buy, shopQuery(r)) + '</div>';
   }
   // PFC wants a slug, name and notes; the catalogue row already has them under other names.
   function rowFor(r) { return { slug: r.slug, name: shortTitle(r), notes: r.notes, pid: r.variants[0] ? r.variants[0][0] : '' }; }
