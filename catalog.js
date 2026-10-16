@@ -40,11 +40,16 @@
   function cardHTML(r) {
     var notes = r.notes.slice(0, 3).map(cap).join(', ');
     var R = rowFor(r);
-    return '<a class="pd" style="--c1:' + PFC.tint(R) + ';text-decoration:none;color:inherit" href="catalog.html?id=' + encodeURIComponent(r.slug) + '">' +
-      '<div class="pd-tg"><span class="gt">' + GENDER[r.gender] + '</span></div>' + PFC.stage(R, 170) +
+    var href = 'catalog.html?id=' + encodeURIComponent(r.slug);
+    var v0 = r.variants[0];
+    var buy = v0 ? '<a class="pd-buy" href="' + esc(linkFor(v0)) + '" target="_blank" rel="sponsored nofollow noopener">Check price \u2197</a>' : '<a class="pd-buy" href="' + href + '">View \u2197</a>';
+    return '<div class="pd" style="--c1:' + PFC.tint(R) + '">' +
+      '<div class="pd-tg"><span class="gt">' + GENDER[r.gender] + '</span></div>' +
+      '<a class="pd-main" href="' + href + '">' + PFC.stage(R, 170) +
       '<div class="pd-hh">' + esc(r.house) + '</div><div class="pd-nm">' + esc(shortTitle(r)) + '</div>' +
       (notes ? '<div class="pd-nt">' + esc(notes) + '</div>' : '') +
-      '<div class="pd-sz">' + plural(r.variants.length, 'size option') + '</div></a>';
+      '<div class="pd-sz">' + plural(r.variants.length, 'size option') + '</div></a>' +
+      '<div class="pd-act">' + buy + '</div></div>';
   }
   // PFC wants a slug, name and notes; the catalogue row already has them under other names.
   function rowFor(r) { return { slug: r.slug, name: shortTitle(r), notes: r.notes, pid: r.variants[0] ? r.variants[0][0] : '' }; }
