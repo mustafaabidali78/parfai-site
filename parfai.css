@@ -623,6 +623,11 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .mega.mc .mwrap{display:grid;grid-template-columns:1.05fr 1.6fr;gap:34px}
 .mega.mc .mcols{display:grid;grid-template-columns:1fr 1fr;gap:6px 34px}
 .mega.mc .colhead{margin-bottom:12px}
+.mega.mc .mcols.scroll>div{max-height:340px;overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.mega.mc .mcols.scroll .colhead{position:sticky;top:0;background:#fff;z-index:1;padding-bottom:6px;margin-bottom:4px}
+.mega.mc .mcols.scroll .it span{font-size:12.5px}
+.mega.mc .mcols.scroll .it span:empty{display:none}
+.mega.mc .mcols.scroll .it{padding:9px 0}
 .mega.mc .it{margin:0;padding:10px 0;border-bottom:1px solid var(--border)}
 .mega.mc .it b{font-size:17px;color:var(--ink)}
 .mega.mc .it:hover b{color:var(--violet)}
@@ -681,6 +686,7 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
   .mega.mc{left:0}
   .navlinks.mobileopen .mega.mc .mwrap{display:flex;flex-direction:column;gap:18px}
   .navlinks.mobileopen .mega.mc .mcols{grid-template-columns:1fr}
+  .navlinks.mobileopen .mega.mc .mcols.scroll>div{max-height:260px}
   .navlinks.mobileopen .mega.mc .feat{min-height:170px;padding:22px}
   .navlinks.mobileopen .mega.mc .feat .big{font-size:32px}
   .navlinks.mobileopen .mega.mc .feat .big.sm{font-size:24px}

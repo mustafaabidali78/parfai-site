@@ -1382,6 +1382,13 @@ function journalBadge(){
   for(let i=0;i<t.length;i++) ch+='<span style="transform:rotate('+(360/t.length*i).toFixed(2)+'deg)">'+(t[i]==='&'?'&amp;':t[i])+'</span>';
   return '<div class="jwrap" aria-hidden="true"><div class="jbot"><img src="images/nav/b10.webp" alt="" loading="lazy" decoding="async"></div><div class="jring"><div class="jturn">'+ch+'</div></div></div><div class="bshade" aria-hidden="true"></div>';
 }
+/* All houses of one tier for the Houses menu (A to Z, with a short note for the best known) */
+function houseMenuList(tier){
+  const sub={dior:'Sauvage, Homme…',chanel:'Bleu, No. 5, Coco…',ysl:'Y, Libre, Black Opium',versace:'Eros, Bright Crystal',creed:'Aventus, Green Irish Tweed',mfk:'Baccarat Rouge 540',pdm:'Layton, Delina',xerjoff:'Erba Pura, Naxos'};
+  const rows=HOUSES.filter(h=>h.tier===tier).slice().sort((x,y)=>x.name.localeCompare(y.name));
+  const top=rows.filter(h=>sub[h.id]), rest=rows.filter(h=>!sub[h.id]);
+  return top.concat(rest).map(h=>[h.name,sub[h.id]||'','house.html?id='+h.id]);
+}
 /* ---------- nav dropdown (feature card + clean list) ---------- */
 function navMega(label, m){
   const esc = t => String(t).replace(/&(?!amp;|lt;|gt;|quot;|#)/g,'&amp;').replace(/</g,'&lt;');
@@ -1394,7 +1401,7 @@ function navMega(label, m){
           <a class="feat ${m.f}" href="${m.feat[4]}">${m.f==='f1'?bottleRows():m.f==='f2'?houseRows():m.f==='f4'?reviewRing():m.f==='f3'?journalBadge():''}<small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
           <div class="mrest"><div class="colhead">${m.head}</div>
             <div class="chips">${m.chips.map(c=>`<a href="${c[1]}">${c[0]}</a>`).join('')}</div>
-            <div class="mcols">${m.cols.map(c=>`<div><div class="colhead">${c[0]}</div>${list(c[1])}</div>`).join('')}</div>
+            <div class="mcols${m.scroll?' scroll':''}">${m.cols.map(c=>`<div><div class="colhead">${c[0]}</div>${list(c[1])}</div>`).join('')}</div>
           </div>
         </div></div>
       </span>`;
@@ -1477,8 +1484,8 @@ function renderNav(active){
       ${navMega('Houses', {
         f:'f2', feat:['Directory','Every house','From designer to niche, all in one A to Z directory.','See all houses','houses.html'],
         head:'Browse by', chips:[['Affordable houses','houses.html?tier=Affordable'],['Niche vs designer','houses.html?tier=Niche']],
-        cols:[['Designer',[['Dior','Sauvage, Homme…','house.html?id=dior'],['Chanel','Bleu, No. 5, Coco…','house.html?id=chanel'],['Yves Saint Laurent','Y, Libre, Black Opium','house.html?id=ysl'],['Versace','Eros, Bright Crystal','house.html?id=versace']]],
-              ['Niche',[['Creed','Aventus, Green Irish Tweed','house.html?id=creed'],['Maison Francis Kurkdjian','Baccarat Rouge 540','house.html?id=mfk'],['Parfums de Marly','Layton, Delina','house.html?id=pdm'],['Xerjoff','Erba Pura, Naxos','house.html?id=xerjoff']]]]
+        scroll:true,
+        cols:[['Designer',houseMenuList('Designer')],['Niche',houseMenuList('Niche')]]
       })}
       ${navMega('Community', {
         f:'f4', feat:['Join in','Write a review','Rate any fragrance in a minute. Help others find their scent.','Write a review','community.html?do=review'],
