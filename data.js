@@ -1485,7 +1485,7 @@ function renderNav(active){
         f:'f2', feat:['Directory','Every house','From designer to niche, all in one A to Z directory.','See all houses','houses.html'],
         head:'Browse by', chips:[['Affordable houses','houses.html?tier=Affordable'],['Niche vs designer','houses.html?tier=Niche']],
         scroll:true,
-        cols:[['Designer',houseMenuList('Designer')],['Niche',houseMenuList('Niche')]]
+        cols:[['Designer',houseMenuList('Designer')],['Niche',houseMenuList('Niche')],['Affordable',houseMenuList('Affordable')]]
       })}
       ${navMega('Community', {
         f:'f4', feat:['Join in','Write a review','Rate any fragrance in a minute. Help others find their scent.','Write a review','community.html?do=review'],
