@@ -1009,3 +1009,10 @@ html a.noonlink:hover,html a.noonlink:focus-visible{background:#FFD400 !importan
 html a[href*="amazon.ae"] .p,html a.noonlink .p{color:inherit !important;opacity:.78}
 /* links with no class of their own sit inside a sentence: make them small chips */
 html a[href*="amazon.ae"]:not([class]),html a.noonlink:not(.btn):not(.pd-sm):not(.wpt-bb):not(.wpxbuy):not(.retail):not(.more):not(.vmore):not(.alt){display:inline-block;padding:1px 9px;border-radius:100px;line-height:1.5;white-space:nowrap}
+
+/* FragranceNet buy links (price buttons), everywhere on the site: sage green with dark text.
+   Targets the link address, so it works on every page, including links made by scripts. */
+html a[href*="linksynergy.com"],html a[href*="fragrancenet.com"]{background:#A9C7A0 !important;color:#14260F !important;border:1px solid #7FA074 !important;font-weight:700;text-decoration:none}
+html a[href*="linksynergy.com"]:hover,html a[href*="linksynergy.com"]:focus-visible,html a[href*="fragrancenet.com"]:hover,html a[href*="fragrancenet.com"]:focus-visible{background:#94B98A !important;color:#0B1A08 !important;border-color:#5F8A53 !important}
+html a[href*="linksynergy.com"] .p,html a[href*="fragrancenet.com"] .p{color:inherit !important;opacity:.78}
+html a[href*="linksynergy.com"]:not([class]),html a[href*="fragrancenet.com"]:not([class]){display:inline-block;padding:1px 9px;border-radius:100px;line-height:1.5;white-space:nowrap}
