@@ -42,6 +42,11 @@
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
   .chip{font-size:12px;font-weight:600;padding:6px 12px;border-radius:100px;background:rgba(139,124,255,.12);color:var(--violet);cursor:pointer;border:0;font-family:var(--body)}
   .dsec{margin-top:34px}
+  .vidbox{position:relative;width:min(320px,100%);border-radius:26px;overflow:hidden;background:#14110f;box-shadow:0 14px 40px rgba(40,25,10,.22)}
+  .vidbox video{display:block;width:100%;aspect-ratio:9/16;object-fit:cover}
+  .vidbar{position:absolute;left:0;right:0;bottom:12px;display:flex;gap:8px;justify-content:center}
+  .vbt{font:600 12.5px var(--body);padding:8px 15px;border-radius:100px;border:1px solid rgba(255,255,255,.55);background:rgba(20,17,15,.55);color:#fff;cursor:pointer;backdrop-filter:blur(6px)}
+  .vbt:hover{background:rgba(20,17,15,.8)}
   .dsec h2{font-family:var(--disp);font-weight:600;font-size:24px;margin:0 0 14px}
   .vrow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 18px;background:var(--panel);border:1px solid var(--border);border-radius:16px;margin-bottom:10px;flex-wrap:wrap}
   .vrow .vmore{flex-basis:100%;font-size:12.5px;color:var(--ink2);text-decoration:underline}
@@ -110,7 +115,7 @@
 <script src="auth.js"></script>
 <script src="reviews.js?v=202610111200"></script>
 <script src="catalog-lib.js?v=202610160300"></script>
-<script src="catalog.js?v=202610160700"></script>
+<script src="catalog.js?v=202610160900"></script>
 <script src="cookie-notice.js"></script>
 </body>
 </html>

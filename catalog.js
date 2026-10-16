@@ -8,6 +8,8 @@
   var GENDER = ['Men', 'Women', 'Unisex'];
   // Perfumers (noses), filled in over time. Shown only when we have a checked name.
   var perfumers = fetch('catalog/perfumers.json?v=4').then(function (x) { return x.ok ? x.json() : {}; }).catch(function () { return {}; });
+  // Short videos (slow zoom and soft music) for chosen perfumes. catalog/videos.json maps slug to file.
+  var videos = fetch('catalog/videos.json?v=1').then(function (x) { return x.ok ? x.json() : {}; }).catch(function () { return {}; });
   function nameList(a) { return a.length < 3 ? a.join(' and ') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
   var data = null, rows = [], filtered = [], shown = 0;
 
@@ -127,6 +129,24 @@
       (more.length ? '<div class="dsec"><h2>More from ' + esc(r.house) + '</h2><div class="grid">' + more.map(cardHTML).join('') + '</div></div>' : '') +
       '</div>';
     window.scrollTo(0, 0);
+    videos.then(function (vm) {
+      var src = vm[r.slug], hero = document.querySelector('#detail-view .dhero');
+      if (!src || !hero) return;
+      var sec = document.createElement('div'); sec.className = 'dsec vidsec';
+      sec.innerHTML = '<h2>See it in motion</h2><div class="vidbox"><video muted loop playsinline preload="metadata" poster="' + esc(src.replace(/\.mp4$/, '.jpg')) + '" src="' + esc(src) + '" aria-label="' + esc(shortTitle(r)) + ' short video"></video>' +
+        '<div class="vidbar"><button type="button" class="vbt" data-play aria-label="Play or pause">Pause</button><button type="button" class="vbt" data-snd aria-label="Sound on or off">Sound on</button></div></div>';
+      hero.parentNode.insertBefore(sec, hero.nextSibling);
+      var v = sec.querySelector('video'), pb = sec.querySelector('[data-play]'), sb = sec.querySelector('[data-snd]');
+      var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function sync() { pb.textContent = v.paused ? 'Play' : 'Pause'; sb.textContent = v.muted ? 'Sound on' : 'Sound off'; }
+      pb.onclick = function () { if (v.paused) v.play().catch(function () {}); else v.pause(); sync(); };
+      sb.onclick = function () { v.muted = !v.muted; if (!v.muted && v.paused) v.play().catch(function () {}); sync(); };
+      v.addEventListener('play', sync); v.addEventListener('pause', sync);
+      if ('IntersectionObserver' in window && !still) {
+        new IntersectionObserver(function (en) { en.forEach(function (e) { if (e.isIntersecting) v.play().catch(function () {}); else v.pause(); }); }, { threshold: 0.5 }).observe(v);
+      }
+      sync();
+    });
     perfumers.then(function (m) {
       var e = m[r.slug], box = $('creator'), ap = $('about-p');
       if (!e || !e.length || !box) return;
