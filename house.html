@@ -88,13 +88,16 @@
       var url = 'https://parfai.org/house.html?' + (h && h.id ? 'id=' + encodeURIComponent(h.id) : (curated ? 'id=' + encodeURIComponent(curated.id) : 'h=' + encodeURIComponent(name)));
       document.title = name + ' perfumes — ParfAI';
       updateSocialTags({ title: name + ' — ParfAI', desc: name + ': ' + blurb + ' Browse every ' + name + ' fragrance on ParfAI, with notes and where to buy.', url: url });
+      var tierOk = { Designer: 1, Niche: 1, Affordable: 1 }[tier] ? tier : '';
+      var tierHref = tierOk ? 'houses.html?tier=' + tierOk : '', tierLabel = tierOk + ' houses';
       var bs = document.createElement('script'); bs.type = 'application/ld+json';
       bs.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Houses', item: 'https://parfai.org/houses.html' },
-        { '@type': 'ListItem', position: 2, name: name, item: url }] });
+        { '@type': 'ListItem', position: 1, name: 'Houses', item: 'https://parfai.org/houses.html' }]
+        .concat(tierOk ? [{ '@type': 'ListItem', position: 2, name: tierLabel, item: 'https://parfai.org/' + tierHref }] : [])
+        .concat([{ '@type': 'ListItem', position: tierOk ? 3 : 2, name: name, item: url }]) });
       document.head.appendChild(bs);
       var E = PFC.esc, shownN = 0, PAGE = 48;
-      content.innerHTML = '<div class="crumb"><a href="houses.html">Houses</a> / ' + E(name) + '</div>' +
+      content.innerHTML = '<div class="crumb"><a href="houses.html">Houses</a> / ' + (tierOk ? '<a href="' + tierHref + '">' + tierLabel + '</a> / ' : '') + E(name) + '</div>' +
         '<div class="hero" style="padding:20px 0 40px;text-align:left"><div class="rule"></div>' +
         '<div class="k">' + (tier ? E(tier.toUpperCase()) + ' HOUSE' : 'FRAGRANCE HOUSE') + '</div>' +
         '<h1 style="font-size:56px;margin:0">' + E(name) + '</h1>' +
