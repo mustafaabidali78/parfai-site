@@ -7,7 +7,7 @@
   var PAGE = 48;
   var GENDER = ['Men', 'Women', 'Unisex'];
   // Perfumers (noses), filled in over time. Shown only when we have a checked name.
-  var perfumers = fetch('catalog/perfumers.json?v=2').then(function (x) { return x.ok ? x.json() : {}; }).catch(function () { return {}; });
+  var perfumers = fetch('catalog/perfumers.json?v=3').then(function (x) { return x.ok ? x.json() : {}; }).catch(function () { return {}; });
   function nameList(a) { return a.length < 3 ? a.join(' and ') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
   var data = null, rows = [], filtered = [], shown = 0;
 
