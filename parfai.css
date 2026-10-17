@@ -998,12 +998,12 @@ a.pd-buy:hover{background:var(--rust);color:#fff}
 .introv.about .introv-note{text-align:left}
 @media(max-width:640px){.introv{margin-bottom:38px}.introv-play span.c{width:62px;height:62px}.introv-box{border-radius:16px}}
 
-/* Amazon (sky blue) and Noon (yellow) buy links, everywhere on the site.
+/* Amazon (pastel lavender) and Noon (yellow) buy links, everywhere on the site.
    Dark text on a light colour keeps the contrast high. Works on every page because it
    targets the link address (Amazon) and the noonlink class (Noon). */
 html a[href*="amazon.ae"],html a.noonlink{font-weight:700;text-decoration:none;border:1px solid transparent}
-html a[href*="amazon.ae"]{background:#8FD3FB !important;color:#062B47 !important;border-color:#4DB0EA !important}
-html a[href*="amazon.ae"]:hover,html a[href*="amazon.ae"]:focus-visible{background:#6BC3F7 !important;color:#031D31 !important;border-color:#2F98D8 !important}
+html a[href*="amazon.ae"]{background:#D8CCF7 !important;color:#2A1B5C !important;border-color:#B5A3EA !important}
+html a[href*="amazon.ae"]:hover,html a[href*="amazon.ae"]:focus-visible{background:#C9B8F3 !important;color:#1E1245 !important;border-color:#9A85DC !important}
 html a.noonlink{background:#FFE333 !important;color:#1D1A00 !important;border-color:#E0BE00 !important}
 html a.noonlink:hover,html a.noonlink:focus-visible{background:#FFD400 !important;color:#120F00 !important;border-color:#C9A800 !important}
 html a[href*="amazon.ae"] .p,html a.noonlink .p{color:inherit !important;opacity:.78}
