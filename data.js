@@ -1401,7 +1401,7 @@ function navMega(label, m){
           <a class="feat ${m.f}" href="${m.feat[4]}">${m.f==='f1'?bottleRows():m.f==='f2'?houseRows():m.f==='f4'?reviewRing():m.f==='f3'?journalBadge():''}<small>${m.feat[0]}</small><div class="big${big}">${esc(m.feat[1])}</div><p>${esc(m.feat[2])}</p><span class="go">${m.feat[3]}</span></a>
           <div class="mrest"><div class="colhead">${m.head}</div>
             <div class="chips">${m.chips.map(c=>`<a href="${c[1]}">${c[0]}</a>`).join('')}</div>
-            <div class="mcols${m.scroll?' scroll':''}">${m.cols.map(c=>`<div><div class="colhead">${c[0]}</div>${list(c[1])}</div>`).join('')}</div>
+            <div class="mcols${m.scroll?' scroll':''}">${m.cols.map(c=>`<div><div class="colhead">${c[2]?`<a class="colhead-link" href="${c[2]}">${c[0]} <span aria-hidden="true">&rarr;</span></a>`:c[0]}</div>${list(c[1])}</div>`).join('')}</div>
           </div>
         </div></div>
       </span>`;
@@ -1485,7 +1485,7 @@ function renderNav(active){
         f:'f2', feat:['Directory','Every house','From designer to niche, all in one A to Z directory.','See all houses','houses.html'],
         head:'Browse by', chips:[['Affordable houses','houses.html?tier=Affordable'],['Niche vs designer','houses.html?tier=Niche']],
         scroll:true,
-        cols:[['Designer',houseMenuList('Designer')],['Niche',houseMenuList('Niche')],['Affordable',houseMenuList('Affordable')]]
+        cols:[['Designer',houseMenuList('Designer'),'houses.html?tier=Designer'],['Niche',houseMenuList('Niche'),'houses.html?tier=Niche'],['Affordable',houseMenuList('Affordable'),'houses.html?tier=Affordable']]
       })}
       ${navMega('Community', {
         f:'f4', feat:['Join in','Write a review','Rate any fragrance in a minute. Help others find their scent.','Write a review','community.html?do=review'],

@@ -1016,3 +1016,9 @@ html a[href*="linksynergy.com"],html a[href*="fragrancenet.com"]{background:#A9C
 html a[href*="linksynergy.com"]:hover,html a[href*="linksynergy.com"]:focus-visible,html a[href*="fragrancenet.com"]:hover,html a[href*="fragrancenet.com"]:focus-visible{background:#94B98A !important;color:#0B1A08 !important;border-color:#5F8A53 !important}
 html a[href*="linksynergy.com"] .p,html a[href*="fragrancenet.com"] .p{color:inherit !important;opacity:.78}
 html a[href*="linksynergy.com"]:not([class]),html a[href*="fragrancenet.com"]:not([class]){display:inline-block;padding:1px 9px;border-radius:100px;line-height:1.5;white-space:nowrap}
+
+/* Clickable column headings in the Houses menu */
+.colhead-link{display:inline-flex;align-items:center;gap:6px;color:var(--ink) !important;font-weight:700;text-decoration:none;padding:5px 12px;margin-left:-12px;border-radius:100px;background:transparent;transition:background .15s,color .15s}
+.colhead-link span{transition:transform .15s}
+.colhead-link:hover,.colhead-link:focus-visible{background:#ECE8FF;color:var(--ink) !important}
+.colhead-link:hover span,.colhead-link:focus-visible span{transform:translateX(3px)}
