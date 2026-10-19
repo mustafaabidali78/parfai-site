@@ -966,6 +966,9 @@ const BLOG_POSTS = [
   { slug:'blog-edt-vs-edp-vs-parfum', title:'EDT vs EDP vs Parfum: What the Letters Actually Tell You',
     excerpt:'EDT, EDP and Parfum are not just a strength dial. We check what each one really means against our own catalog, and find the label predicts a lot less than most people think.',
     date:'2026-10-12', category:'Notes & Education', perfumeIds:['sauvage','erba-pura','zara-red-vanilla','roja-elysium','roja-danger','clubdenuit','aventus'] },
+  { slug:'blog-fragrance-news-roundup-october-2026', title:'Fragrance News Roundup: October 2026',
+    excerpt:'A look at three real fragrance stories making news this October: Coty\'s new global community for fragrance creators, gourmand notes growing more specific, and the rise of fragrance layering.',
+    date:'2026-10-19', category:'Fragrance News', perfumeIds:[] },
 ];
 
 /* ---------- helpers ---------- */
