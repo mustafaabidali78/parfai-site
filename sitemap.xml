@@ -20,7 +20,7 @@
   </url>
   <url>
     <loc>https://parfai.org/blog.html</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -57,6 +57,12 @@
   <url>
     <loc>https://parfai.org/blog-fragrance-news-roundup-october-2026.html</loc>
     <lastmod>2026-10-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://parfai.org/blog-perfume-gifts-under-50.html</loc>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

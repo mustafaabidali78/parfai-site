@@ -969,6 +969,9 @@ const BLOG_POSTS = [
   { slug:'blog-fragrance-news-roundup-october-2026', title:'Fragrance News Roundup: October 2026',
     excerpt:'A look at three real fragrance stories making news this October: Coty\'s new global community for fragrance creators, gourmand notes growing more specific, and the rise of fragrance layering.',
     date:'2026-10-19', category:'Fragrance News', perfumeIds:[] },
+  { slug:'blog-perfume-gifts-under-50', title:'8 Perfume Gifts Under $50 That Smell Way More Expensive',
+    excerpt:'Eight perfume gift picks under $50, pulled straight from the ParfAI catalog, with real notes, ratings and prices, for her, for him, and for anyone.',
+    date:'2026-10-26', category:'Guides & Picks', perfumeIds:['lattafa-yara','clubdenuit','lattafa-khamrah','alhambra-opera-noir','rasasi-hawas','lattafa-ameer','dossier-powdery-tobacco','ck-one'] },
 ];
 
 /* ---------- helpers ---------- */
