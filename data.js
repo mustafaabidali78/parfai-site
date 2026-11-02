@@ -969,6 +969,9 @@ const BLOG_POSTS = [
   { slug:'blog-fragrance-news-roundup-october-2026', title:'Fragrance News Roundup: October 2026',
     excerpt:'A look at three real fragrance stories making news this October: Coty\'s new global community for fragrance creators, gourmand notes growing more specific, and the rise of fragrance layering.',
     date:'2026-10-19', category:'Fragrance News', perfumeIds:[] },
+  { slug:'blog-layton-vs-armaf-derby', title:'Layton vs Armaf Derby: Is the $32 Dupe Worth It?',
+    excerpt:'Parfums de Marly Layton costs $250. Armaf Derby costs $32. We compare the two note for note to see how much of Layton\'s sweet-amber signature actually survives the price drop.',
+    date:'2026-11-02', category:'Dupes & Comparisons', perfumeIds:['layton','armaf-derby'] },
 ];
 
 /* ---------- helpers ---------- */
