@@ -969,6 +969,9 @@ const BLOG_POSTS = [
   { slug:'blog-fragrance-news-roundup-october-2026', title:'Fragrance News Roundup: October 2026',
     excerpt:'A look at three real fragrance stories making news this October: Coty\'s new global community for fragrance creators, gourmand notes growing more specific, and the rise of fragrance layering.',
     date:'2026-10-19', category:'Fragrance News', perfumeIds:[] },
+  { slug:'blog-new-fragrance-launches-october-november-2026', title:'New Fragrance Launches Worth Knowing About, October and November 2026',
+    excerpt:'A roundup of real fragrance launches from October and November 2026, from Dior\'s first Sauvage extrait to Byredo\'s Havana Tonka, with notes, prices, and sources.',
+    date:'2026-11-09', category:'New Releases', perfumeIds:['sauvage','ombre-leather','stronger-with-you','montblanc-explorer'] },
 ];
 
 /* ---------- helpers ---------- */
