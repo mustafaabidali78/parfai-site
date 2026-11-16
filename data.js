@@ -969,6 +969,9 @@ const BLOG_POSTS = [
   { slug:'blog-fragrance-news-roundup-october-2026', title:'Fragrance News Roundup: October 2026',
     excerpt:'A look at three real fragrance stories making news this October: Coty\'s new global community for fragrance creators, gourmand notes growing more specific, and the rise of fragrance layering.',
     date:'2026-10-19', category:'Fragrance News', perfumeIds:[] },
+  { slug:'blog-what-does-musk-smell-like', title:'What Does Musk Actually Smell Like?',
+    excerpt:'Musk is in more ParfAI catalog fragrances than almost any other note, yet it never smells the same twice. A breakdown of clean, powdery, and skin-like musk with real examples.',
+    date:'2026-11-16', category:'Notes & Education', perfumeIds:['kayali-musk-12','coco-mademoiselle','dior-homme-intense','wood-sage-sea-salt','aventus','baccarat-rouge'] },
 ];
 
 /* ---------- helpers ---------- */
