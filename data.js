@@ -972,6 +972,9 @@ const BLOG_POSTS = [
   { slug:'blog-what-does-musk-smell-like', title:'What Does Musk Actually Smell Like?',
     excerpt:'Musk is in more ParfAI catalog fragrances than almost any other note, yet it never smells the same twice. A breakdown of clean, powdery, and skin-like musk with real examples.',
     date:'2026-11-16', category:'Notes & Education', perfumeIds:['kayali-musk-12','coco-mademoiselle','dior-homme-intense','wood-sage-sea-salt','aventus','baccarat-rouge'] },
+  { slug:'blog-fragrance-news-roundup-november-2026', title:'Fragrance News Roundup: November 2026',
+    excerpt:'Three real fragrance stories from this November: Coty narrows its focus around Marc Jacobs while cutting French jobs, Floraïku sells a $775 fragrance sight unseen, and celebrity scents have a huge year.',
+    date:'2026-11-23', category:'Fragrance News', perfumeIds:[] },
 ];
 
 /* ---------- helpers ---------- */
