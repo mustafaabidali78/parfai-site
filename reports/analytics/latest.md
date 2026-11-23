@@ -1,15 +1,15 @@
-# ParfAI analytics report — 2026-11-22
+# ParfAI analytics report — 2026-11-23
 
-_Generated automatically by [`.github/workflows/analytics-report.yml`](../../.github/workflows/analytics-report.yml) at 2026-11-22T13:38:57.248Z. Aggregate counts only — no names, emails, or message text are included (this repo is public). See [reports/analytics/README.md](./README.md) for what each number means and the current setup status._
+_Generated automatically by [`.github/workflows/analytics-report.yml`](../../.github/workflows/analytics-report.yml) at 2026-11-23T16:33:46.169Z. Aggregate counts only — no names, emails, or message text are included (this repo is public). See [reports/analytics/README.md](./README.md) for what each number means and the current setup status._
 
 ## Signups & logins
 
 | Metric | Last 24h | Last 7d | All-time |
 |---|---:|---:|---:|
-| New signups | 0 | 3 | 4 |
-| Login events | 0 | 4 | 9 |
+| New signups | 0 | 1 | 4 |
+| Login events | 0 | 0 | 9 |
 
-Unique users who logged in, last 7 days: **1**
+Unique users who logged in, last 7 days: **0**
 
 ## Reviews
 
